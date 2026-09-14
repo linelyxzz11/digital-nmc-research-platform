@@ -54,7 +54,7 @@ FPGA 只作为主线完成后的可选验证，不属于项目完成条件。
 4. 让 Mapper 自动改变指令 Trace 与通信矩阵。
 5. 完成 Vector MAC、单 Tile、NI、Router，再连接 2×2 Mesh。
 
-完整路线见 [团队版项目路线与研究设计](docs/project_plan.zh-CN.md)。
+课程提交版见 [Project Proposal](docs/proposal.md)，完整实施路线见 [团队版项目路线与研究设计](docs/project_plan.zh-CN.md)。
 
 ## Development setup
 
@@ -76,4 +76,3 @@ Windows 建议在 WSL2 Ubuntu 中开发。RTL 工具建议安装 Icarus Verilog�
 ## License
 
 许可证等待团队共同确认。在许可证确定前，仓库内容默认保留全部权利。
-
