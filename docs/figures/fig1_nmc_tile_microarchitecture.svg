@@ -18,21 +18,12 @@
   <text x="55" y="105" class="sub">(a) Command and control</text>
   <rect x="55" y="125" width="260" height="120" rx="3" class="blk blue"/>
   <text x="185" y="153" class="sub ctr">Command FIFO</text>
-  <rect x="78" y="170" width="214" height="24" class="white"/>
-  <rect x="78" y="199" width="214" height="24" class="white"/>
-  <text x="185" y="187" class="sm ctr">opcode | tag | address | length</text>
-  <text x="185" y="216" class="sm ctr">src | dst | expected_count</text>
-  <path d="M185 245V278" class="cmd"/>
-  <rect x="55" y="280" width="260" height="192" rx="3" class="blk gray"/>
+  <rect x="90" y="174" width="190" height="28" class="white"/>
+  <text x="185" y="193" class="sm ctr">opcode · tag · addr · len</text>
+  <path d="M185 245V266" class="cmd"/>
+  <rect x="55" y="280" width="260" height="100" rx="3" class="blk gray"/>
   <text x="185" y="310" class="sub ctr">Tile Controller</text>
-  <text x="75" y="340" class="sm">state</text>
-  <rect x="75" y="353" width="48" height="34" class="white"/><rect x="131" y="353" width="54" height="34" class="white"/><rect x="193" y="353" width="48" height="34" class="white"/><rect x="249" y="353" width="46" height="34" class="white"/>
-  <text x="99" y="375" class="xs ctr">FETCH</text><text x="158" y="375" class="xs ctr">ISSUE</text><text x="217" y="375" class="xs ctr">WAIT</text><text x="272" y="375" class="xs ctr">DONE</text>
-  <path d="M123 370H129M185 370H191M241 370H247" class="line"/>
-  <text x="75" y="418" class="sm">scoreboard</text>
-  <rect x="150" y="400" width="145" height="28" class="white"/><text x="222" y="419" class="xs ctr">bank | mac | noc | reduce</text>
-  <text x="75" y="451" class="sm">counters</text>
-  <text x="182" y="451" class="xs">busy · stall · completion</text>
+  <text x="185" y="351" class="sm ctr">FETCH  →  ISSUE  →  WAIT  →  DONE</text>
 
   <!-- Bank arrays -->
   <text x="355" y="105" class="sub">(b) Local memory and operand supply</text>
@@ -61,7 +52,6 @@
   <text x="780" y="377" class="sub ctr">Weight Buffer</text>
   <g transform="translate(685 392)"><rect x="0" y="0" width="24" height="22" fill="#f7d5c6" stroke="#c95b32"/><rect x="24" y="0" width="24" height="22" fill="#f7d5c6" stroke="#c95b32"/><rect x="48" y="0" width="24" height="22" fill="#f7d5c6" stroke="#c95b32"/><rect x="72" y="0" width="24" height="22" fill="#f7d5c6" stroke="#c95b32"/><rect x="96" y="0" width="24" height="22" class="cell"/><rect x="120" y="0" width="24" height="22" class="cell"/><rect x="144" y="0" width="24" height="22" class="cell"/><rect x="168" y="0" width="24" height="22" class="cell"/></g>
   <path d="M500 307V350M780 307V350" class="op"/>
-  <text x="640" y="449" class="sm ctr">ping/pong buffers hide Bank service latency</text>
 
   <!-- Packet fields -->
   <text x="970" y="105" class="sub">(c) Packet and network endpoint</text>
@@ -69,36 +59,34 @@
   <text x="1242" y="153" class="sub ctr">Packet format</text>
   <g transform="translate(995 175)">
     <rect x="0" y="0" width="75" height="44" class="white"/><rect x="75" y="0" width="70" height="44" class="white"/><rect x="145" y="0" width="86" height="44" class="white"/><rect x="231" y="0" width="86" height="44" class="white"/><rect x="317" y="0" width="98" height="44" class="white"/><rect x="415" y="0" width="80" height="44" class="white"/>
-    <text x="37" y="19" class="xs ctr">opcode</text><text x="37" y="36" class="xs ctr">4b</text><text x="110" y="19" class="xs ctr">src/dst</text><text x="110" y="36" class="xs ctr">8b</text><text x="188" y="19" class="xs ctr">txn_id</text><text x="188" y="36" class="xs ctr">12b</text><text x="274" y="19" class="xs ctr">out_idx</text><text x="274" y="36" class="xs ctr">12b</text><text x="366" y="19" class="xs ctr">count/len</text><text x="366" y="36" class="xs ctr">8b</text><text x="455" y="19" class="xs ctr">payload</text><text x="455" y="36" class="xs ctr">32b</text>
+    <text x="37" y="27" class="xs ctr">opcode</text><text x="110" y="27" class="xs ctr">src/dst</text><text x="188" y="27" class="xs ctr">txn_id</text><text x="274" y="27" class="xs ctr">out_idx</text><text x="366" y="27" class="xs ctr">count/len</text><text x="455" y="27" class="xs ctr">payload</text>
   </g>
   <rect x="995" y="247" width="235" height="174" class="blk white"/>
   <text x="1112" y="274" class="sub ctr">Endpoint NI</text>
   <text x="1015" y="305" class="sm">TX FIFO</text><g transform="translate(1080 287)"><rect x="0" y="0" width="28" height="24" fill="#dbe9f6" stroke="#4e7fad"/><rect x="28" y="0" width="28" height="24" fill="#dbe9f6" stroke="#4e7fad"/><rect x="56" y="0" width="28" height="24" fill="#f4f4f2" stroke="#666"/><rect x="84" y="0" width="28" height="24" fill="#f4f4f2" stroke="#666"/></g>
   <text x="1015" y="346" class="sm">RX FIFO</text><g transform="translate(1080 328)"><rect x="0" y="0" width="28" height="24" fill="#d7efd9" stroke="#38824a"/><rect x="28" y="0" width="28" height="24" fill="#d7efd9" stroke="#38824a"/><rect x="56" y="0" width="28" height="24" fill="#d7efd9" stroke="#38824a"/><rect x="84" y="0" width="28" height="24" fill="#f4f4f2" stroke="#666"/></g>
-  <text x="1112" y="386" class="sm ctr">packetize · depacketize</text><text x="1112" y="407" class="sm ctr">valid / ready backpressure</text>
+  <text x="1112" y="390" class="sm ctr">valid / ready</text>
   <g transform="translate(1300 245)">
     <circle cx="90" cy="88" r="43" fill="#e8f1fa" stroke="#4e7fad" stroke-width="2"/>
     <rect x="71" y="69" width="38" height="38" fill="#fff" stroke="#4e7fad"/><path d="M90 69V35M90 107V141M71 88H37M109 88H143" stroke="#4e7fad" stroke-width="7"/>
     <text x="90" y="94" class="sm ctr">Router</text>
-    <text x="90" y="18" class="xs ctr">North</text><text x="90" y="164" class="xs ctr">South</text><text x="18" y="94" class="xs ctr">West</text><text x="164" y="94" class="xs ctr">East</text>
-    <text x="90" y="191" class="sm ctr">XY route · arbitration · 2 VC</text>
+    <text x="90" y="173" class="sm ctr">XY · arbitration · 2 VC</text>
   </g>
   <path d="M1230 334H1295" class="cmd"/>
 
   <!-- Compute datapath -->
-  <text x="55" y="520" class="sub">(d) Vector compute, accumulation, and endpoint reduction</text>
+  <text x="955" y="520" class="sub">(d) Vector compute, accumulation, and endpoint reduction</text>
   <rect x="55" y="540" width="1465" height="380" rx="3" class="frame"/>
   <rect x="355" y="570" width="575" height="186" rx="3" class="blk orange"/>
   <text x="642" y="600" class="sub ctr">4 × INT8 Vector MAC lanes</text>
   <g transform="translate(390 625)">
-    <text x="0" y="18" class="sm">lane 0</text><circle cx="95" cy="14" r="20" class="mul"/><text x="95" y="20" class="sub ctr">×</text><circle cx="165" cy="14" r="20" class="add"/><text x="165" y="20" class="sub ctr">+</text><rect x="205" y="-7" width="70" height="42" class="white"/><text x="240" y="19" class="sm ctr">acc[0]</text>
-    <text x="0" y="61" class="sm">lane 1</text><circle cx="95" cy="57" r="20" class="mul"/><text x="95" y="63" class="sub ctr">×</text><circle cx="165" cy="57" r="20" class="add"/><text x="165" y="63" class="sub ctr">+</text><rect x="205" y="36" width="70" height="42" class="white"/><text x="240" y="62" class="sm ctr">acc[1]</text>
-    <text x="0" y="104" class="sm">lane 2</text><circle cx="95" cy="100" r="20" class="mul"/><text x="95" y="106" class="sub ctr">×</text><circle cx="165" cy="100" r="20" class="add"/><text x="165" y="106" class="sub ctr">+</text><rect x="205" y="79" width="70" height="42" class="white"/><text x="240" y="105" class="sm ctr">acc[2]</text>
-    <text x="320" y="18" class="sm">lane 3</text><circle cx="415" cy="14" r="20" class="mul"/><text x="415" y="20" class="sub ctr">×</text><circle cx="485" cy="14" r="20" class="add"/><text x="485" y="20" class="sub ctr">+</text><rect x="525" y="-7" width="70" height="42" class="white"/><text x="560" y="19" class="sm ctr">acc[3]</text>
+<circle cx="95" cy="14" r="20" class="mul"/><text x="95" y="20" class="sub ctr">×</text><circle cx="165" cy="14" r="20" class="add"/><text x="165" y="20" class="sub ctr">+</text><rect x="205" y="-7" width="70" height="42" class="white"/><text x="240" y="19" class="sm ctr">acc[0]</text>
+<circle cx="95" cy="57" r="20" class="mul"/><text x="95" y="63" class="sub ctr">×</text><circle cx="165" cy="57" r="20" class="add"/><text x="165" y="63" class="sub ctr">+</text><rect x="205" y="36" width="70" height="42" class="white"/><text x="240" y="62" class="sm ctr">acc[1]</text>
+<circle cx="95" cy="100" r="20" class="mul"/><text x="95" y="106" class="sub ctr">×</text><circle cx="165" cy="100" r="20" class="add"/><text x="165" y="106" class="sub ctr">+</text><rect x="205" y="79" width="70" height="42" class="white"/><text x="240" y="105" class="sm ctr">acc[2]</text>
+<circle cx="415" cy="14" r="20" class="mul"/><text x="415" y="20" class="sub ctr">×</text><circle cx="485" cy="14" r="20" class="add"/><text x="485" y="20" class="sub ctr">+</text><rect x="525" y="-7" width="70" height="42" class="white"/><text x="560" y="19" class="sm ctr">acc[3]</text>
     <path d="M115 14H143M185 14H203M115 57H143M185 57H203M115 100H143M185 100H203M435 14H463M505 14H523" class="line"/>
-    <text x="420" y="68" class="sm ctr">each cycle:</text><text x="420" y="91" class="sm ctr">acc ← acc + w × x</text>
   </g>
-  <path d="M500 431V515H485V570M780 431V515H800V570" class="op"/>
+  <path d="M500 431V570M780 431V570" class="op"/>
 
   <rect x="955" y="570" width="255" height="186" rx="3" class="blk green"/>
   <text x="1082" y="600" class="sub ctr">INT32 Accumulator RF</text>
@@ -126,16 +114,12 @@
   <!-- Lower network path and control -->
   <rect x="355" y="800" width="1130" height="86" rx="3" class="blk blue"/>
   <text x="510" y="832" class="sub ctr">Endpoint NI</text>
-  <text x="510" y="859" class="sm ctr">packetize local result</text>
   <text x="790" y="832" class="sub ctr">Local FIFO</text>
   <g transform="translate(700 846)"><rect x="0" y="0" width="32" height="22" fill="#d7efd9" stroke="#38824a"/><rect x="32" y="0" width="32" height="22" fill="#d7efd9" stroke="#38824a"/><rect x="64" y="0" width="32" height="22" fill="#d7efd9" stroke="#38824a"/><rect x="96" y="0" width="32" height="22" fill="#f4f4f2" stroke="#666"/><rect x="128" y="0" width="32" height="22" fill="#f4f4f2" stroke="#666"/></g>
   <text x="1080" y="832" class="sub ctr">Router local port</text>
-  <text x="1080" y="859" class="sm ctr">XY routing · VC allocation · switch arbitration</text>
+  <text x="1080" y="859" class="sm ctr">XY · VC · arbitration</text>
   <path d="M1485 843H1520" class="ps"/>
   <path d="M1360 776V797" class="ps"/>
-  <path d="M315 375H335V843H353" class="cmd"/>
-  <path d="M315 420H335V665H353" class="cmd"/>
   <text x="65" y="902" class="sm">Blue: command/control</text><text x="245" y="902" class="sm" fill="#c95b32">Orange: operand movement</text><text x="475" y="902" class="sm" fill="#38824a">Green: partial sum/result</text>
-  <text x="950" y="907" class="sm">Cycle-level rule: transfer occurs only when valid ∧ ready = 1</text>
   </g>
 </svg>
