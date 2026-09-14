@@ -1,0 +1,32 @@
+name: Project task
+description: Track one implementation, experiment, or documentation task
+title: "[Task] "
+labels: []
+body:
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: What concrete result should this task produce?
+    validations:
+      required: true
+  - type: textarea
+    id: interfaces
+    attributes:
+      label: Inputs and outputs
+      description: Files, data structures, signals, commands, or artifacts involved.
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: Other issues, modules, or decisions required first.
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Observable checks that prove the task is complete.
+    validations:
+      required: true
+

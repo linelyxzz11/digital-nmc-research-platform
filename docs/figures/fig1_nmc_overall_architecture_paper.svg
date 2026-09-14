@@ -1,0 +1,222 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="950" viewBox="0 0 1600 950">
+  <defs>
+    <marker id="arrow-gray" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <path d="M0,0 L9,3.5 L0,7 Z" fill="#4a4a4a"/>
+    </marker>
+    <marker id="arrow-red" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <path d="M0,0 L9,3.5 L0,7 Z" fill="#c44e31"/>
+    </marker>
+    <marker id="arrow-green" markerWidth="9" markerHeight="7" refX="8" refY="3.5" orient="auto">
+      <path d="M0,0 L9,3.5 L0,7 Z" fill="#3a7d44"/>
+    </marker>
+    <style>
+      .panel { fill:#ffffff; stroke:#4f5b66; stroke-width:1.7; }
+      .box { stroke:#3f4850; stroke-width:1.5; }
+      .blue { fill:#eaf2fa; stroke:#4e79a7; }
+      .green { fill:#eaf4ea; stroke:#4d8b55; }
+      .orange { fill:#fbf1df; stroke:#d18a24; }
+      .purple { fill:#f0ebf6; stroke:#8064a2; }
+      .gray { fill:#f4f4f2; stroke:#686868; }
+      .white { fill:#ffffff; stroke:#555555; }
+      .title { font-family:Arial, Helvetica, sans-serif; font-size:22px; font-weight:700; fill:#171717; }
+      .panel-title { font-family:Arial, Helvetica, sans-serif; font-size:20px; font-weight:700; fill:#171717; }
+      .label { font-family:Arial, Helvetica, sans-serif; font-size:17px; font-weight:600; fill:#151515; text-anchor:middle; }
+      .small { font-family:Arial, Helvetica, sans-serif; font-size:14px; fill:#333333; text-anchor:middle; }
+      .tiny { font-family:Arial, Helvetica, sans-serif; font-size:12px; fill:#3a3a3a; text-anchor:middle; }
+      .note { font-family:Arial, Helvetica, sans-serif; font-size:13px; fill:#444444; }
+      .flow { fill:none; stroke:#4a4a4a; stroke-width:1.8; marker-end:url(#arrow-gray); }
+      .data { fill:none; stroke:#c44e31; stroke-width:2.4; marker-end:url(#arrow-red); }
+      .reduce { fill:none; stroke:#3a7d44; stroke-width:2.4; marker-end:url(#arrow-green); }
+      .control { fill:none; stroke:#4e79a7; stroke-width:1.6; stroke-dasharray:6 4; }
+      .link { stroke:#607483; stroke-width:5; fill:none; }
+      .router { fill:#dbe8f4; stroke:#4e79a7; stroke-width:1.4; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1600" height="950" fill="#ffffff"/>
+  <text x="45" y="37" class="title">Overview of the Proposed Digital NMC Research Platform</text>
+
+  <!-- (a) Software and modeling flow -->
+  <rect x="35" y="55" width="1530" height="235" class="panel"/>
+  <text x="52" y="82" class="panel-title">(a) Software-to-architecture flow</text>
+
+  <rect x="65" y="112" width="190" height="105" rx="3" class="box gray"/>
+  <text x="160" y="148" class="label">NN workload</text>
+  <text x="160" y="176" class="small">GEMV · MLP</text>
+  <text x="160" y="199" class="small">decode-shape traces</text>
+
+  <path d="M255 165 H305" class="flow"/>
+  <rect x="305" y="112" width="170" height="105" rx="3" class="box blue"/>
+  <text x="390" y="151" class="label">Operator IR</text>
+  <text x="390" y="181" class="small">shape · dependency</text>
+  <text x="390" y="203" class="small">data ownership</text>
+
+  <path d="M475 165 H525" class="flow"/>
+  <rect x="525" y="92" width="310" height="145" rx="3" class="box green"/>
+  <text x="680" y="120" class="label">Mapping and scheduling search</text>
+  <rect x="548" y="139" width="82" height="69" class="white"/>
+  <rect x="639" y="139" width="82" height="69" class="white"/>
+  <rect x="730" y="139" width="82" height="69" class="white"/>
+  <text x="589" y="166" class="small">Partition</text>
+  <text x="589" y="190" class="tiny">row / K / 2-D</text>
+  <text x="680" y="166" class="small">Placement</text>
+  <text x="680" y="190" class="tiny">tile / bank</text>
+  <text x="771" y="166" class="small">Reduction</text>
+  <text x="771" y="190" class="tiny">central / tree</text>
+
+  <path d="M835 165 H885" class="flow"/>
+  <rect x="885" y="112" width="190" height="105" rx="3" class="box orange"/>
+  <text x="980" y="148" class="label">Unified trace</text>
+  <text x="980" y="176" class="small">ISA commands</text>
+  <text x="980" y="199" class="small">NoC messages</text>
+
+  <path d="M1075 145 H1125 V110 H1160" class="flow"/>
+  <path d="M1075 165 H1160" class="flow"/>
+  <path d="M1075 185 H1125 V220 H1160" class="flow"/>
+  <rect x="1160" y="84" width="180" height="54" rx="2" class="box green"/>
+  <rect x="1160" y="145" width="180" height="54" rx="2" class="box blue"/>
+  <rect x="1160" y="206" width="180" height="54" rx="2" class="box purple"/>
+  <text x="1250" y="116" class="small">Functional model</text>
+  <text x="1250" y="177" class="small">Cycle event model</text>
+  <text x="1250" y="238" class="small">RTL testbench</text>
+
+  <path d="M1340 111 H1384" class="flow"/>
+  <path d="M1340 172 H1384" class="flow"/>
+  <path d="M1340 233 H1384" class="flow"/>
+  <rect x="1384" y="112" width="150" height="105" rx="3" class="box gray"/>
+  <text x="1459" y="143" class="label">Results</text>
+  <text x="1459" y="170" class="small">correctness · cycles</text>
+  <text x="1459" y="194" class="small">traffic · utilization</text>
+
+  <!-- Trace crosses into the hardware panel -->
+  <path d="M980 217 V323 H175 V360" class="flow"/>
+  <text x="585" y="316" class="note">command stream and packet schedule</text>
+
+  <!-- (b) NMC system organization -->
+  <rect x="35" y="330" width="1050" height="585" class="panel"/>
+  <text x="52" y="360" class="panel-title">(b) Multi-tile NMC organization</text>
+
+  <rect x="65" y="390" width="220" height="150" rx="3" class="box gray"/>
+  <text x="175" y="425" class="label">Host / Runtime</text>
+  <rect x="89" y="447" width="172" height="31" class="white"/>
+  <rect x="89" y="487" width="172" height="31" class="white"/>
+  <text x="175" y="468" class="small">Command queue</text>
+  <text x="175" y="508" class="small">Completion queue</text>
+
+  <rect x="65" y="585" width="220" height="145" rx="3" class="box blue"/>
+  <text x="175" y="617" class="label">Baseline policies</text>
+  <text x="175" y="651" class="small">row partition</text>
+  <text x="175" y="676" class="small">K partition + central reduce</text>
+  <text x="175" y="701" class="small">uniform 2-D partition</text>
+
+  <rect x="65" y="765" width="220" height="112" rx="3" class="box green"/>
+  <text x="175" y="797" class="label">Proposed policy</text>
+  <text x="175" y="828" class="small">joint partition · placement</text>
+  <text x="175" y="853" class="small">and reduction selection</text>
+
+  <path d="M285 466 H350" class="data"/>
+  <text x="317" y="452" class="note">cmd/data</text>
+  <path d="M350 492 H285" class="reduce"/>
+  <text x="300" y="520" class="note">completion</text>
+
+  <rect x="350" y="380" width="700" height="497" fill="#fbfcfd" stroke="#7890a0" stroke-width="1.4"/>
+  <text x="370" y="408" class="label" text-anchor="start">2-D mesh NoC with finite FIFO and backpressure</text>
+
+  <!-- Mesh links -->
+  <path d="M545 500 H830 M545 715 H830 M500 545 V670 M875 545 V670" class="link"/>
+
+  <!-- Tile 0 -->
+  <rect x="405" y="435" width="190" height="128" rx="2" class="box purple"/>
+  <text x="500" y="458" class="label">NMC Tile 0</text>
+  <rect x="422" y="474" width="72" height="55" class="white"/>
+  <rect x="506" y="474" width="72" height="55" class="white"/>
+  <text x="458" y="497" class="small">Local</text><text x="458" y="518" class="small">Bank</text>
+  <text x="542" y="497" class="small">Vector</text><text x="542" y="518" class="small">MAC</text>
+  <rect x="479" y="538" width="42" height="24" class="router"/>
+  <text x="500" y="555" class="tiny">R/NI</text>
+
+  <!-- Tile 1 -->
+  <rect x="780" y="435" width="190" height="128" rx="2" class="box purple"/>
+  <text x="875" y="458" class="label">NMC Tile 1</text>
+  <rect x="797" y="474" width="72" height="55" class="white"/>
+  <rect x="881" y="474" width="72" height="55" class="white"/>
+  <text x="833" y="497" class="small">Local</text><text x="833" y="518" class="small">Bank</text>
+  <text x="917" y="497" class="small">Vector</text><text x="917" y="518" class="small">MAC</text>
+  <rect x="854" y="538" width="42" height="24" class="router"/>
+  <text x="875" y="555" class="tiny">R/NI</text>
+
+  <!-- Tile 2 -->
+  <rect x="405" y="650" width="190" height="128" rx="2" class="box purple"/>
+  <text x="500" y="673" class="label">NMC Tile 2</text>
+  <rect x="422" y="689" width="72" height="55" class="white"/>
+  <rect x="506" y="689" width="72" height="55" class="white"/>
+  <text x="458" y="712" class="small">Local</text><text x="458" y="733" class="small">Bank</text>
+  <text x="542" y="712" class="small">Vector</text><text x="542" y="733" class="small">MAC</text>
+  <rect x="479" y="753" width="42" height="24" class="router"/>
+  <text x="500" y="770" class="tiny">R/NI</text>
+
+  <!-- Tile 3 -->
+  <rect x="780" y="650" width="190" height="128" rx="2" class="box purple"/>
+  <text x="875" y="673" class="label">NMC Tile 3</text>
+  <rect x="797" y="689" width="72" height="55" class="white"/>
+  <rect x="881" y="689" width="72" height="55" class="white"/>
+  <text x="833" y="712" class="small">Local</text><text x="833" y="733" class="small">Bank</text>
+  <text x="917" y="712" class="small">Vector</text><text x="917" y="733" class="small">MAC</text>
+  <rect x="854" y="753" width="42" height="24" class="router"/>
+  <text x="875" y="770" class="tiny">R/NI</text>
+
+  <!-- Broadcast and reduction illustration -->
+  <path d="M365 430 H500 V438 M500 430 H875 V438" class="data"/>
+  <text x="650" y="424" class="note">input broadcast</text>
+  <path d="M500 778 V825 H875 V779" class="reduce"/>
+  <path d="M875 825 H1004" class="reduce"/>
+  <text x="686" y="847" class="note">partial-sum reduction</text>
+  <rect x="936" y="805" width="95" height="42" class="box green"/>
+  <text x="983" y="831" class="small">Result</text>
+
+  <!-- (c) Tile microarchitecture -->
+  <rect x="1110" y="330" width="455" height="585" class="panel"/>
+  <text x="1127" y="360" class="panel-title">(c) NMC tile microarchitecture</text>
+
+  <rect x="1140" y="394" width="395" height="474" fill="#fbfcfd" stroke="#8064a2" stroke-width="1.8"/>
+  <text x="1338" y="422" class="label">NMC Tile</text>
+
+  <rect x="1260" y="450" width="240" height="72" class="box purple"/>
+  <text x="1380" y="480" class="label">Local Bank / Scratchpad</text>
+  <text x="1380" y="505" class="small">weights and activations</text>
+
+  <rect x="1260" y="551" width="112" height="61" class="box blue"/>
+  <rect x="1388" y="551" width="112" height="61" class="box blue"/>
+  <text x="1316" y="578" class="small">Input buffer</text>
+  <text x="1444" y="578" class="small">Weight buffer</text>
+  <text x="1316" y="599" class="tiny">finite FIFO</text>
+  <text x="1444" y="599" class="tiny">finite FIFO</text>
+
+  <rect x="1260" y="641" width="240" height="73" class="box orange"/>
+  <text x="1380" y="671" class="label">INT8 Vector MAC lanes</text>
+  <text x="1380" y="697" class="small">parallel multiply–accumulate</text>
+
+  <rect x="1260" y="743" width="112" height="71" class="box green"/>
+  <rect x="1388" y="743" width="112" height="71" class="box green"/>
+  <text x="1316" y="770" class="small">INT32</text>
+  <text x="1316" y="793" class="small">accumulator</text>
+  <text x="1444" y="770" class="small">Reduction</text>
+  <text x="1444" y="793" class="small">buffer</text>
+
+  <rect x="1165" y="493" width="68" height="226" class="box gray"/>
+  <text x="1199" y="573" class="small" transform="rotate(-90 1199 573)">Tile controller</text>
+  <text x="1199" y="655" class="tiny" transform="rotate(-90 1199 655)">command FIFO</text>
+
+  <rect x="1260" y="837" width="240" height="45" class="box blue"/>
+  <text x="1380" y="865" class="label">Network interface + router</text>
+
+  <path d="M1380 522 V549 M1316 612 V639 M1444 612 V639 M1380 714 V741 M1316 814 V835 M1444 814 V835" class="flow"/>
+  <path d="M1233 540 H1255 M1233 675 H1255 M1233 790 H1255" class="control"/>
+  <text x="1199" y="858" class="tiny">valid / ready</text>
+
+  <!-- Legend -->
+  <line x1="1145" y1="900" x2="1195" y2="900" class="data"/>
+  <text x="1205" y="905" class="note">broadcast / operand traffic</text>
+  <line x1="1380" y1="900" x2="1430" y2="900" class="reduce"/>
+  <text x="1440" y="905" class="note">partial sum / completion</text>
+</svg>

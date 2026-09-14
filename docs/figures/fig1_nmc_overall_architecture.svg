@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1600" height="900" viewBox="0 0 1600 900">
+  <rect width="1600" height="900" fill="#ffffff"/>
+  <image x="0" y="-45" width="1600" height="950" xlink:href="fig1_nmc_overall_architecture_paper.svg"/>
+  <!-- Rebuild the header band of panel (b) so its labels read like a paper figure. -->
+  <rect x="65" y="340" width="1000" height="42" fill="#ffffff"/>
+  <line x1="65" y1="345" x2="285" y2="345" stroke="#686868" stroke-width="1.5"/>
+  <line x1="350" y1="335" x2="1050" y2="335" stroke="#7890a0" stroke-width="1.4"/>
+  <text x="175" y="375" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="600" fill="#151515" text-anchor="middle">Host / Runtime</text>
+  <text x="700" y="358" font-family="Arial, Helvetica, sans-serif" font-size="17" font-weight="600" fill="#151515" text-anchor="middle">2-D mesh NoC with finite FIFO and backpressure</text>
+  <text x="700" y="379" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#444444" text-anchor="middle">input broadcast</text>
+</svg>

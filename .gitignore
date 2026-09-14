@@ -1,0 +1,44 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# C/C++ and RTL build outputs
+build/
+out/
+obj_dir/
+*.o
+*.a
+*.so
+*.vcd
+*.fst
+*.wlf
+
+# FPGA outputs
+*.bit
+*.bin
+*.dcp
+*.runs/
+*.cache/
+*.gen/
+*.hw/
+*.ip_user_files/
+
+# Data and logs
+*.log
+results/raw/
+experiments/runs/
+
+# Papers and external repositories
+papers/
+*.pdf
+open_source_references/
+
+# Editors and OS
+.DS_Store
+.idea/
+.vscode/settings.json
+
