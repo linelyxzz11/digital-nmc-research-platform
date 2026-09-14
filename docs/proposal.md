@@ -10,13 +10,13 @@
 
 Matrix-vector multiplication (GEMV),
 
-\[
+$$
 y = Wx, \qquad W \in \mathbb{Z}^{M\times K},\ x \in \mathbb{Z}^{K},
-\]
+$$
 
 is a major operation in batch-1 neural-network inference and the decode phase of large language models. Conventional processors repeatedly move weights between memory and compute units. Digital NMC reduces this movement by placing simple vector compute units close to memory Banks and keeping weights near those units.
 
-Adding nearby MAC units alone does not guarantee scalable performance. A GEMV can be partitioned by output rows, by the reduction dimension \(K\), or in two dimensions. Output-row partitioning broadcasts the input vector and produces independent outputs. K-dimension partitioning distributes input slices but creates partial sums that must be reduced. Two-dimensional partitioning combines both communication patterns. Consequently, a balanced number of MAC operations can still perform poorly because of Bank conflicts, network hotspots, finite FIFOs, backpressure, or an overloaded reduction root.
+Adding nearby MAC units alone does not guarantee scalable performance. A GEMV can be partitioned by output rows, by the reduction dimension `K`, or in two dimensions. Output-row partitioning broadcasts the input vector and produces independent outputs. K-dimension partitioning distributes input slices but creates partial sums that must be reduced. Two-dimensional partitioning combines both communication patterns. Consequently, a balanced number of MAC operations can still perform poorly because of Bank conflicts, network hotspots, finite FIFOs, backpressure, or an overloaded reduction root.
 
 The central research question is:
 
@@ -83,9 +83,9 @@ For each legal mapping candidate, the mapper chooses:
 
 The first cost model is
 
-\[
+$$
 T_{total}=T_{host}+T_{bank}+T_{MAC}+T_{NoC}+T_{reduce}+T_{sync}.
-\]
+$$
 
 It estimates Bank availability and conflicts, MAC occupancy, packet and flit-hop counts, link contention, FIFO blocking, reduction dependencies, and the slowest Tile’s completion time. The event model then evaluates shortlisted candidates with cycle-level queues and resource constraints.
 
@@ -132,7 +132,7 @@ The evaluation is designed to prove correctness first and compare performance se
 | Benchmark group | Cases | Purpose |
 |---|---|---|
 | Hand-checkable correctness | VADD, REDUCE, 2×2 GEMV, 4×4 GEMV | Verify arithmetic, commands, packet fields, ordering, completion, and waveforms by hand. |
-| Synthetic GEMV | Square and rectangular \((M,K)\): 128–4096 dimensions, including high-\(M/K\) and high-\(K/M\) cases | Expose compute-balanced, Bank-limited, broadcast-heavy, and reduction-heavy regimes. |
+| Synthetic GEMV | Square and rectangular `(M, K)`: 128–4096 dimensions, including high `M/K` and high `K/M` cases | Expose compute-balanced, Bank-limited, broadcast-heavy, and reduction-heavy regimes. |
 | Small RTL performance set | 16×16, 32×32, 64×64 and asymmetric scaled cases | Compare event-model and RTL cycles without excessive simulation time. |
 | Two-layer MLP | Scaled MLP for RTL; 4096→11008→4096 trace for the event model | Exercise consecutive GEMVs, persistent weights, intermediate activations, and synchronization. |
 | Llama-class decode shapes | 4096×4096 projection, 11008×4096 up/gate, 4096×11008 down projection; optional fused 12288×4096 QKV | Test realistic batch-1 GEMV aspect ratios without running a full language model. |
