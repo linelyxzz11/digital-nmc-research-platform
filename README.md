@@ -8,7 +8,17 @@
 
 ## Planned system
 
-![Planned digital NMC architecture](docs/figures/fig1_nmc_overall_architecture.png)
+**NMC Tile microarchitecture（主图）**
+
+![NMC Tile microarchitecture](docs/figures/fig1_nmc_tile_microarchitecture.png)
+
+**Multi-tile mesh organization**
+
+![Multi-tile NMC mesh](docs/figures/fig2_multitile_mesh_organization.png)
+
+**Mapping and validation flow**
+
+![Mapping and validation flow](docs/figures/fig3_mapping_and_validation_flow.png)
 
 系统由以下部分组成：
 

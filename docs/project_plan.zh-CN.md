@@ -16,17 +16,27 @@
 
 ## 2. 总体架构与架构图
 
-![图1：数字 NMC 项目总体架构](figures/fig1_nmc_overall_architecture.png)
+项目用三张图分别固定硬件、系统和软件边界，避免把所有内容压进一张方框流程图。
 
-可编辑矢量图见 `figures/fig1_nmc_overall_architecture.svg`。
+### 图 1：NMC Tile 微架构（主图）
 
-图 1 分为三部分：
+![图1：NMC Tile 微架构与逐周期数据通路](figures/fig1_nmc_tile_microarchitecture.png)
 
-- **软件与模型：** 工作负载转成 Operator IR；Mapper 选择分块、Tile/Bank 放置和归约方式，再产生统一 ISA 与 NoC 消息 Trace。
-- **多 Tile 系统：** Host 提交命令；2D Mesh NoC 连接 NMC Tile；有限 FIFO 和 valid/ready 反压会产生真实的等待与拥塞。
-- **Tile：** Local Bank 为 Vector MAC 提供权重和激活；INT32 Accumulator 保存局部结果；需要跨 Tile 合并时，Reduction Buffer 按 transaction ID 和 output index 收集部分和。
+单个 Tile 包含 Command FIFO、控制器、本地 Bank/Scratchpad、输入与权重 Buffer、4 路 INT8 Vector MAC、INT32 累加器、端点 Reduction Buffer、NI 和 Router local port。蓝色路径表示命令与控制，橙色表示操作数，绿色表示部分和与结果；所有逐周期传输都遵循 valid/ready。
 
-同一套 ISA 和消息格式必须同时用于 NumPy Golden、功能解释器、周期事件模型、RTL Testbench 和后续可选的 FPGA Host 程序，防止每一层使用不同语义。
+### 图 2：多 Tile NMC 与 NoC
+
+![图2：多 Tile NMC、有限 FIFO、反压和两类 GEMV 切分](figures/fig2_multitile_mesh_organization.png)
+
+Host 通过命令队列和 DMA 描述符向 2D Mesh 注入任务。实线橙色路径展示输入广播，绿色虚线展示层次归约，紫色点线展示 FIFO 满后向上游传播的反压。下方直接对比输出行切分与 K 维切分，说明两者分别产生广播和跨 Tile 部分和归约。
+
+### 图 3：映射、执行与校验链
+
+![图3：从 Operator IR 到 ISA、周期模型和 RTL 的统一执行链](figures/fig3_mapping_and_validation_flow.png)
+
+Mapper 对同一个 GEMV 枚举行、K 维和二维切分，再联合选择 Tile 放置、归约根、拓扑与顺序。选定方案生成唯一一份 ISA/Packet Trace，同时驱动 NumPy Golden、事件模型和 RTL Testbench，以数值、完成事件和资源计数器做一致性检查。
+
+每张图都提供可编辑 SVG。图中参数是当前 v0.1 规划，例如 4 路 MAC、2 VC 和示例 3×3 Mesh；它们是运行时/配置空间的初始值，不代表已经实现或测得的结果。FPGA 不在三张主图中，也不作为当前贡献。
 
 ## 3. 核心研究问题、候选创新点、Baseline 与 Benchmark
 
