@@ -20,19 +20,19 @@
 
 ### 图 1：NMC Tile 微架构（主图）
 
-![图1：NMC Tile 微架构与逐周期数据通路](figures/fig1_nmc_tile_microarchitecture.png)
+![图1：NMC Tile 微架构与逐周期数据通路](https://raw.githubusercontent.com/linelyxzz11/digital-nmc-research-platform/main/docs/figures/fig1_nmc_tile_microarchitecture.png)
 
 单个 Tile 包含 Command FIFO、控制器、本地 Bank/Scratchpad、输入与权重 Buffer、4 路 INT8 Vector MAC、INT32 累加器、端点 Reduction Buffer、NI 和 Router local port。蓝色路径表示命令与控制，橙色表示操作数，绿色表示部分和与结果；所有逐周期传输都遵循 valid/ready。
 
 ### 图 2：多 Tile NMC 与 NoC
 
-![图2：多 Tile NMC、有限 FIFO、反压和两类 GEMV 切分](figures/fig2_multitile_mesh_organization.png)
+![图2：多 Tile NMC、有限 FIFO、反压和两类 GEMV 切分](https://raw.githubusercontent.com/linelyxzz11/digital-nmc-research-platform/main/docs/figures/fig2_multitile_mesh_organization.png)
 
 Host 通过命令队列和 DMA 描述符向 2D Mesh 注入任务。实线橙色路径展示输入广播，绿色虚线展示层次归约，紫色点线展示 FIFO 满后向上游传播的反压。下方直接对比输出行切分与 K 维切分，说明两者分别产生广播和跨 Tile 部分和归约。
 
 ### 图 3：映射、执行与校验链
 
-![图3：从 Operator IR 到 ISA、周期模型和 RTL 的统一执行链](figures/fig3_mapping_and_validation_flow.png)
+![图3：从 Operator IR 到 ISA、周期模型和 RTL 的统一执行链](https://raw.githubusercontent.com/linelyxzz11/digital-nmc-research-platform/main/docs/figures/fig3_mapping_and_validation_flow.png)
 
 Mapper 对同一个 GEMV 枚举行、K 维和二维切分，再联合选择 Tile 放置、归约根、拓扑与顺序。选定方案生成唯一一份 ISA/Packet Trace，同时驱动 NumPy Golden、事件模型和 RTL Testbench，以数值、完成事件和资源计数器做一致性检查。
 

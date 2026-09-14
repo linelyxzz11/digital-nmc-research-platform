@@ -59,7 +59,7 @@ Router-internal reduction, runtime remapping, and a full FPGA deployment remain 
 
 Each Tile contains local memory resources, vector compute, control, and a network endpoint. INT8 operands are multiplied in parallel and accumulated with defined INT32 semantics. Tagged partial sums are matched by transaction and output index at the endpoint reduction buffer. All queue transfers use valid/ready flow control.
 
-![Figure 1. Planned NMC Tile microarchitecture and cycle-level data path.](figures/fig1_nmc_tile_microarchitecture.png)
+![Figure 1. Planned NMC Tile microarchitecture and cycle-level data path.](https://raw.githubusercontent.com/linelyxzz11/digital-nmc-research-platform/main/docs/figures/fig1_nmc_tile_microarchitecture.png)
 
 **Figure 1.** Planned NMC Tile microarchitecture. Commands configure local memory and vector execution; local Banks feed buffered vector MAC lanes; the accumulator and reduction buffer produce tagged results for the endpoint NI. The initial drawing shows four MAC lanes, but lane count, capacity, and latency remain configuration parameters.
 
@@ -69,7 +69,7 @@ The initial command set will support configuration, local load/store, vector add
 
 Tiles are connected by a finite-buffer 2D Mesh using deterministic XY routing in the baseline. The NI packetizes operands and partial sums. When a downstream FIFO cannot accept a flit, valid/ready backpressure propagates upstream. Reduction is initially performed at Tile endpoints; baseline Routers only route and arbitrate.
 
-![Figure 2. Planned multi-Tile NMC Mesh and GEMV communication patterns.](figures/fig2_multitile_mesh_organization.png)
+![Figure 2. Planned multi-Tile NMC Mesh and GEMV communication patterns.](https://raw.githubusercontent.com/linelyxzz11/digital-nmc-research-platform/main/docs/figures/fig2_multitile_mesh_organization.png)
 
 **Figure 2.** Planned multi-Tile NMC organization. Solid orange paths illustrate operand distribution, dashed green paths illustrate hierarchical partial-sum reduction, and the dotted path illustrates backpressure from a full endpoint FIFO. The lower panels contrast output-row and K-dimension partitioning. The 3×3 layout is explanatory; experiments use the configurations defined in Section 4.
 
@@ -116,7 +116,7 @@ The implementation order is:
 
 The evaluation is designed to prove correctness first and compare performance second. Figure 3 shows how a selected mapping is turned into a common executable trace and checked across the three backends.
 
-![Figure 3. Mapping, executable trace, and cross-layer validation flow.](figures/fig3_mapping_and_validation_flow.png)
+![Figure 3. Mapping, executable trace, and cross-layer validation flow.](https://raw.githubusercontent.com/linelyxzz11/digital-nmc-research-platform/main/docs/figures/fig3_mapping_and_validation_flow.png)
 
 **Figure 3.** Proposed mapping and validation flow. Legal GEMV decompositions are placed on the Mesh and ranked with Bank, NoC, FIFO, and reduction costs. The selected plan emits one trace for the Golden model, event model, and RTL testbench. The selected plan and bars in the diagram are illustrative data structures, not measured results.
 
