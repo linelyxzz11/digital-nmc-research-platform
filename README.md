@@ -1,78 +1,85 @@
 # Digital NMC Research Platform
 
-面向小批量神经网络推理的可配置数字近存计算（NMC）课程与研究项目。
+面向 GEMV 的数字近存计算（NMC）研究平台，研究有限 Bank、MAC、NoC 带宽和 FIFO 条件下的切分、放置与端点归约。
 
-项目围绕 GEMV 构建从工作负载、Mapper、ISA/消息 Trace、功能与周期模型到多 Tile RTL 的完整链路，并研究有限 Bank、MAC、NoC 带宽和 FIFO 条件下的分块、放置与归约选择。
+当前可运行：单 Tile GEMV、Packet/NI/2×2 XY Mesh，以及 Demo 1 行切分/FINAL 收集、Demo 2 K 切分/INT32 PSUM 归约的多 Tile 闭环，配套 Python 自检查测试。输入通过 NoC 写入并收齐 ACK 后启动计算，Root 完成收集或归约后向 Host 发送全局 DONE。Compute 和归约仍为功能模型，通信调度周期不代表完整 GEMV 延迟。Mapper v0.1 已提供 ROW/K 切分、容量检查和 ROW 优先的 auto 选择，生成与现有 TileTask/Packet 字段一致的 JSON 计划；当前通过对照测试验证，Demo CLI 尚未直接读取该计划。性能优化 Mapper、完整时序模型和 NMC RTL 仍待实现。早期 RV32I CPU 示例仅作本地学习参考。
 
-> 当前状态：架构规划与工程骨架。功能模拟器、Mapper、周期模型和 RTL 尚未实现；仓库不会把规划内容描述为已有结果。
+## 从这里开始
 
-## Planned system
+- 定义计算/通信接口：[Compute v0.1](docs/spec/compute_architecture_v0.1.md)、[Communication v0.1](docs/spec/communication_architecture_v0.1.md)。
+- 运行 Demo：[Demo 0 指南](docs/validation.md#demo0)、[Comm 0A–0C 记录](docs/validation.md#comm)、[NMC Demo 1](docs/validation.md#demo1)、[NMC Demo 2](docs/validation.md#demo2)。
+- Mapper：[v0.1 使用说明与规则](src/compiler/README.md)。
+- 阅读计划：[团队路线](docs/project_plan.zh-CN.md)、[Proposal](docs/proposal.md)。文献调研保存在本地 `docs/papers/`，不随 GitHub 仓库发布。
+- 使用 VS Code：直接打开仓库根目录。本地的 `Digital-NMC.code-workspace` 与论文工作区为可选配置，不是运行依赖。
 
-**NMC Tile microarchitecture（主图）**
+## 目录
 
-![NMC Tile microarchitecture](docs/figures/fig1_nmc_tile_microarchitecture.png)
+```text
+computer architecture project/
+├── src/                 # 代码：Python 模型、Mapper、RTL、测试
+│   ├── simulator/
+│   ├── compiler/
+│   ├── rtl/             # legacy_cpu/ 仅为早期示例
+│   ├── fpga/            # 后续可选
+│   └── tests/
+├── ini/                 # 模型/实验配置；保留实际格式 .cfg/.yaml
+├── tools/               # 检查工具、实验运行与绘图脚本
+├── data/                # 工作负载和精选实验结果
+├── dump/                # 可重建的运行输出、trace、波形
+├── lib/                 # 本地作者仓库：PIMCOMP-NN、pimsim-nn、UniNDP
+└── docs/                # 规范、架构图、计划、论文和验证记录
+```
 
-**Multi-tile mesh organization**
+目录参考 [SAITPublic/PIMSimulator](https://github.com/SAITPublic/PIMSimulator/tree/dev) 的 `src / src/tests / ini / tools / data / dump / lib`。为本项目额外保留 `docs`，集中存放说明和论文。只参考工程组织，不改变既有数字 NMC 架构。星标与适用范围见 [目录依据和迁移表](docs/README.md#layout)。
 
-![Multi-tile NMC mesh](docs/figures/fig2_multitile_mesh_organization.png)
+## 环境和运行
 
-**Mapping and validation flow**
-
-![Mapping and validation flow](docs/figures/fig3_mapping_and_validation_flow.png)
-
-系统由以下部分组成：
-
-- 工作负载与 Operator IR；
-- GEMV 分块、Tile/Bank 放置和归约规划；
-- 统一 ISA 命令与 NoC 消息 Trace；
-- NumPy Golden、功能解释器和周期事件模型；
-- Local Bank、INT8 Vector MAC、INT32 Accumulator、NI、Router 与端点归约 RTL；
-- 连接多个 NMC Tile 的有限缓冲 2D Mesh NoC。
-
-FPGA 只作为主线完成后的可选验证，不属于项目完成条件。
-
-## Repository layout
-
-|目录|用途|
-|---|---|
-|`spec/`|架构、ISA、Packet、数值语义与接口约定|
-|`compiler/`|Operator IR、分块、放置、归约计划和 Trace 生成|
-|`simulator/`|NumPy Golden、功能解释器和周期事件模型|
-|`rtl/`|Tile、Vector MAC、NI、Router 和 Reduction RTL|
-|`workloads/`|GEMV、MLP、decode 形状与输入生成|
-|`tests/`|单元、接口和端到端测试|
-|`experiments/`|配置、批量运行和绘图脚本|
-|`results/`|精简 CSV、图和结果索引；不提交大型原始输出|
-|`docs/`|团队路线、架构图和设计决定|
-|`fpga/`|可选板级验证|
-
-## First milestone
-
-1. 手算并记录一个 4×4 GEMV 的行切分、K 维切分和二维切分。
-2. 冻结 Tile、数值语义、ISA 与 Packet v0.1。
-3. 完成 NumPy Golden、VADD/REDUCE/GEMV 功能解释器。
-4. 让 Mapper 自动改变指令 Trace 与通信矩阵。
-5. 完成 Vector MAC、单 Tile、NI、Router，再连接 2×2 Mesh。
-
-课程提交版见 [Project Proposal](docs/proposal.md)，完整实施路线见 [团队版项目路线与研究设计](docs/project_plan.zh-CN.md)。
-
-## Development setup
+在仓库根目录执行：
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
+
+# 全部当前测试
+python -m pytest -q -p no:cacheprovider
+# Compute Demo 0
+python -m pytest -q -p no:cacheprovider src/tests/test_demo0_functional.py
+# Packet + Comm 0A–0C
+python -m pytest -q -p no:cacheprovider src/tests/test_communication_v0_1.py
+# 多 Tile NMC Demo 1：打印计算/通信事件，并保存 Trace
+PYTHONPATH=src python -m simulator.system.demo1 --trace dump/demo1_trace.json
+# Demo 1 验收测试
+python -m pytest -q -p no:cacheprovider src/tests/test_nmc_demo1.py
+# NMC Demo 2：K 切分与 PSUM 归约
+PYTHONPATH=src python -m simulator.system.demo2 --trace dump/demo2_trace.json
+python -m pytest -q -p no:cacheprovider src/tests/test_nmc_demo2.py
+# Mapper v0.1：生成计划，不执行 GEMV
+PYTHONPATH=src python -m compiler.auto_mapper_v0_1 --demo --strategy auto -o dump/mapper_plan.json
+PYTHONPATH=src python -m compiler.auto_mapper_v0_1 --demo --strategy k --k-split 1
+PYTHONPATH=src python -m compiler.auto_mapper_v0_1 --self-test
+python -m pytest -q -p no:cacheprovider src/tests/test_mapper_v0_1.py
+# 检查随 Git 发布的文档链接
+python tools/check_layout.py --tracked
 ```
 
-Windows 建议在 WSL2 Ubuntu 中开发。RTL 工具建议安装 Icarus Verilog、Verilator、GTKWave 与 Yosys。具体版本将在第一个可运行里程碑后锁定。
+Python 导入路径为 `src`，包名仍为 `simulator`；直接运行解释器时使用 `PYTHONPATH=src`。已有 `.venv` 保留在根目录，无需因目录整理重装环境。
 
-## Collaboration
+## 总体架构
 
-- 用 GitHub Issue 记录负责人、接口、依赖和验收条件。
-- 每个 Pull Request 关联 Issue，并附最小测试证据。
-- `main` 只接收可运行或纯文档变更。
-- 论文 PDF、他人仓库副本、虚拟环境、完整波形和大型原始结果不上传。
+![NMC Tile microarchitecture](docs/figures/fig1_nmc_tile_microarchitecture.png)
 
-## License
+![Multi-tile NMC mesh](docs/figures/fig2_multitile_mesh_organization.png)
 
-许可证等待团队共同确认。在许可证确定前，仓库内容默认保留全部权利。
+![Mapping and validation flow](docs/figures/fig3_mapping_and_validation_flow.png)
+
+以上为规划图，不能当作 RTL 或性能实验结果。FPGA 为可选验证，不属于当前完成条件。
+
+## 协作与文件规则
+
+- 接口修改先更新 `docs/spec/`，重要决定记录到 `docs/spec/design_decisions_v0.1.md`。
+- 测试源码放 `src/tests/`，原始输出放 `dump/`，精选结果放 `data/results/`。
+- 本地论文 `docs/papers/`、作者仓库 `lib/`、虚拟环境和大型输出不上传 GitHub。
+- 分支和 PR 工作流程见 [CONTRIBUTING](CONTRIBUTING.md)。
+
+许可证仍待团队确认；没有因为参考目录结构而采用对方的许可证。

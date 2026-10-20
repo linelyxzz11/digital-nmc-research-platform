@@ -6,7 +6,7 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 
-# C/C++ and RTL build outputs
+# Build and RTL outputs
 build/
 out/
 obj_dir/
@@ -27,18 +27,18 @@ obj_dir/
 *.hw/
 *.ip_user_files/
 
-# Data and logs
+# Local data, outputs, papers and author repositories
 *.log
-results/raw/
-experiments/runs/
-
-# Papers and external repositories
-papers/
+dump/*
+!dump/.gitkeep
+!dump/README.md
+data/results/raw/
+tools/experiments/runs/
+docs/papers/
 *.pdf
-open_source_references/
+lib/
 
 # Editors and OS
 .DS_Store
 .idea/
 .vscode/settings.json
-

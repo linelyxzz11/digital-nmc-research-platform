@@ -36,7 +36,7 @@ Host 通过命令队列和 DMA 描述符向 2D Mesh 注入任务。实线橙色�
 
 Mapper 对同一个 GEMV 枚举行、K 维和二维切分，再联合选择 Tile 放置、归约根、拓扑与顺序。选定方案生成唯一一份 ISA/Packet Trace，同时驱动 NumPy Golden、事件模型和 RTL Testbench，以数值、完成事件和资源计数器做一致性检查。
 
-每张图都提供可编辑 SVG。图中参数是当前 v0.1 规划，例如 4 路 MAC、2 VC 和示例 3×3 Mesh；它们是运行时/配置空间的初始值，不代表已经实现或测得的结果。FPGA 不在三张主图中，也不作为当前贡献。
+每张图都提供可编辑 SVG。可执行 v0.1 固定为 4 路 MAC、单 VC、128-bit Flit、每 Router 输入 4-Flit FIFO 和 2×2 Mesh。图中的 3×3 Mesh 只用于展示扩展路径；旧图若仍标注 2 VC，以 `docs/spec/communication_architecture_v0.1.md` 为准。它们是规划参数，不代表已经实现或测得的结果。FPGA 不在三张主图中，也不作为当前贡献。
 
 ## 3. 核心研究问题、候选创新点、Baseline 与 Benchmark
 
@@ -87,22 +87,18 @@ Mapper 对同一个 GEMV 枚举行、K 维和二维切分，再联合选择 Tile
 
 ## 4. GitHub 框架
 
-GitHub 作为代码、接口、任务和结果的统一来源；飞书用于即时沟通、周会和汇报协作，重要决定回写 GitHub Issue 或 `docs/decisions/`。
+GitHub 作为代码、接口、任务和结果的统一来源；飞书用于即时沟通、周会和汇报协作，重要决定回写 GitHub Issue 或 `docs/spec/design_decisions_v0.1.md`。
 
 ```text
 project/
-├── README.md
-├── environment.yml / requirements.txt
-├── spec/          # 架构、ISA、Packet、数值语义
-├── compiler/      # IR、分块、放置、归约计划、Trace生成
-├── simulator/     # Golden、功能解释器、周期事件模型
-├── rtl/           # Tile、Vector MAC、NI、Router、Reduction
-├── workloads/     # GEMV、MLP、decode形状与输入生成
-├── tests/         # 单元、接口和端到端测试
-├── experiments/   # 配置、批量运行、CSV和绘图脚本
-├── results/       # 精简结果、图表与结果索引
-├── docs/          # 架构说明、接口决定和周报
-└── fpga/          # 可选，不阻塞主线
+├── README.md / requirements.txt / pyproject.toml
+├── src/                 # simulator、compiler、rtl、fpga、tests
+├── ini/                 # 架构和实验配置
+├── tools/               # 批量运行、检查和绘图工具
+├── data/                # workloads 和精选 results
+├── dump/                # 可重建的原始 trace、日志和波形
+├── lib/                 # 作者仓库，本地保留
+└── docs/                # spec、计划、图、论文与验证记录
 ```
 
 每个 Issue 写清负责人、输入、输出、依赖和验收条件；每个 Pull Request 附最小测试结果。主分支只合并能够运行的版本，大型波形、虚拟环境和完整原始数据不提交。
