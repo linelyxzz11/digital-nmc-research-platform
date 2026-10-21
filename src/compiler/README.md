@@ -9,7 +9,8 @@
 - ROW 使用 `ceil(M/2)` 连续行切分；K 默认使用 `ceil(K/2)`，可指定 `k_split`。
 - auto 按 ROW、K 顺序选择第一个合法默认候选，属于容量基线，不预测哪个方案最快。
 - 权重按现有 (group,k,lane) 布局预加载，输入通过 MEM_WRITE/ACK 分发。
-- 计划字段通过现有模型与 Demo 对照测试；Demo CLI 尚未直接读取该 JSON 计划。
+- 计划字段通过现有模型与 Demo 对照测试；Demo CLI 通过 `--plan` 直接读取并执行该 JSON 计划。
+- 执行阶段会重新校验计划：固定硬件参数、切分覆盖、TileTask 字段、权重镜像长度、输入写覆盖与 ACK 身份；非法计划在启动仿真前被拒绝。
 - 性能代价模型、多任务 tiling、更多 worker、自动放置、二维切分和树形归约留待后续版本。
 
 ## 运行
@@ -17,11 +18,16 @@
 从仓库根目录执行：
 
 ```bash
-PYTHONPATH=src python -m compiler.auto_mapper_v0_1 --demo --strategy row
-PYTHONPATH=src python -m compiler.auto_mapper_v0_1 --demo --strategy k --k-split 1
 PYTHONPATH=src python -m compiler.auto_mapper_v0_1 --demo --strategy auto -o dump/mapper_plan.json
+PYTHONPATH=src python -m compiler.auto_mapper_v0_1 --demo --strategy k --k-split 1
 PYTHONPATH=src python -m compiler.auto_mapper_v0_1 --self-test
 python -m pytest -q -p no:cacheprovider src/tests/test_mapper_v0_1.py
+
+# 计划由 Demo CLI 直接执行；--workload 可选，用于 golden 校验
+PYTHONPATH=src python -m simulator.system.demo1 --plan dump/mapper_plan.json --workload data/workloads/demo1_gemv.json
+PYTHONPATH=src python -m compiler.auto_mapper_v0_1 --workload data/workloads/demo1_gemv.json --strategy k -o dump/mapper_plan_k.json
+PYTHONPATH=src python -m simulator.system.demo2 --plan dump/mapper_plan_k.json --workload data/workloads/demo1_gemv.json
+python -m pytest -q -p no:cacheprovider src/tests/test_plan_runner.py
 ```
 
 也可直接运行 `python src/compiler/auto_mapper_v0_1.py --demo`，无需设置 PYTHONPATH。

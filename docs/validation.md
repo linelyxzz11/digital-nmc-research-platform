@@ -563,21 +563,24 @@ Demo 2 定向测试：34 passed in 0.14s
 
 <a id="mapper"></a>
 
-## Mapper v0.1：Demo 1/2 计划生成与对照
+## Mapper v0.1：Demo 1/2 计划生成与执行
 
-日期：2026-10-20。入口为 `src/compiler/auto_mapper_v0_1.py`，规则与运行方法见 [Mapper 说明](../src/compiler/README.md)。
+日期：2026-10-20，计划执行集成更新于 2026-10-21。入口为 `src/compiler/auto_mapper_v0_1.py`，规则与运行方法见 [Mapper 说明](../src/compiler/README.md)。
 
 - ROW 与 K 默认沿用现有 Demo 的连续、近似均分；K 模式接受合法的显式切分点。
 - auto 只在默认 ROW/K 候选间按合法性选择，ROW 合法则优先；这不是性能最优声明。
 - 计划包括 TileTask、权重预加载镜像、输入 MEM_WRITE、Root 配置和期望 ACK。
 - 保留现有“权重驻留、输入经 NoC 写入并等待 ACK”的边界，不把权重加载计为已经模拟的传输。
-- Demo CLI 暂未直接消费 JSON 计划；现阶段通过共享模型及对照测试证明字段和结果一致。
+- Demo CLI 通过 `--plan` 直接读取并执行计划；执行前重新校验固定硬件参数、切分覆盖、TileTask 字段、权重镜像长度、输入写字节覆盖和 ACK 身份。
 
 ```bash
 PYTHONPATH=src python -m compiler.auto_mapper_v0_1 --demo --strategy auto -o dump/mapper_plan.json
 PYTHONPATH=src python -m compiler.auto_mapper_v0_1 --demo --strategy k --k-split 1
 PYTHONPATH=src python -m compiler.auto_mapper_v0_1 --self-test
-python -m pytest -q -p no:cacheprovider src/tests/test_mapper_v0_1.py
+PYTHONPATH=src python -m simulator.system.demo1 --plan dump/mapper_plan.json --workload data/workloads/demo1_gemv.json
+PYTHONPATH=src python -m compiler.auto_mapper_v0_1 --workload data/workloads/demo1_gemv.json --strategy k -o dump/mapper_plan_k.json
+PYTHONPATH=src python -m simulator.system.demo2 --plan dump/mapper_plan_k.json --workload data/workloads/demo1_gemv.json
+python -m pytest -q -p no:cacheprovider src/tests/test_mapper_v0_1.py src/tests/test_plan_runner.py
 python -m pytest -q -p no:cacheprovider
 python tools/check_layout.py --tracked
 ```
@@ -586,12 +589,15 @@ python tools/check_layout.py --tracked
 
 错误用例在计划生成时拒绝重复/非法 Tile、Root 与 worker 冲突、字段溢出、非 INT8 数据、维度不匹配和超过本版两任务容量的请求。JSON 命令行同时覆盖输入文件、输出文件和失败退出码。
 
-### 2026-10-20 实际运行记录
+### 2026-10-21 计划执行集成记录
+
+计划执行入口复用 Demo 1/2 的同一调度链：`plan_from_mapping` 校验 JSON 并生成 `ExecutionPlan`，`run_plan` 预加载权重镜像、发送输入写、启动任务并收集结果。计划路径与硬编码 Demo 路径的 `y`、事件 Trace、ACK 集合和摘要必须完全一致。`--workload` 只用于 Host 侧 golden 比较，不向执行链提供矩阵数据。
 
 ```text
-完整 pytest 回归：105 passed
+完整 pytest 回归：145 passed
 其中 Mapper 回归：26 项
+其中 Plan Runner：40 项（7 组等价执行、CLI 往返、错误入口、30 种篡改计划）
 Mapper 内置自检：28 个场景全部通过
 ```
 
-Mapper 只生成计划，当前对照测试不构成“已集成自动执行入口”或完整 GEMV 性能结果。
+计划执行仍使用功能 Compute 和周期步进 NoC，不构成完整 GEMV 延迟，也不代表 RTL 等价。

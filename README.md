@@ -2,7 +2,7 @@
 
 面向 GEMV 的数字近存计算（NMC）研究平台，研究有限 Bank、MAC、NoC 带宽和 FIFO 条件下的切分、放置与端点归约。
 
-当前可运行：单 Tile GEMV、Packet/NI/2×2 XY Mesh，以及 Demo 1 行切分/FINAL 收集、Demo 2 K 切分/INT32 PSUM 归约的多 Tile 闭环，配套 Python 自检查测试。输入通过 NoC 写入并收齐 ACK 后启动计算，Root 完成收集或归约后向 Host 发送全局 DONE。Compute 和归约仍为功能模型，通信调度周期不代表完整 GEMV 延迟。Mapper v0.1 已提供 ROW/K 切分、容量检查和 ROW 优先的 auto 选择，生成与现有 TileTask/Packet 字段一致的 JSON 计划；当前通过对照测试验证，Demo CLI 尚未直接读取该计划。性能优化 Mapper、完整时序模型和 NMC RTL 仍待实现。早期 RV32I CPU 示例仅作本地学习参考。
+当前可运行：单 Tile GEMV、Packet/NI/2×2 XY Mesh，以及 Demo 1 行切分/FINAL 收集、Demo 2 K 切分/INT32 PSUM 归约的多 Tile 闭环，配套 Python 自检查测试。输入通过 NoC 写入并收齐 ACK 后启动计算，Root 完成收集或归约后向 Host 发送全局 DONE。Compute 和归约仍为功能模型，通信调度周期不代表完整 GEMV 延迟。Mapper v0.1 已提供 ROW/K 切分、容量检查和 ROW 优先的 auto 选择，生成与现有 TileTask/Packet 字段一致的 JSON 计划；Demo 1/2 CLI 可通过 `--plan` 直接读取并执行该计划。性能优化 Mapper、完整时序模型和 NMC RTL 仍待实现。早期 RV32I CPU 示例仅作本地学习参考。
 
 ## 从这里开始
 
@@ -54,11 +54,15 @@ python -m pytest -q -p no:cacheprovider src/tests/test_nmc_demo1.py
 # NMC Demo 2：K 切分与 PSUM 归约
 PYTHONPATH=src python -m simulator.system.demo2 --trace dump/demo2_trace.json
 python -m pytest -q -p no:cacheprovider src/tests/test_nmc_demo2.py
-# Mapper v0.1：生成计划，不执行 GEMV
-PYTHONPATH=src python -m compiler.auto_mapper_v0_1 --demo --strategy auto -o dump/mapper_plan.json
+# Mapper v0.1：生成计划
+PYTHONPATH=src python -m compiler.auto_mapper_v0_1 --workload data/workloads/demo1_gemv.json --strategy auto -o dump/mapper_plan.json
 PYTHONPATH=src python -m compiler.auto_mapper_v0_1 --demo --strategy k --k-split 1
 PYTHONPATH=src python -m compiler.auto_mapper_v0_1 --self-test
-python -m pytest -q -p no:cacheprovider src/tests/test_mapper_v0_1.py
+# Demo CLI 直接执行计划；--workload 可选，用于 golden 校验
+PYTHONPATH=src python -m simulator.system.demo1 --plan dump/mapper_plan.json --workload data/workloads/demo1_gemv.json
+PYTHONPATH=src python -m compiler.auto_mapper_v0_1 --workload data/workloads/demo1_gemv.json --strategy k -o dump/mapper_plan_k.json
+PYTHONPATH=src python -m simulator.system.demo2 --plan dump/mapper_plan_k.json --workload data/workloads/demo1_gemv.json
+python -m pytest -q -p no:cacheprovider src/tests/test_mapper_v0_1.py src/tests/test_plan_runner.py
 # 检查随 Git 发布的文档链接
 python tools/check_layout.py --tracked
 ```

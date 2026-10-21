@@ -6,14 +6,15 @@ functional; mesh cycles are not a prediction of total GEMV latency.
 from __future__ import annotations
 
 import argparse
-import json
 from pathlib import Path
+import sys
 from typing import Callable
 
 from simulator.communication import ResultPacket, StatusCode, TransactionDonePacket
 from simulator.functional import Demo0Tile, int32_wrap
 from simulator.system.demo1 import (
-    DEMO_W, DEMO_X, FinalGather, GatherConfig, NMCRun, TransactionError, _run_partitioned,
+    DEMO_W, DEMO_X, FinalGather, GatherConfig, NMCRun, PlanError, TransactionError,
+    emit_run, load_workload, _run_partitioned, load_plan, run_plan,
 )
 
 
@@ -105,21 +106,27 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--trace", type=Path, help="optional JSON trace output")
     parser.add_argument("--k-split", type=int, help="K split position; default ceil(K/2)")
+    parser.add_argument("--plan", type=Path, help="execute a Mapper JSON plan instead of the built-in GEMV")
+    parser.add_argument("--workload", type=Path, help='optional {"W","x"} JSON for the golden check')
     args = parser.parse_args()
-    run = run_demo2(k_split=args.k_split)
-    for event in run.trace:
-        if event["event"] != "PACKET_RECEIVE":
-            print(json.dumps(event, ensure_ascii=False))
-    import numpy as np
-    golden = (np.asarray(DEMO_W, dtype=np.int64) @ np.asarray(DEMO_X, dtype=np.int64)).tolist()
-    if run.y != golden:
-        raise AssertionError(f"Root result {run.y} != NumPy Golden {golden}")
-    summary = {**run.summary(), "golden": golden, "check": "PASS"}
-    print(json.dumps(summary, indent=2, ensure_ascii=False))
-    if args.trace:
-        args.trace.parent.mkdir(parents=True, exist_ok=True)
-        args.trace.write_text(json.dumps({"summary": summary, "trace": run.trace}, indent=2,
-                                         ensure_ascii=False) + "\n", encoding="utf-8")
+    try:
+        if args.plan is not None:
+            plan = load_plan(args.plan)
+            run = run_plan(plan, endpoint_factory=PSumReduce, expected_partition="K")
+            workload = None
+            if args.workload is not None:
+                workload = load_workload(args.workload)
+                if (len(workload[0]), len(workload[1])) != (plan.output_count, plan.k):
+                    raise PlanError("workload dimensions do not match the plan")
+        else:
+            if args.workload is not None:
+                raise PlanError("--workload requires --plan")
+            run = run_demo2(k_split=args.k_split)
+            workload = (DEMO_W, DEMO_X)
+    except PlanError as error:
+        print(f"demo2: {error}", file=sys.stderr)
+        raise SystemExit(2)
+    emit_run(run, workload=workload, trace=args.trace)
 
 
 if __name__ == "__main__":
