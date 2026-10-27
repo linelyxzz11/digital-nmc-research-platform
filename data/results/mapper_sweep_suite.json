@@ -1,0 +1,1972 @@
+{
+  "shapes": [
+    {
+      "m": 4,
+      "k": 2048
+    },
+    {
+      "m": 8,
+      "k": 1024
+    },
+    {
+      "m": 16,
+      "k": 512
+    },
+    {
+      "m": 32,
+      "k": 256
+    },
+    {
+      "m": 64,
+      "k": 128
+    },
+    {
+      "m": 128,
+      "k": 64
+    },
+    {
+      "m": 256,
+      "k": 32
+    },
+    {
+      "m": 4,
+      "k": 1024
+    },
+    {
+      "m": 8,
+      "k": 512
+    },
+    {
+      "m": 16,
+      "k": 256
+    },
+    {
+      "m": 32,
+      "k": 128
+    },
+    {
+      "m": 64,
+      "k": 64
+    },
+    {
+      "m": 128,
+      "k": 32
+    },
+    {
+      "m": 256,
+      "k": 16
+    },
+    {
+      "m": 1,
+      "k": 2048
+    },
+    {
+      "m": 2,
+      "k": 2048
+    },
+    {
+      "m": 1,
+      "k": 1024
+    },
+    {
+      "m": 256,
+      "k": 1
+    },
+    {
+      "m": 256,
+      "k": 8
+    },
+    {
+      "m": 8,
+      "k": 256
+    },
+    {
+      "m": 16,
+      "k": 128
+    },
+    {
+      "m": 128,
+      "k": 16
+    },
+    {
+      "m": 32,
+      "k": 64
+    },
+    {
+      "m": 64,
+      "k": 32
+    }
+  ],
+  "options": {
+    "partitions": [
+      "row",
+      "k"
+    ],
+    "placements": "default",
+    "k_splits": "default",
+    "tid": 1,
+    "global_row_base": 0,
+    "timing_scope": "cycle-stepped NoC schedule; functional Compute; not total GEMV latency"
+  },
+  "calibration": {
+    "shapes_checked": 24,
+    "agreements": 22,
+    "mismatches": 2
+  },
+  "workloads": [
+    {
+      "workload": {
+        "m": 4,
+        "k": 2048
+      },
+      "options": {
+        "partitions": [
+          "row",
+          "k"
+        ],
+        "placements": "default",
+        "k_splits": "default",
+        "tid": 1,
+        "global_row_base": 0,
+        "timing_scope": "cycle-stepped NoC schedule; functional Compute; not total GEMV latency"
+      },
+      "results": [
+        {
+          "m": 4,
+          "k": 2048,
+          "strategy": "ROW",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "infeasible",
+          "reason": "no legal default mapping; ROW: Tile 1 k_local must be an integer in [1, 1024]"
+        },
+        {
+          "m": 4,
+          "k": 2048,
+          "strategy": "K",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "K",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 3594,
+            "flit_hops": 1542,
+            "max_router_fifo_occupancy": 2,
+            "input_acks": 512,
+            "result_packet_count": 2,
+            "psum_elements": 8,
+            "compute_cycles": 1024,
+            "estimated_packets": 1027,
+            "cost_score": 2051
+          },
+          "plan": {
+            "input_write_count": 512,
+            "total_weight_bytes": 8192,
+            "total_input_bytes": 2048,
+            "useful_mac_count": 8192
+          }
+        }
+      ]
+    },
+    {
+      "workload": {
+        "m": 8,
+        "k": 1024
+      },
+      "options": {
+        "partitions": [
+          "row",
+          "k"
+        ],
+        "placements": "default",
+        "k_splits": "default",
+        "tid": 1,
+        "global_row_base": 0,
+        "timing_scope": "cycle-stepped NoC schedule; functional Compute; not total GEMV latency"
+      },
+      "results": [
+        {
+          "m": 8,
+          "k": 1024,
+          "strategy": "ROW",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "ROW",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 3594,
+            "flit_hops": 1542,
+            "max_router_fifo_occupancy": 2,
+            "input_acks": 512,
+            "result_packet_count": 2,
+            "psum_elements": 0,
+            "compute_cycles": 1024,
+            "estimated_packets": 1027,
+            "cost_score": 2051
+          },
+          "plan": {
+            "input_write_count": 512,
+            "total_weight_bytes": 8192,
+            "total_input_bytes": 2048,
+            "useful_mac_count": 8192
+          }
+        },
+        {
+          "m": 8,
+          "k": 1024,
+          "strategy": "K",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "K",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 1806,
+            "flit_hops": 778,
+            "max_router_fifo_occupancy": 3,
+            "input_acks": 256,
+            "result_packet_count": 4,
+            "psum_elements": 16,
+            "compute_cycles": 1024,
+            "estimated_packets": 517,
+            "cost_score": 1541
+          },
+          "plan": {
+            "input_write_count": 256,
+            "total_weight_bytes": 8192,
+            "total_input_bytes": 1024,
+            "useful_mac_count": 8192
+          }
+        }
+      ]
+    },
+    {
+      "workload": {
+        "m": 16,
+        "k": 512
+      },
+      "options": {
+        "partitions": [
+          "row",
+          "k"
+        ],
+        "placements": "default",
+        "k_splits": "default",
+        "tid": 1,
+        "global_row_base": 0,
+        "timing_scope": "cycle-stepped NoC schedule; functional Compute; not total GEMV latency"
+      },
+      "results": [
+        {
+          "m": 16,
+          "k": 512,
+          "strategy": "ROW",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "ROW",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 1806,
+            "flit_hops": 778,
+            "max_router_fifo_occupancy": 3,
+            "input_acks": 256,
+            "result_packet_count": 4,
+            "psum_elements": 0,
+            "compute_cycles": 1024,
+            "estimated_packets": 517,
+            "cost_score": 1541
+          },
+          "plan": {
+            "input_write_count": 256,
+            "total_weight_bytes": 8192,
+            "total_input_bytes": 1024,
+            "useful_mac_count": 8192
+          }
+        },
+        {
+          "m": 16,
+          "k": 512,
+          "strategy": "K",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "K",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 918,
+            "flit_hops": 402,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 128,
+            "result_packet_count": 8,
+            "psum_elements": 32,
+            "compute_cycles": 1024,
+            "estimated_packets": 265,
+            "cost_score": 1289
+          },
+          "plan": {
+            "input_write_count": 128,
+            "total_weight_bytes": 8192,
+            "total_input_bytes": 512,
+            "useful_mac_count": 8192
+          }
+        }
+      ]
+    },
+    {
+      "workload": {
+        "m": 32,
+        "k": 256
+      },
+      "options": {
+        "partitions": [
+          "row",
+          "k"
+        ],
+        "placements": "default",
+        "k_splits": "default",
+        "tid": 1,
+        "global_row_base": 0,
+        "timing_scope": "cycle-stepped NoC schedule; functional Compute; not total GEMV latency"
+      },
+      "results": [
+        {
+          "m": 32,
+          "k": 256,
+          "strategy": "ROW",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "ROW",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 918,
+            "flit_hops": 402,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 128,
+            "result_packet_count": 8,
+            "psum_elements": 0,
+            "compute_cycles": 1024,
+            "estimated_packets": 265,
+            "cost_score": 1289
+          },
+          "plan": {
+            "input_write_count": 128,
+            "total_weight_bytes": 8192,
+            "total_input_bytes": 512,
+            "useful_mac_count": 8192
+          }
+        },
+        {
+          "m": 32,
+          "k": 256,
+          "strategy": "K",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "K",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 486,
+            "flit_hops": 226,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 64,
+            "result_packet_count": 16,
+            "psum_elements": 64,
+            "compute_cycles": 1024,
+            "estimated_packets": 145,
+            "cost_score": 1169
+          },
+          "plan": {
+            "input_write_count": 64,
+            "total_weight_bytes": 8192,
+            "total_input_bytes": 256,
+            "useful_mac_count": 8192
+          }
+        }
+      ]
+    },
+    {
+      "workload": {
+        "m": 64,
+        "k": 128
+      },
+      "options": {
+        "partitions": [
+          "row",
+          "k"
+        ],
+        "placements": "default",
+        "k_splits": "default",
+        "tid": 1,
+        "global_row_base": 0,
+        "timing_scope": "cycle-stepped NoC schedule; functional Compute; not total GEMV latency"
+      },
+      "results": [
+        {
+          "m": 64,
+          "k": 128,
+          "strategy": "ROW",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "ROW",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 486,
+            "flit_hops": 226,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 64,
+            "result_packet_count": 16,
+            "psum_elements": 0,
+            "compute_cycles": 1024,
+            "estimated_packets": 145,
+            "cost_score": 1169
+          },
+          "plan": {
+            "input_write_count": 64,
+            "total_weight_bytes": 8192,
+            "total_input_bytes": 256,
+            "useful_mac_count": 8192
+          }
+        },
+        {
+          "m": 64,
+          "k": 128,
+          "strategy": "K",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "K",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 294,
+            "flit_hops": 162,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 32,
+            "result_packet_count": 32,
+            "psum_elements": 128,
+            "compute_cycles": 1024,
+            "estimated_packets": 97,
+            "cost_score": 1121
+          },
+          "plan": {
+            "input_write_count": 32,
+            "total_weight_bytes": 8192,
+            "total_input_bytes": 128,
+            "useful_mac_count": 8192
+          }
+        }
+      ]
+    },
+    {
+      "workload": {
+        "m": 128,
+        "k": 64
+      },
+      "options": {
+        "partitions": [
+          "row",
+          "k"
+        ],
+        "placements": "default",
+        "k_splits": "default",
+        "tid": 1,
+        "global_row_base": 0,
+        "timing_scope": "cycle-stepped NoC schedule; functional Compute; not total GEMV latency"
+      },
+      "results": [
+        {
+          "m": 128,
+          "k": 64,
+          "strategy": "ROW",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "ROW",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 294,
+            "flit_hops": 162,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 32,
+            "result_packet_count": 32,
+            "psum_elements": 0,
+            "compute_cycles": 1024,
+            "estimated_packets": 97,
+            "cost_score": 1121
+          },
+          "plan": {
+            "input_write_count": 32,
+            "total_weight_bytes": 8192,
+            "total_input_bytes": 128,
+            "useful_mac_count": 8192
+          }
+        },
+        {
+          "m": 128,
+          "k": 64,
+          "strategy": "K",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "K",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 246,
+            "flit_hops": 178,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 16,
+            "result_packet_count": 64,
+            "psum_elements": 256,
+            "compute_cycles": 1024,
+            "estimated_packets": 97,
+            "cost_score": 1121
+          },
+          "plan": {
+            "input_write_count": 16,
+            "total_weight_bytes": 8192,
+            "total_input_bytes": 64,
+            "useful_mac_count": 8192
+          }
+        }
+      ]
+    },
+    {
+      "workload": {
+        "m": 256,
+        "k": 32
+      },
+      "options": {
+        "partitions": [
+          "row",
+          "k"
+        ],
+        "placements": "default",
+        "k_splits": "default",
+        "tid": 1,
+        "global_row_base": 0,
+        "timing_scope": "cycle-stepped NoC schedule; functional Compute; not total GEMV latency"
+      },
+      "results": [
+        {
+          "m": 256,
+          "k": 32,
+          "strategy": "ROW",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "ROW",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 246,
+            "flit_hops": 178,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 16,
+            "result_packet_count": 64,
+            "psum_elements": 0,
+            "compute_cycles": 1024,
+            "estimated_packets": 97,
+            "cost_score": 1121
+          },
+          "plan": {
+            "input_write_count": 16,
+            "total_weight_bytes": 8192,
+            "total_input_bytes": 64,
+            "useful_mac_count": 8192
+          }
+        },
+        {
+          "m": 256,
+          "k": 32,
+          "strategy": "K",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "K",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 318,
+            "flit_hops": 282,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 8,
+            "result_packet_count": 128,
+            "psum_elements": 512,
+            "compute_cycles": 1024,
+            "estimated_packets": 145,
+            "cost_score": 1169
+          },
+          "plan": {
+            "input_write_count": 8,
+            "total_weight_bytes": 8192,
+            "total_input_bytes": 32,
+            "useful_mac_count": 8192
+          }
+        }
+      ]
+    },
+    {
+      "workload": {
+        "m": 4,
+        "k": 1024
+      },
+      "options": {
+        "partitions": [
+          "row",
+          "k"
+        ],
+        "placements": "default",
+        "k_splits": "default",
+        "tid": 1,
+        "global_row_base": 0,
+        "timing_scope": "cycle-stepped NoC schedule; functional Compute; not total GEMV latency"
+      },
+      "results": [
+        {
+          "m": 4,
+          "k": 1024,
+          "strategy": "ROW",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "ROW",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 3594,
+            "flit_hops": 1542,
+            "max_router_fifo_occupancy": 2,
+            "input_acks": 512,
+            "result_packet_count": 2,
+            "psum_elements": 0,
+            "compute_cycles": 512,
+            "estimated_packets": 1027,
+            "cost_score": 1539
+          },
+          "plan": {
+            "input_write_count": 512,
+            "total_weight_bytes": 8192,
+            "total_input_bytes": 2048,
+            "useful_mac_count": 4096
+          }
+        },
+        {
+          "m": 4,
+          "k": 1024,
+          "strategy": "K",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "K",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 1802,
+            "flit_hops": 774,
+            "max_router_fifo_occupancy": 2,
+            "input_acks": 256,
+            "result_packet_count": 2,
+            "psum_elements": 8,
+            "compute_cycles": 512,
+            "estimated_packets": 515,
+            "cost_score": 1027
+          },
+          "plan": {
+            "input_write_count": 256,
+            "total_weight_bytes": 4096,
+            "total_input_bytes": 1024,
+            "useful_mac_count": 4096
+          }
+        }
+      ]
+    },
+    {
+      "workload": {
+        "m": 8,
+        "k": 512
+      },
+      "options": {
+        "partitions": [
+          "row",
+          "k"
+        ],
+        "placements": "default",
+        "k_splits": "default",
+        "tid": 1,
+        "global_row_base": 0,
+        "timing_scope": "cycle-stepped NoC schedule; functional Compute; not total GEMV latency"
+      },
+      "results": [
+        {
+          "m": 8,
+          "k": 512,
+          "strategy": "ROW",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "ROW",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 1802,
+            "flit_hops": 774,
+            "max_router_fifo_occupancy": 2,
+            "input_acks": 256,
+            "result_packet_count": 2,
+            "psum_elements": 0,
+            "compute_cycles": 512,
+            "estimated_packets": 515,
+            "cost_score": 1027
+          },
+          "plan": {
+            "input_write_count": 256,
+            "total_weight_bytes": 4096,
+            "total_input_bytes": 1024,
+            "useful_mac_count": 4096
+          }
+        },
+        {
+          "m": 8,
+          "k": 512,
+          "strategy": "K",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "K",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 910,
+            "flit_hops": 394,
+            "max_router_fifo_occupancy": 3,
+            "input_acks": 128,
+            "result_packet_count": 4,
+            "psum_elements": 16,
+            "compute_cycles": 512,
+            "estimated_packets": 261,
+            "cost_score": 773
+          },
+          "plan": {
+            "input_write_count": 128,
+            "total_weight_bytes": 4096,
+            "total_input_bytes": 512,
+            "useful_mac_count": 4096
+          }
+        }
+      ]
+    },
+    {
+      "workload": {
+        "m": 16,
+        "k": 256
+      },
+      "options": {
+        "partitions": [
+          "row",
+          "k"
+        ],
+        "placements": "default",
+        "k_splits": "default",
+        "tid": 1,
+        "global_row_base": 0,
+        "timing_scope": "cycle-stepped NoC schedule; functional Compute; not total GEMV latency"
+      },
+      "results": [
+        {
+          "m": 16,
+          "k": 256,
+          "strategy": "ROW",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "ROW",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 910,
+            "flit_hops": 394,
+            "max_router_fifo_occupancy": 3,
+            "input_acks": 128,
+            "result_packet_count": 4,
+            "psum_elements": 0,
+            "compute_cycles": 512,
+            "estimated_packets": 261,
+            "cost_score": 773
+          },
+          "plan": {
+            "input_write_count": 128,
+            "total_weight_bytes": 4096,
+            "total_input_bytes": 512,
+            "useful_mac_count": 4096
+          }
+        },
+        {
+          "m": 16,
+          "k": 256,
+          "strategy": "K",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "K",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 470,
+            "flit_hops": 210,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 64,
+            "result_packet_count": 8,
+            "psum_elements": 32,
+            "compute_cycles": 512,
+            "estimated_packets": 137,
+            "cost_score": 649
+          },
+          "plan": {
+            "input_write_count": 64,
+            "total_weight_bytes": 4096,
+            "total_input_bytes": 256,
+            "useful_mac_count": 4096
+          }
+        }
+      ]
+    },
+    {
+      "workload": {
+        "m": 32,
+        "k": 128
+      },
+      "options": {
+        "partitions": [
+          "row",
+          "k"
+        ],
+        "placements": "default",
+        "k_splits": "default",
+        "tid": 1,
+        "global_row_base": 0,
+        "timing_scope": "cycle-stepped NoC schedule; functional Compute; not total GEMV latency"
+      },
+      "results": [
+        {
+          "m": 32,
+          "k": 128,
+          "strategy": "ROW",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "ROW",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 470,
+            "flit_hops": 210,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 64,
+            "result_packet_count": 8,
+            "psum_elements": 0,
+            "compute_cycles": 512,
+            "estimated_packets": 137,
+            "cost_score": 649
+          },
+          "plan": {
+            "input_write_count": 64,
+            "total_weight_bytes": 4096,
+            "total_input_bytes": 256,
+            "useful_mac_count": 4096
+          }
+        },
+        {
+          "m": 32,
+          "k": 128,
+          "strategy": "K",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "K",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 262,
+            "flit_hops": 130,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 32,
+            "result_packet_count": 16,
+            "psum_elements": 64,
+            "compute_cycles": 512,
+            "estimated_packets": 81,
+            "cost_score": 593
+          },
+          "plan": {
+            "input_write_count": 32,
+            "total_weight_bytes": 4096,
+            "total_input_bytes": 128,
+            "useful_mac_count": 4096
+          }
+        }
+      ]
+    },
+    {
+      "workload": {
+        "m": 64,
+        "k": 64
+      },
+      "options": {
+        "partitions": [
+          "row",
+          "k"
+        ],
+        "placements": "default",
+        "k_splits": "default",
+        "tid": 1,
+        "global_row_base": 0,
+        "timing_scope": "cycle-stepped NoC schedule; functional Compute; not total GEMV latency"
+      },
+      "results": [
+        {
+          "m": 64,
+          "k": 64,
+          "strategy": "ROW",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "ROW",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 262,
+            "flit_hops": 130,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 32,
+            "result_packet_count": 16,
+            "psum_elements": 0,
+            "compute_cycles": 512,
+            "estimated_packets": 81,
+            "cost_score": 593
+          },
+          "plan": {
+            "input_write_count": 32,
+            "total_weight_bytes": 4096,
+            "total_input_bytes": 128,
+            "useful_mac_count": 4096
+          }
+        },
+        {
+          "m": 64,
+          "k": 64,
+          "strategy": "K",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "K",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 182,
+            "flit_hops": 114,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 16,
+            "result_packet_count": 32,
+            "psum_elements": 128,
+            "compute_cycles": 512,
+            "estimated_packets": 65,
+            "cost_score": 577
+          },
+          "plan": {
+            "input_write_count": 16,
+            "total_weight_bytes": 4096,
+            "total_input_bytes": 64,
+            "useful_mac_count": 4096
+          }
+        }
+      ]
+    },
+    {
+      "workload": {
+        "m": 128,
+        "k": 32
+      },
+      "options": {
+        "partitions": [
+          "row",
+          "k"
+        ],
+        "placements": "default",
+        "k_splits": "default",
+        "tid": 1,
+        "global_row_base": 0,
+        "timing_scope": "cycle-stepped NoC schedule; functional Compute; not total GEMV latency"
+      },
+      "results": [
+        {
+          "m": 128,
+          "k": 32,
+          "strategy": "ROW",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "ROW",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 182,
+            "flit_hops": 114,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 16,
+            "result_packet_count": 32,
+            "psum_elements": 0,
+            "compute_cycles": 512,
+            "estimated_packets": 65,
+            "cost_score": 577
+          },
+          "plan": {
+            "input_write_count": 16,
+            "total_weight_bytes": 4096,
+            "total_input_bytes": 64,
+            "useful_mac_count": 4096
+          }
+        },
+        {
+          "m": 128,
+          "k": 32,
+          "strategy": "K",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "K",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 190,
+            "flit_hops": 154,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 8,
+            "result_packet_count": 64,
+            "psum_elements": 256,
+            "compute_cycles": 512,
+            "estimated_packets": 81,
+            "cost_score": 593
+          },
+          "plan": {
+            "input_write_count": 8,
+            "total_weight_bytes": 4096,
+            "total_input_bytes": 32,
+            "useful_mac_count": 4096
+          }
+        }
+      ]
+    },
+    {
+      "workload": {
+        "m": 256,
+        "k": 16
+      },
+      "options": {
+        "partitions": [
+          "row",
+          "k"
+        ],
+        "placements": "default",
+        "k_splits": "default",
+        "tid": 1,
+        "global_row_base": 0,
+        "timing_scope": "cycle-stepped NoC schedule; functional Compute; not total GEMV latency"
+      },
+      "results": [
+        {
+          "m": 256,
+          "k": 16,
+          "strategy": "ROW",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "ROW",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 190,
+            "flit_hops": 154,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 8,
+            "result_packet_count": 64,
+            "psum_elements": 0,
+            "compute_cycles": 512,
+            "estimated_packets": 81,
+            "cost_score": 593
+          },
+          "plan": {
+            "input_write_count": 8,
+            "total_weight_bytes": 4096,
+            "total_input_bytes": 32,
+            "useful_mac_count": 4096
+          }
+        },
+        {
+          "m": 256,
+          "k": 16,
+          "strategy": "K",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "K",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 290,
+            "flit_hops": 270,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 4,
+            "result_packet_count": 128,
+            "psum_elements": 512,
+            "compute_cycles": 512,
+            "estimated_packets": 137,
+            "cost_score": 649
+          },
+          "plan": {
+            "input_write_count": 4,
+            "total_weight_bytes": 4096,
+            "total_input_bytes": 16,
+            "useful_mac_count": 4096
+          }
+        }
+      ]
+    },
+    {
+      "workload": {
+        "m": 1,
+        "k": 2048
+      },
+      "options": {
+        "partitions": [
+          "row",
+          "k"
+        ],
+        "placements": "default",
+        "k_splits": "default",
+        "tid": 1,
+        "global_row_base": 0,
+        "timing_scope": "cycle-stepped NoC schedule; functional Compute; not total GEMV latency"
+      },
+      "results": [
+        {
+          "m": 1,
+          "k": 2048,
+          "strategy": "ROW",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "infeasible",
+          "reason": "no legal default mapping; ROW: ROW needs a partition dimension of at least 2"
+        },
+        {
+          "m": 1,
+          "k": 2048,
+          "strategy": "K",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "K",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 3594,
+            "flit_hops": 1542,
+            "max_router_fifo_occupancy": 2,
+            "input_acks": 512,
+            "result_packet_count": 2,
+            "psum_elements": 2,
+            "compute_cycles": 256,
+            "estimated_packets": 1027,
+            "cost_score": 1283
+          },
+          "plan": {
+            "input_write_count": 512,
+            "total_weight_bytes": 8192,
+            "total_input_bytes": 2048,
+            "useful_mac_count": 2048
+          }
+        }
+      ]
+    },
+    {
+      "workload": {
+        "m": 2,
+        "k": 2048
+      },
+      "options": {
+        "partitions": [
+          "row",
+          "k"
+        ],
+        "placements": "default",
+        "k_splits": "default",
+        "tid": 1,
+        "global_row_base": 0,
+        "timing_scope": "cycle-stepped NoC schedule; functional Compute; not total GEMV latency"
+      },
+      "results": [
+        {
+          "m": 2,
+          "k": 2048,
+          "strategy": "ROW",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "infeasible",
+          "reason": "no legal default mapping; ROW: Tile 1 k_local must be an integer in [1, 1024]"
+        },
+        {
+          "m": 2,
+          "k": 2048,
+          "strategy": "K",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "K",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 3594,
+            "flit_hops": 1542,
+            "max_router_fifo_occupancy": 2,
+            "input_acks": 512,
+            "result_packet_count": 2,
+            "psum_elements": 4,
+            "compute_cycles": 512,
+            "estimated_packets": 1027,
+            "cost_score": 1539
+          },
+          "plan": {
+            "input_write_count": 512,
+            "total_weight_bytes": 8192,
+            "total_input_bytes": 2048,
+            "useful_mac_count": 4096
+          }
+        }
+      ]
+    },
+    {
+      "workload": {
+        "m": 1,
+        "k": 1024
+      },
+      "options": {
+        "partitions": [
+          "row",
+          "k"
+        ],
+        "placements": "default",
+        "k_splits": "default",
+        "tid": 1,
+        "global_row_base": 0,
+        "timing_scope": "cycle-stepped NoC schedule; functional Compute; not total GEMV latency"
+      },
+      "results": [
+        {
+          "m": 1,
+          "k": 1024,
+          "strategy": "ROW",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "infeasible",
+          "reason": "no legal default mapping; ROW: ROW needs a partition dimension of at least 2"
+        },
+        {
+          "m": 1,
+          "k": 1024,
+          "strategy": "K",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "K",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 1802,
+            "flit_hops": 774,
+            "max_router_fifo_occupancy": 2,
+            "input_acks": 256,
+            "result_packet_count": 2,
+            "psum_elements": 2,
+            "compute_cycles": 128,
+            "estimated_packets": 515,
+            "cost_score": 643
+          },
+          "plan": {
+            "input_write_count": 256,
+            "total_weight_bytes": 4096,
+            "total_input_bytes": 1024,
+            "useful_mac_count": 1024
+          }
+        }
+      ]
+    },
+    {
+      "workload": {
+        "m": 256,
+        "k": 1
+      },
+      "options": {
+        "partitions": [
+          "row",
+          "k"
+        ],
+        "placements": "default",
+        "k_splits": "default",
+        "tid": 1,
+        "global_row_base": 0,
+        "timing_scope": "cycle-stepped NoC schedule; functional Compute; not total GEMV latency"
+      },
+      "results": [
+        {
+          "m": 256,
+          "k": 1,
+          "strategy": "ROW",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "ROW",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 148,
+            "flit_hops": 136,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 2,
+            "result_packet_count": 64,
+            "psum_elements": 0,
+            "compute_cycles": 32,
+            "estimated_packets": 69,
+            "cost_score": 101
+          },
+          "plan": {
+            "input_write_count": 2,
+            "total_weight_bytes": 256,
+            "total_input_bytes": 2,
+            "useful_mac_count": 256
+          }
+        },
+        {
+          "m": 256,
+          "k": 1,
+          "strategy": "K",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "infeasible",
+          "reason": "no legal default mapping; K: K needs a partition dimension of at least 2"
+        }
+      ]
+    },
+    {
+      "workload": {
+        "m": 256,
+        "k": 8
+      },
+      "options": {
+        "partitions": [
+          "row",
+          "k"
+        ],
+        "placements": "default",
+        "k_splits": "default",
+        "tid": 1,
+        "global_row_base": 0,
+        "timing_scope": "cycle-stepped NoC schedule; functional Compute; not total GEMV latency"
+      },
+      "results": [
+        {
+          "m": 256,
+          "k": 8,
+          "strategy": "ROW",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "ROW",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 162,
+            "flit_hops": 142,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 4,
+            "result_packet_count": 64,
+            "psum_elements": 0,
+            "compute_cycles": 256,
+            "estimated_packets": 73,
+            "cost_score": 329
+          },
+          "plan": {
+            "input_write_count": 4,
+            "total_weight_bytes": 2048,
+            "total_input_bytes": 16,
+            "useful_mac_count": 2048
+          }
+        },
+        {
+          "m": 256,
+          "k": 8,
+          "strategy": "K",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "K",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 276,
+            "flit_hops": 264,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 2,
+            "result_packet_count": 128,
+            "psum_elements": 512,
+            "compute_cycles": 256,
+            "estimated_packets": 133,
+            "cost_score": 389
+          },
+          "plan": {
+            "input_write_count": 2,
+            "total_weight_bytes": 2048,
+            "total_input_bytes": 8,
+            "useful_mac_count": 2048
+          }
+        }
+      ]
+    },
+    {
+      "workload": {
+        "m": 8,
+        "k": 256
+      },
+      "options": {
+        "partitions": [
+          "row",
+          "k"
+        ],
+        "placements": "default",
+        "k_splits": "default",
+        "tid": 1,
+        "global_row_base": 0,
+        "timing_scope": "cycle-stepped NoC schedule; functional Compute; not total GEMV latency"
+      },
+      "results": [
+        {
+          "m": 8,
+          "k": 256,
+          "strategy": "ROW",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "ROW",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 906,
+            "flit_hops": 390,
+            "max_router_fifo_occupancy": 2,
+            "input_acks": 128,
+            "result_packet_count": 2,
+            "psum_elements": 0,
+            "compute_cycles": 256,
+            "estimated_packets": 259,
+            "cost_score": 515
+          },
+          "plan": {
+            "input_write_count": 128,
+            "total_weight_bytes": 2048,
+            "total_input_bytes": 512,
+            "useful_mac_count": 2048
+          }
+        },
+        {
+          "m": 8,
+          "k": 256,
+          "strategy": "K",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "K",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 462,
+            "flit_hops": 202,
+            "max_router_fifo_occupancy": 3,
+            "input_acks": 64,
+            "result_packet_count": 4,
+            "psum_elements": 16,
+            "compute_cycles": 256,
+            "estimated_packets": 133,
+            "cost_score": 389
+          },
+          "plan": {
+            "input_write_count": 64,
+            "total_weight_bytes": 2048,
+            "total_input_bytes": 256,
+            "useful_mac_count": 2048
+          }
+        }
+      ]
+    },
+    {
+      "workload": {
+        "m": 16,
+        "k": 128
+      },
+      "options": {
+        "partitions": [
+          "row",
+          "k"
+        ],
+        "placements": "default",
+        "k_splits": "default",
+        "tid": 1,
+        "global_row_base": 0,
+        "timing_scope": "cycle-stepped NoC schedule; functional Compute; not total GEMV latency"
+      },
+      "results": [
+        {
+          "m": 16,
+          "k": 128,
+          "strategy": "ROW",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "ROW",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 462,
+            "flit_hops": 202,
+            "max_router_fifo_occupancy": 3,
+            "input_acks": 64,
+            "result_packet_count": 4,
+            "psum_elements": 0,
+            "compute_cycles": 256,
+            "estimated_packets": 133,
+            "cost_score": 389
+          },
+          "plan": {
+            "input_write_count": 64,
+            "total_weight_bytes": 2048,
+            "total_input_bytes": 256,
+            "useful_mac_count": 2048
+          }
+        },
+        {
+          "m": 16,
+          "k": 128,
+          "strategy": "K",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "K",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 246,
+            "flit_hops": 114,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 32,
+            "result_packet_count": 8,
+            "psum_elements": 32,
+            "compute_cycles": 256,
+            "estimated_packets": 73,
+            "cost_score": 329
+          },
+          "plan": {
+            "input_write_count": 32,
+            "total_weight_bytes": 2048,
+            "total_input_bytes": 128,
+            "useful_mac_count": 2048
+          }
+        }
+      ]
+    },
+    {
+      "workload": {
+        "m": 128,
+        "k": 16
+      },
+      "options": {
+        "partitions": [
+          "row",
+          "k"
+        ],
+        "placements": "default",
+        "k_splits": "default",
+        "tid": 1,
+        "global_row_base": 0,
+        "timing_scope": "cycle-stepped NoC schedule; functional Compute; not total GEMV latency"
+      },
+      "results": [
+        {
+          "m": 128,
+          "k": 16,
+          "strategy": "ROW",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "ROW",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 126,
+            "flit_hops": 90,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 8,
+            "result_packet_count": 32,
+            "psum_elements": 0,
+            "compute_cycles": 256,
+            "estimated_packets": 49,
+            "cost_score": 305
+          },
+          "plan": {
+            "input_write_count": 8,
+            "total_weight_bytes": 2048,
+            "total_input_bytes": 32,
+            "useful_mac_count": 2048
+          }
+        },
+        {
+          "m": 128,
+          "k": 16,
+          "strategy": "K",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "K",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 162,
+            "flit_hops": 142,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 4,
+            "result_packet_count": 64,
+            "psum_elements": 256,
+            "compute_cycles": 256,
+            "estimated_packets": 73,
+            "cost_score": 329
+          },
+          "plan": {
+            "input_write_count": 4,
+            "total_weight_bytes": 2048,
+            "total_input_bytes": 16,
+            "useful_mac_count": 2048
+          }
+        }
+      ]
+    },
+    {
+      "workload": {
+        "m": 32,
+        "k": 64
+      },
+      "options": {
+        "partitions": [
+          "row",
+          "k"
+        ],
+        "placements": "default",
+        "k_splits": "default",
+        "tid": 1,
+        "global_row_base": 0,
+        "timing_scope": "cycle-stepped NoC schedule; functional Compute; not total GEMV latency"
+      },
+      "results": [
+        {
+          "m": 32,
+          "k": 64,
+          "strategy": "ROW",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "ROW",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 246,
+            "flit_hops": 114,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 32,
+            "result_packet_count": 8,
+            "psum_elements": 0,
+            "compute_cycles": 256,
+            "estimated_packets": 73,
+            "cost_score": 329
+          },
+          "plan": {
+            "input_write_count": 32,
+            "total_weight_bytes": 2048,
+            "total_input_bytes": 128,
+            "useful_mac_count": 2048
+          }
+        },
+        {
+          "m": 32,
+          "k": 64,
+          "strategy": "K",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "K",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 150,
+            "flit_hops": 82,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 16,
+            "result_packet_count": 16,
+            "psum_elements": 64,
+            "compute_cycles": 256,
+            "estimated_packets": 49,
+            "cost_score": 305
+          },
+          "plan": {
+            "input_write_count": 16,
+            "total_weight_bytes": 2048,
+            "total_input_bytes": 64,
+            "useful_mac_count": 2048
+          }
+        }
+      ]
+    },
+    {
+      "workload": {
+        "m": 64,
+        "k": 32
+      },
+      "options": {
+        "partitions": [
+          "row",
+          "k"
+        ],
+        "placements": "default",
+        "k_splits": "default",
+        "tid": 1,
+        "global_row_base": 0,
+        "timing_scope": "cycle-stepped NoC schedule; functional Compute; not total GEMV latency"
+      },
+      "results": [
+        {
+          "m": 64,
+          "k": 32,
+          "strategy": "ROW",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "ROW",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 150,
+            "flit_hops": 82,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 16,
+            "result_packet_count": 16,
+            "psum_elements": 0,
+            "compute_cycles": 256,
+            "estimated_packets": 49,
+            "cost_score": 305
+          },
+          "plan": {
+            "input_write_count": 16,
+            "total_weight_bytes": 2048,
+            "total_input_bytes": 64,
+            "useful_mac_count": 2048
+          }
+        },
+        {
+          "m": 64,
+          "k": 32,
+          "strategy": "K",
+          "workers": [
+            1,
+            2
+          ],
+          "root_tile": 3,
+          "k_split": null,
+          "status": "ok",
+          "partition": "K",
+          "golden_ok": true,
+          "metrics": {
+            "network_schedule_cycles": 126,
+            "flit_hops": 90,
+            "max_router_fifo_occupancy": 4,
+            "input_acks": 8,
+            "result_packet_count": 32,
+            "psum_elements": 128,
+            "compute_cycles": 256,
+            "estimated_packets": 49,
+            "cost_score": 305
+          },
+          "plan": {
+            "input_write_count": 8,
+            "total_weight_bytes": 2048,
+            "total_input_bytes": 32,
+            "useful_mac_count": 2048
+          }
+        }
+      ]
+    }
+  ]
+}

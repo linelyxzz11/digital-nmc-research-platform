@@ -13,12 +13,14 @@ from pathlib import Path
 import sys
 from typing import Any, Callable, Protocol
 
+from hardware import DEFAULT_HARDWARE
 from simulator.communication import (
     MemAckPacket, MemWritePacket, Mesh2x2, ResultNI, ResultPacket,
     StatusCode, TransactionDonePacket, pack_packet,
 )
 from simulator.functional import Demo0Tile, ResultEmitter, TileTask, int32_wrap
 from simulator.functional.demo0_model import X_START, X_END, Y_START, Y_END, W_START, W_END
+from simulator.system.compute_timing import ComputeTiming, TimedCompute
 
 
 DEMO_W = [[1, 2, 3, 4], [-1, 0, 2, -2], [3, -1, 0, 1], [2, 2, -1, 0]]
@@ -42,10 +44,13 @@ class GatherConfig:
     mode: str = "GATHER_FINAL"
 
     def __post_init__(self) -> None:
-        if not (0 <= self.tid <= 0xFFFF and 0 <= self.root_tile < 4
-                and 0 <= self.host_tile < 4 and 0 < self.source_mask < 16
-                and 0 <= self.output_base <= 0xFFFF and 1 <= self.output_count <= 256
-                and self.output_base + self.output_count <= 0x10000
+        if not (0 <= self.tid <= 0xFFFF
+                and 0 <= self.root_tile < DEFAULT_HARDWARE.tile_count
+                and 0 <= self.host_tile < DEFAULT_HARDWARE.tile_count
+                and 0 < self.source_mask < (1 << DEFAULT_HARDWARE.tile_count)
+                and 0 <= self.output_base < DEFAULT_HARDWARE.global_index_limit
+                and 1 <= self.output_count <= DEFAULT_HARDWARE.max_local_rows
+                and self.output_base + self.output_count <= DEFAULT_HARDWARE.global_index_limit
                 and self.mode in ("GATHER_FINAL", "REDUCE_PSUM")):
             raise ValueError("invalid TransactionConfig")
 
@@ -196,6 +201,8 @@ class NMCRun:
     host_done: list[TransactionDonePacket]
     ack_keys: set[tuple[int, int, int]]
     y: list[int]
+    compute_stats: dict | None = None
+    compute_timing: dict | None = None
 
     def summary(self) -> dict:
         config = self.gather.config
@@ -209,6 +216,11 @@ class NMCRun:
         if config.mode == "REDUCE_PSUM":
             summary["psum_elements"] = sum(e["lane_mask"].bit_count() for e in self.trace
                                             if e["event"] == "RESULTBEAT_ACCEPT")
+        if self.compute_timing is not None:
+            summary["modeled_schedule_cycles"] = summary.pop("network_schedule_cycles")
+            summary["timing_scope"] = "reference Compute/SRAM timing + cycle NoC; functional reduction; resident weights; not RTL-calibrated end-to-end latency"
+            summary["compute_timing"] = self.compute_timing
+            summary["compute_stats"] = self.compute_stats
         return summary
 
 
@@ -250,8 +262,11 @@ def _build_demo_plan(
     m, k = len(matrix), len(vector)
     if partition not in ("ROW", "K"):
         raise ValueError("partition must be ROW or K")
-    min_m, min_k, max_k = (2, 1, 1024) if partition == "ROW" else (1, 2, 2048)
-    if not min_m <= m <= 256 or not min_k <= k <= max_k or any(len(row) != k for row in matrix):
+    min_m, min_k = (2, 1) if partition == "ROW" else (1, 2)
+    max_k = (DEFAULT_HARDWARE.max_local_k if partition == "ROW"
+             else 2 * DEFAULT_HARDWARE.max_local_k)
+    if (not min_m <= m <= DEFAULT_HARDWARE.max_local_rows or not min_k <= k <= max_k
+            or any(len(row) != k for row in matrix)):
         raise ValueError("invalid MxK matrix/vector dimensions for the selected partition")
     if len(workers) != 2 or len(set(workers)) != 2 or any(t not in (1, 2, 3) for t in workers):
         raise ValueError("two distinct non-host worker Tiles are required")
@@ -279,7 +294,7 @@ def _build_demo_plan(
         local_w = matrix[begin:end] if partition == "ROW" else [row[begin:end] for row in matrix]
         inputs[tile] = vector if partition == "ROW" else vector[begin:end]
         local_k = len(inputs[tile])
-        if local_k > 1024:
+        if local_k > DEFAULT_HARDWARE.max_local_k:
             raise ValueError("local K exceeds Input SRAM capacity")
         slices.append(TensorSlice(
             tile,
@@ -334,23 +349,22 @@ def plan_from_mapping(mapping: Any) -> ExecutionPlan:
         raise PlanError(f"plan_version must be {PLAN_VERSION!r}")
 
     hardware = _plan_object(plan.get("hardware"), "hardware")
-    fixed = {"mesh_x": 2, "mesh_y": 2, "tile_count": 4, "host_tile": 0,
-             "lanes_per_worker": 4, "weight_sram_bytes": W_END - W_START,
-             "input_sram_bytes": X_END - X_START, "result_sram_bytes": Y_END - Y_START}
-    for key, expected in fixed.items():
+    for key, expected in DEFAULT_HARDWARE.describe().items():
         if type(hardware.get(key)) is not int or hardware[key] != expected:
             raise PlanError(f"hardware.{key} must be {expected}")
     raw_workers = _plan_array(hardware.get("workers"), "hardware.workers", 2)
-    workers = tuple(_plan_int(tile, f"hardware.workers[{index}]", 1, 3)
+    workers = tuple(_plan_int(tile, f"hardware.workers[{index}]", 1,
+                              DEFAULT_HARDWARE.tile_count - 1)
                     for index, tile in enumerate(raw_workers))
     if workers[0] == workers[1]:
         raise PlanError("hardware.workers must be distinct")
-    root_tile = _plan_int(hardware.get("root_tile"), "hardware.root_tile", 0, 3)
+    root_tile = _plan_int(hardware.get("root_tile"), "hardware.root_tile", 0,
+                          DEFAULT_HARDWARE.tile_count - 1)
     if root_tile in workers:
         raise PlanError("hardware.root_tile must differ from the workers")
 
     workload = _plan_object(plan.get("workload"), "workload")
-    m = _plan_int(workload.get("m"), "workload.m", 1, Y_END // 4)
+    m = _plan_int(workload.get("m"), "workload.m", 1, DEFAULT_HARDWARE.max_local_rows)
     k = _plan_int(workload.get("k"), "workload.k", 1, 2048)
     if workload.get("operand_type") != "signed_int8":
         raise PlanError("workload.operand_type must be 'signed_int8'")
@@ -381,7 +395,8 @@ def plan_from_mapping(mapping: Any) -> ExecutionPlan:
     for index, item in enumerate(_plan_array(plan.get("tensor_slices"), "tensor_slices", 2)):
         name = f"tensor_slices[{index}]"
         data = _plan_object(item, name)
-        tile = _plan_int(data.get("tile_id"), f"{name}.tile_id", 1, 3)
+        tile = _plan_int(data.get("tile_id"), f"{name}.tile_id", 1,
+                         DEFAULT_HARDWARE.tile_count - 1)
         if tile != workers[index]:
             raise PlanError(f"{name}.tile_id must follow hardware.workers order")
         rows = _plan_array(data.get("rows"), f"{name}.rows", 2)
@@ -429,13 +444,13 @@ def plan_from_mapping(mapping: Any) -> ExecutionPlan:
             raise PlanError(f"{name}.task_last must be true")
         if (task.w_base, task.x_base, task.y_base) != (W_START, X_START, Y_START):
             raise PlanError(f"{name} must use the canonical W/x/y bases")
-        if not 1 <= task.m_local <= Y_END // 4:
+        if not 1 <= task.m_local <= DEFAULT_HARDWARE.max_local_rows:
             raise PlanError(f"{name}.m_local is outside v0.1 capacity")
-        if not 1 <= task.k_local <= X_END - X_START:
+        if not 1 <= task.k_local <= DEFAULT_HARDWARE.max_local_k:
             raise PlanError(f"{name}.k_local is outside v0.1 capacity")
-        if 4 * ((task.m_local + 3) // 4) * task.k_local > W_END - W_START:
+        if 4 * ((task.m_local + 3) // 4) * task.k_local > DEFAULT_HARDWARE.weight.size:
             raise PlanError(f"{name} weight footprint exceeds Weight SRAM")
-        if 4 * task.m_local > Y_END - Y_START:
+        if 4 * task.m_local > DEFAULT_HARDWARE.result.size:
             raise PlanError(f"{name} result footprint exceeds Result SRAM")
         if (task.m_local, task.k_local) != (tensor_slice.row_end - tensor_slice.row_start,
                                             tensor_slice.k_end - tensor_slice.k_start):
@@ -443,7 +458,7 @@ def plan_from_mapping(mapping: Any) -> ExecutionPlan:
         first_row = tensor_slice.row_start if partition == "ROW" else 0
         if task.global_row_base != config.output_base + first_row:
             raise PlanError(f"{name}.global_row_base must start at gather_config.output_base")
-        if task.global_row_base + task.m_local > 0x10000:
+        if task.global_row_base + task.m_local > DEFAULT_HARDWARE.global_index_limit:
             raise PlanError(f"{name} output indices overflow the 16-bit global field")
         tasks.append(task)
 
@@ -451,7 +466,8 @@ def plan_from_mapping(mapping: Any) -> ExecutionPlan:
     for index, item in enumerate(_plan_array(plan.get("weight_images"), "weight_images", 2)):
         name = f"weight_images[{index}]"
         data = _plan_object(item, name)
-        tile = _plan_int(data.get("tile_id"), f"{name}.tile_id", 1, 3)
+        tile = _plan_int(data.get("tile_id"), f"{name}.tile_id", 1,
+                         DEFAULT_HARDWARE.tile_count - 1)
         if tile != workers[index]:
             raise PlanError(f"{name}.tile_id must match hardware.workers[{index}]")
         base = _plan_int(data.get("base_addr"), f"{name}.base_addr", 0, 0xFFFF)
@@ -478,8 +494,10 @@ def plan_from_mapping(mapping: Any) -> ExecutionPlan:
             packet = MemWritePacket(**data)
         except TypeError as error:
             raise PlanError(f"{name} is not a valid MemWritePacket: {error}") from None
-        _plan_int(data.get("src_tile"), f"{name}.src_tile", 0, 3)
-        _plan_int(data.get("dst_tile"), f"{name}.dst_tile", 0, 3)
+        _plan_int(data.get("src_tile"), f"{name}.src_tile", 0,
+                  DEFAULT_HARDWARE.tile_count - 1)
+        _plan_int(data.get("dst_tile"), f"{name}.dst_tile", 0,
+                  DEFAULT_HARDWARE.tile_count - 1)
         _plan_int(data.get("local_addr"), f"{name}.local_addr", 0, 0xFFFF)
         _plan_int(data.get("wstrb"), f"{name}.wstrb", 0, 15)
         _plan_int(data.get("sequence"), f"{name}.sequence", 0, 0xFFFF)
@@ -523,7 +541,8 @@ def plan_from_mapping(mapping: Any) -> ExecutionPlan:
         for index, key in enumerate(raw_keys):
             name = f"expected_ack_keys[{index}]"
             values = _plan_array(key, name, 3)
-            normalized.append([_plan_int(values[0], f"{name}[0]", 0, 3),
+            normalized.append([_plan_int(values[0], f"{name}[0]", 0,
+                                          DEFAULT_HARDWARE.tile_count - 1),
                                _plan_int(values[1], f"{name}[1]", 0, 0xFFFF),
                                _plan_int(values[2], f"{name}[2]", 0, 0xFFFF)])
         if normalized != expected:
@@ -551,6 +570,7 @@ def _execute_plan(
     plan: ExecutionPlan,
     endpoint_factory: Callable[[GatherConfig, Demo0Tile], ResultEndpoint],
     *, sink_ready: Callable[[int, int, str], bool] | None, max_cycles: int,
+    compute_timing: ComputeTiming | None = None,
 ) -> NMCRun:
     """Shared Host/Compute/NI/Mesh loop for every validated ExecutionPlan."""
     tiles = [Demo0Tile(t) for t in range(4)]
@@ -589,7 +609,7 @@ def _execute_plan(
     # Pending Host commands/events are software queues, not hardware FIFO claims.
     pending = [deque() for _ in range(4)]
     seen = [0] * 4
-    emitters: dict[int, ResultEmitter] = {}
+    emitters: dict[int, ResultEmitter | TimedCompute] = {}
     local_done: set[int] = set()
     host_done: list[TransactionDonePacket] = []
     phase = "LOAD"
@@ -605,10 +625,13 @@ def _execute_plan(
             phase = "COMPUTE_AND_GATHER"
             for task in tasks:
                 record("TASK_START", **asdict(task))
-                beats, done = tiles[task.tile_id].execute(task)
-                if done.status != "OK":
-                    raise TransactionError(StatusCode[done.status], "invalid Compute task")
-                emitters[task.tile_id] = ResultEmitter(beats, done)
+                if compute_timing is not None:
+                    emitters[task.tile_id] = TimedCompute(tiles[task.tile_id], task, compute_timing)
+                else:
+                    beats, done = tiles[task.tile_id].execute(task)
+                    if done.status != "OK":
+                        raise TransactionError(StatusCode[done.status], "invalid Compute task")
+                    emitters[task.tile_id] = ResultEmitter(beats, done)
         for tile, emitter in emitters.items():
             signals = emitter.signals()
             ready = nis[tile].result_ready
@@ -670,7 +693,11 @@ def _execute_plan(
             seen[tile] = len(mesh.received_packets[tile])
         if host_done and local_done == set(workers) and mesh.idle() and not any(pending):
             y = [tiles[root_tile].read_result(row) for row in range(m)]
-            return NMCRun(tiles, mesh, gather, tasks, trace, host_done, ack_keys, y)
+            stats = ({tile: emitter.stats() for tile, emitter in emitters.items()}
+                     if compute_timing is not None else None)
+            return NMCRun(tiles, mesh, gather, tasks, trace, host_done, ack_keys, y,
+                          compute_stats=stats,
+                          compute_timing=asdict(compute_timing) if compute_timing is not None else None)
     raise TimeoutError(f"NMC {mode} did not complete in {max_cycles} network schedule cycles")
 
 
@@ -694,6 +721,7 @@ def run_plan(
     expected_partition: str | None = None,
     sink_ready: Callable[[int, int, str], bool] | None = None,
     max_cycles: int = 10000,
+    compute_timing: ComputeTiming | None = None,
 ) -> NMCRun:
     """Execute a validated Mapper plan without access to the original matrix."""
     if not isinstance(plan, ExecutionPlan):
@@ -701,7 +729,8 @@ def run_plan(
     if expected_partition is not None and plan.partition != expected_partition:
         raise PlanError(f"plan uses {plan.partition} partitioning; "
                         f"this runner requires {expected_partition}")
-    return _execute_plan(plan, endpoint_factory, sink_ready=sink_ready, max_cycles=max_cycles)
+    return _execute_plan(plan, endpoint_factory, sink_ready=sink_ready, max_cycles=max_cycles,
+                         compute_timing=compute_timing)
 
 
 def load_workload(path: Path) -> tuple[list[list[int]], list[int]]:

@@ -1,0 +1,34 @@
+name: Verify Python and Tile RTL
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install simulators and Python dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y iverilog verilator yosys
+          python -m pip install -r requirements.txt
+      - name: Run all regressions including RTL co-simulation
+        run: python -m pytest -q -p no:cacheprovider --basetemp dump/ci_pytest
+      - name: Check published links
+        run: python tools/check_layout.py --tracked
+      - name: Preserve RTL results, traces and waveforms
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tile-rtl-verification
+          path: |
+            dump/ci_pytest/**/results.json
+            dump/ci_pytest/**/trace.csv
+            dump/ci_pytest/**/memory.csv
+            dump/ci_pytest/**/wave.vcd
+            dump/ci_pytest/**/*.log

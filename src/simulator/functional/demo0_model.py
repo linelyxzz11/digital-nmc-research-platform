@@ -10,13 +10,20 @@ from dataclasses import dataclass
 from math import ceil
 from typing import Literal
 
+from hardware import DEFAULT_HARDWARE
 
-W_START, W_END = 0x0000, 0x1000
-X_START, X_END = 0x1000, 0x1400
-Y_START, Y_END = 0x2000, 0x2400
-LANES = 4
-TILE_COUNT = 4
-UINT16_MAX = 0xFFFF
+
+W_START = DEFAULT_HARDWARE.weight.base
+W_END = W_START + DEFAULT_HARDWARE.weight.size
+X_START = DEFAULT_HARDWARE.input.base
+X_END = X_START + DEFAULT_HARDWARE.input.size
+Y_START = DEFAULT_HARDWARE.result.base
+Y_END = Y_START + DEFAULT_HARDWARE.result.size
+LANES = DEFAULT_HARDWARE.lanes_per_tile
+TILE_COUNT = DEFAULT_HARDWARE.tile_count
+UINT16_MAX = DEFAULT_HARDWARE.global_index_limit - 1
+MAX_LOCAL_M = DEFAULT_HARDWARE.max_local_rows
+MAX_LOCAL_K = DEFAULT_HARDWARE.max_local_k
 
 Status = Literal[
     "OK",
@@ -60,9 +67,9 @@ class TileTask:
     tile_id: int
     m_local: int
     k_local: int
-    w_base: int = 0x0000
-    x_base: int = 0x1000
-    y_base: int = 0x2000
+    w_base: int = W_START
+    x_base: int = X_START
+    y_base: int = Y_START
     global_row_base: int = 0
     result_kind: Literal["FINAL", "PSUM"] = "FINAL"
     result_dst_tile: int = 0
@@ -157,7 +164,7 @@ class Demo0Tile:
             or task.result_kind not in ("FINAL", "PSUM")
         ):
             return "BAD_FIELD"
-        if not (1 <= task.m_local <= 256 and 1 <= task.k_local <= 1024):
+        if not (1 <= task.m_local <= MAX_LOCAL_M and 1 <= task.k_local <= MAX_LOCAL_K):
             return "BAD_SHAPE"
         if (
             task.tile_id >= TILE_COUNT

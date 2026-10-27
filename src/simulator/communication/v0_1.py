@@ -12,16 +12,17 @@ from dataclasses import dataclass
 from enum import IntEnum
 from typing import Iterable, TypeAlias
 
+from hardware import DEFAULT_HARDWARE
 from simulator.functional.demo0_model import ResultBeat
 
 
-FLIT_DATA_W = 128
+FLIT_DATA_W = DEFAULT_HARDWARE.flit_data_width
 FLIT_MASK = (1 << FLIT_DATA_W) - 1
-MESH_X = 2
-MESH_Y = 2
-TILE_COUNT = 4
-INPUT_FIFO_DEPTH = 4
-NI_FIFO_DEPTH = 4
+MESH_X = DEFAULT_HARDWARE.mesh_x
+MESH_Y = DEFAULT_HARDWARE.mesh_y
+TILE_COUNT = DEFAULT_HARDWARE.tile_count
+INPUT_FIFO_DEPTH = DEFAULT_HARDWARE.router_fifo_depth
+NI_FIFO_DEPTH = DEFAULT_HARDWARE.ni_fifo_depth
 PORTS = ("NORTH", "EAST", "SOUTH", "WEST", "LOCAL")
 INPUT_ORDER = PORTS
 

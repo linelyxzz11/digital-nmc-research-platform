@@ -1,0 +1,223 @@
+{
+  "denominator": "shapes where ROW and K are both legal; each shape counted once per profile; wins must hold for every enumerated phase",
+  "models": {
+    "functional": {
+      "summary": {
+        "cases": 768,
+        "ok": 688,
+        "infeasible": 80,
+        "timeout": 0,
+        "validation_failure": 0
+      },
+      "profiles": [
+        {
+          "profile": "open",
+          "paired_shapes": 19,
+          "forced_choice_shapes": 5,
+          "excluded_shapes": 0,
+          "row_wins_all_phases": 5,
+          "k_wins_all_phases": 14,
+          "ties_all_phases": 0,
+          "phase_sensitive_shapes": 0,
+          "largest_row_speedup": 1.7037037037037037,
+          "largest_k_speedup": 1.9944506104328523
+        },
+        {
+          "profile": "half",
+          "paired_shapes": 19,
+          "forced_choice_shapes": 5,
+          "excluded_shapes": 0,
+          "row_wins_all_phases": 7,
+          "k_wins_all_phases": 12,
+          "ties_all_phases": 0,
+          "phase_sensitive_shapes": 0,
+          "largest_row_speedup": 1.8373702422145328,
+          "largest_k_speedup": 1.992797783933518
+        },
+        {
+          "profile": "quarter",
+          "paired_shapes": 19,
+          "forced_choice_shapes": 5,
+          "excluded_shapes": 0,
+          "row_wins_all_phases": 8,
+          "k_wins_all_phases": 11,
+          "ties_all_phases": 0,
+          "phase_sensitive_shapes": 0,
+          "largest_row_speedup": 1.9171270718232045,
+          "largest_k_speedup": 1.9895085588072887
+        },
+        {
+          "profile": "eighth",
+          "paired_shapes": 19,
+          "forced_choice_shapes": 5,
+          "excluded_shapes": 0,
+          "row_wins_all_phases": 10,
+          "k_wins_all_phases": 9,
+          "ties_all_phases": 0,
+          "phase_sensitive_shapes": 0,
+          "largest_row_speedup": 1.9609895337773549,
+          "largest_k_speedup": 1.9829950630828306
+        },
+        {
+          "profile": "burst64",
+          "paired_shapes": 19,
+          "forced_choice_shapes": 5,
+          "excluded_shapes": 0,
+          "row_wins_all_phases": 5,
+          "k_wins_all_phases": 14,
+          "ties_all_phases": 0,
+          "phase_sensitive_shapes": 0,
+          "largest_row_speedup": 1.5089285714285714,
+          "largest_k_speedup": 1.96137339055794
+        }
+      ]
+    },
+    "reference": {
+      "summary": {
+        "cases": 768,
+        "ok": 688,
+        "infeasible": 80,
+        "timeout": 0,
+        "validation_failure": 0
+      },
+      "profiles": [
+        {
+          "profile": "open",
+          "paired_shapes": 19,
+          "forced_choice_shapes": 5,
+          "excluded_shapes": 0,
+          "row_wins_all_phases": 5,
+          "k_wins_all_phases": 14,
+          "ties_all_phases": 0,
+          "phase_sensitive_shapes": 0,
+          "largest_row_speedup": 1.2707838479809976,
+          "largest_k_speedup": 1.9943892965041001
+        },
+        {
+          "profile": "half",
+          "paired_shapes": 19,
+          "forced_choice_shapes": 5,
+          "excluded_shapes": 0,
+          "row_wins_all_phases": 5,
+          "k_wins_all_phases": 14,
+          "ties_all_phases": 0,
+          "phase_sensitive_shapes": 0,
+          "largest_row_speedup": 1.2688679245283019,
+          "largest_k_speedup": 1.993103448275862
+        },
+        {
+          "profile": "quarter",
+          "paired_shapes": 19,
+          "forced_choice_shapes": 5,
+          "excluded_shapes": 0,
+          "row_wins_all_phases": 5,
+          "k_wins_all_phases": 14,
+          "ties_all_phases": 0,
+          "phase_sensitive_shapes": 0,
+          "largest_row_speedup": 1.891696750902527,
+          "largest_k_speedup": 1.9905417024935512
+        },
+        {
+          "profile": "eighth",
+          "paired_shapes": 19,
+          "forced_choice_shapes": 5,
+          "excluded_shapes": 0,
+          "row_wins_all_phases": 6,
+          "k_wins_all_phases": 13,
+          "ties_all_phases": 0,
+          "phase_sensitive_shapes": 0,
+          "largest_row_speedup": 1.951035781544256,
+          "largest_k_speedup": 1.9854576561163388
+        },
+        {
+          "profile": "burst64",
+          "paired_shapes": 19,
+          "forced_choice_shapes": 5,
+          "excluded_shapes": 0,
+          "row_wins_all_phases": 5,
+          "k_wins_all_phases": 14,
+          "ties_all_phases": 0,
+          "phase_sensitive_shapes": 0,
+          "largest_row_speedup": 1.299287410926366,
+          "largest_k_speedup": 1.9943892965041001
+        }
+      ]
+    },
+    "weight-ii2": {
+      "summary": {
+        "cases": 768,
+        "ok": 688,
+        "infeasible": 80,
+        "timeout": 0,
+        "validation_failure": 0
+      },
+      "profiles": [
+        {
+          "profile": "open",
+          "paired_shapes": 19,
+          "forced_choice_shapes": 5,
+          "excluded_shapes": 0,
+          "row_wins_all_phases": 4,
+          "k_wins_all_phases": 15,
+          "ties_all_phases": 0,
+          "phase_sensitive_shapes": 0,
+          "largest_row_speedup": 1.1271317829457363,
+          "largest_k_speedup": 1.9957567185289957
+        },
+        {
+          "profile": "half",
+          "paired_shapes": 19,
+          "forced_choice_shapes": 5,
+          "excluded_shapes": 0,
+          "row_wins_all_phases": 4,
+          "k_wins_all_phases": 15,
+          "ties_all_phases": 0,
+          "phase_sensitive_shapes": 0,
+          "largest_row_speedup": 1.126543209876543,
+          "largest_k_speedup": 1.994701518897916
+        },
+        {
+          "profile": "quarter",
+          "paired_shapes": 19,
+          "forced_choice_shapes": 5,
+          "excluded_shapes": 0,
+          "row_wins_all_phases": 4,
+          "k_wins_all_phases": 15,
+          "ties_all_phases": 0,
+          "phase_sensitive_shapes": 0,
+          "largest_row_speedup": 1.6085626911314985,
+          "largest_k_speedup": 1.9925978145928798
+        },
+        {
+          "profile": "eighth",
+          "paired_shapes": 19,
+          "forced_choice_shapes": 5,
+          "excluded_shapes": 0,
+          "row_wins_all_phases": 4,
+          "k_wins_all_phases": 15,
+          "ties_all_phases": 0,
+          "phase_sensitive_shapes": 0,
+          "largest_row_speedup": 1.9373246024321795,
+          "largest_k_speedup": 1.9884169884169884
+        },
+        {
+          "profile": "burst64",
+          "paired_shapes": 19,
+          "forced_choice_shapes": 5,
+          "excluded_shapes": 0,
+          "row_wins_all_phases": 4,
+          "k_wins_all_phases": 15,
+          "ties_all_phases": 0,
+          "phase_sensitive_shapes": 0,
+          "largest_row_speedup": 1.1271317829457363,
+          "largest_k_speedup": 1.9957567185289957
+        }
+      ]
+    }
+  },
+  "input_sha256": {
+    "functional": "66f1a61a770e3f8ac74a353872ef0f139a8776c6728e4ddbbdd7b1929ccf046c",
+    "reference": "37ec3928c639cab4d8b7f4cb1d0c18bed2766e58d135564845e799891e231c30",
+    "weight-ii2": "d0ec7aa15c081e4b22792f4f906da468638a891510cbb0605f41105b2b1c2e9f"
+  }
+}

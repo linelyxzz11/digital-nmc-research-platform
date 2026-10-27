@@ -7,11 +7,11 @@
 - 固定 2×2 Mesh、Host=0、两个非 Host worker，每 worker 4 路 MAC。
 - 每 worker 一个 TileTask；Root 与 worker 不重合，Root 可以是 Host。
 - ROW 使用 `ceil(M/2)` 连续行切分；K 默认使用 `ceil(K/2)`，可指定 `k_split`。
-- auto 按 ROW、K 顺序选择第一个合法默认候选，属于容量基线，不预测哪个方案最快。
+- auto 在默认 ROW/K 候选间按 `cost_score = 每 Tile MAC/4 周期 + 输入写/ACK/结果包/DONE 包数` 选择，平局取 ROW；这是一阶代理，不预测真实周期。
 - 权重按现有 (group,k,lane) 布局预加载，输入通过 MEM_WRITE/ACK 分发。
 - 计划字段通过现有模型与 Demo 对照测试；Demo CLI 通过 `--plan` 直接读取并执行该 JSON 计划。
 - 执行阶段会重新校验计划：固定硬件参数、切分覆盖、TileTask 字段、权重镜像长度、输入写覆盖与 ACK 身份；非法计划在启动仿真前被拒绝。
-- 性能代价模型、多任务 tiling、更多 worker、自动放置、二维切分和树形归约留待后续版本。
+- 完整 Bank 时序、带宽代价、多任务 tiling、更多 worker、自动放置、二维切分和树形归约留待后续版本。
 
 ## 运行
 
@@ -58,7 +58,7 @@ plan = map_gemv(W, x, strategy="auto", workers=(1, 2), root_tile=3)
 - `input_writes`：可实例化为现有 MemWritePacket，保留 word offset 优先的发送顺序。
 - `gather_config`：可实例化为现有 GatherConfig；ROW 为 GATHER_FINAL，K 为 REDUCE_PSUM。
 - `expected_ack_keys`：排序后的 `[dst_tile, tid, sequence]` 清单。
-- `diagnostics`：各 Tile 容量占用与候选合法性，不作为完整 GEMV 周期。
+- `diagnostics`：各 Tile 容量占用、`mac_cycles`、`estimated_compute_cycles`、`estimated_packets` 和 `cost_score`；它们是一阶代理，不是完整 GEMV 周期。
 
 先配置 Root 并预加载权重；Host 依次发送输入写请求并等待 ACK，收齐全部预期 ACK 后才启动任务。所有最终输出与所有来源 last 收齐后才能发送一次全局 DONE。LocalDone 不等于全局完成。
 

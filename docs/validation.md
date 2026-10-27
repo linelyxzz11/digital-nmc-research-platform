@@ -568,7 +568,7 @@ Demo 2 定向测试：34 passed in 0.14s
 日期：2026-10-20，计划执行集成更新于 2026-10-21。入口为 `src/compiler/auto_mapper_v0_1.py`，规则与运行方法见 [Mapper 说明](../src/compiler/README.md)。
 
 - ROW 与 K 默认沿用现有 Demo 的连续、近似均分；K 模式接受合法的显式切分点。
-- auto 只在默认 ROW/K 候选间按合法性选择，ROW 合法则优先；这不是性能最优声明。
+- auto 在默认 ROW/K 候选间按 `cost_score = 每 Tile MAC/4 周期 + 输入写/ACK/结果包/DONE 包数` 选择，平局取 ROW；这是一阶代理，不是真实周期预测。
 - 计划包括 TileTask、权重预加载镜像、输入 MEM_WRITE、Root 配置和期望 ACK。
 - 保留现有“权重驻留、输入经 NoC 写入并等待 ACK”的边界，不把权重加载计为已经模拟的传输。
 - Demo CLI 通过 `--plan` 直接读取并执行计划；执行前重新校验固定硬件参数、切分覆盖、TileTask 字段、权重镜像长度、输入写字节覆盖和 ACK 身份。
@@ -594,10 +594,98 @@ python tools/check_layout.py --tracked
 计划执行入口复用 Demo 1/2 的同一调度链：`plan_from_mapping` 校验 JSON 并生成 `ExecutionPlan`，`run_plan` 预加载权重镜像、发送输入写、启动任务并收集结果。计划路径与硬编码 Demo 路径的 `y`、事件 Trace、ACK 集合和摘要必须完全一致。`--workload` 只用于 Host 侧 golden 比较，不向执行链提供矩阵数据。
 
 ```text
-完整 pytest 回归：145 passed
-其中 Mapper 回归：26 项
+完整 pytest 回归：163 passed
+其中 Mapper 回归：31 项
 其中 Plan Runner：40 项（7 组等价执行、CLI 往返、错误入口、30 种篡改计划）
+其中 Plan Sweep：13 项（枚举、形状预设、采样切分、不可行记录、确定性、排序、一阶代价、CSV/JSON 输出）
 Mapper 内置自检：28 个场景全部通过
 ```
 
 计划执行仍使用功能 Compute 和周期步进 NoC，不构成完整 GEMV 延迟，也不代表 RTL 等价。
+
+### 2026-10-21 批量计划对比
+
+入口：`tools/experiments/mapper_sweep.py`。它枚举显式 ROW/K、worker 顺序、Root 位置和 K 切分，为每个候选生成计划并执行，记录 `network_schedule_cycles`、`flit_hops`、最大 Router FIFO 占用、结果包数和 golden 校验，可输出 JSON 与 CSV。
+
+```bash
+PYTHONPATH=src python tools/experiments/mapper_sweep.py --demo --placements all --output data/results/mapper_sweep_demo.json --csv data/results/mapper_sweep_demo.csv
+PYTHONPATH=src python tools/experiments/mapper_sweep.py --workload data/workloads/demo1_gemv.json --k-splits all
+```
+
+Demo 4×4 工作负载、12 种放置、ROW/K 各一份默认计划的结果为 `cases=24 ok=24 infeasible=0 error=0 golden_failures=0`。相同放置下 ROW 与 K 的通信调度相同；不同的是放置：
+
+```text
+workers (1,2)/(2,1), Root 0  -> 22 cycles, 10 hops
+workers (1,2)/(2,1), Root 3  -> 24 cycles, 12 hops
+workers (1,3)/(3,1), Root 0  -> 24 cycles, 15 hops
+workers (2,3)/(3,2), Root 0  -> 24 cycles, 15 hops
+```
+
+这说明批量层能区分放置带来的 NoC 差异，但 4×4 Demo 太小，无法区分 ROW 与 K。要研究切分与归约策略，需要更大 M/K 的工作负载。所有数字仅为通信调度，Compute 仍是功能模型。
+
+### 2026-10-21 形状矩阵
+
+`--shapes` 接受 `MxK` 列表或预设，矩阵按确定性公式生成，不额外提交数据文件：
+
+- `frontier`：每 Tile 权重占满 4096 B（4×2048 … 256×32）。
+- `half`：半容量中间点（4×1024 … 256×16）。
+- `extremes`：细长边界（1×2048、256×1 等）。
+- `aspect`：同权重、反向长宽比（16×128 vs 128×16、32×64 vs 64×32 等）。
+- `suite`：以上四组去重后的 24 个形状。
+
+```bash
+PYTHONPATH=src python tools/experiments/mapper_sweep.py --shapes suite --output data/results/mapper_sweep_suite.json --csv data/results/mapper_sweep_suite.csv
+PYTHONPATH=src python tools/experiments/mapper_sweep.py --shapes 16x128,128x16,32x64,64x32 --top 2
+```
+
+`--k-splits all` 在 K ≤ 64 时穷举，K > 64 时改为 1/8、1/4、1/2、3/4、7/8 采样。
+
+默认放置 `(1,2)`、Root 3、默认切分下的结果为 `24 shapes / 48 cases：ok=43 infeasible=5 error=0 golden_failures=0`。5 个不可行用例分别是 4×2048、1×2048、2×2048、1×1024 的 ROW，以及 256×1 的 K。代表性对比（cycles/hops）：
+
+| 形状 | ROW | K | 较优 |
+|---|---|---|---|
+| 4×2048 | 不可行 | 3594/1542 | K |
+| 16×256 | 910/394 | 470/210 | K |
+| 64×128 | 486/226 | 294/162 | K |
+| 128×32 | 182/114 | 190/154 | ROW（微幅） |
+| 256×32 | 246/178 | 318/282 | ROW |
+| 16×128 | 462/202 | 246/114 | K |
+| 128×16 | 126/90 | 162/142 | ROW |
+| 32×64 | 246/114 | 150/82 | K |
+| 64×32 | 150/82 | 126/90 | K |
+
+初步规律：M/K 比值低（K 主导）时 K 切分更省；M/K 高（M 主导，ROW 的结果包更少）时 ROW 更省，交叉点大致在 M/K ≈ 4 附近（128×32 仅领先 8 cycles）。这只是当前包计数模型的观测，不是最终代价模型；Compute 仍是功能模型，放置也固定在 `(1,2)`/Root 3。
+
+### 2026-10-21 一阶代价与校准
+
+计划诊断新增每 Tile 的 `mac_cycles` 和整体的一阶代价：
+
+```text
+estimated_compute_cycles = max_tile ceil(m_local * k_local / 4)
+estimated_packets        = 2 * 输入写包数 + 结果包数 + 1 (DONE)
+cost_score               = estimated_compute_cycles + estimated_packets
+```
+
+`auto` 已改为在 ROW/K 候选间选择较小的 `cost_score`，平局取 ROW。该模型假设 Compute 与通信不重叠、每个包至少占一个周期，且不区分包类型与路由距离，因此只是排序代理，不是周期预测。
+
+用 `--shapes suite` 的 24 个形状校准：`cost_score` 选出的候选在 **22/24** 个形状上达到观测最佳周期。两个不一致点是 128×64 与 64×32——两种切分的 `cost_score` 完全相同（1121、305），`auto` 按平局规则取 ROW，而实测 K 少 16/24 cycles。因为代价函数无法区分这两种包的组合，这属于当前一阶模型的已知盲区；若要消除，需要引入包类型/路由距离或实测标定。
+
+仍缺失的代价项：Bank 服务时间、权重预加载、Compute 与通信的重叠、FIFO 反压对端到端的影响。
+
+## 2026-10-28：单 Tile SRAM/Bank/MAC 逐请求时序
+
+先冻结内部计算端口：Weight 32 bit/周期、Input 8 bit/周期、独立并行、同步读延迟 1；Result 四个 32-bit Bank；两个操作数对槽位、每周期一次 4-Lane MAC 更新。请求在接受时取数，在指定周期返回，全部有效 Lane 写完后才允许结果握手。完整约定见 [Compute 9.2](spec/compute_architecture_v0.1.md#92-单-tile-端口与-bank-参考组织2026-10-28-补充)。
+
+`src/tests/test_tile_timing.py` 的 28 项测试核对手算 5×3 Trace、实际返回数据、SRAM 提前写入禁止、Y_base 四种 word 对齐、延迟/带宽分离、有限缓冲、地址决定的冲突、轮询公平性、Result 序列化写回与反压。默认配置与原公式时序模型逐周期比较信号和存储内容。全部项目回归 **233 项通过**。
+
+`tools/experiments/tile_timing.py` 对 12 套配置、12 种形状、两个种子及手算/反压例子执行 **301 次验证，全部通过**；基线 5×3 为 15 周期，Result 单 Bank 为 18，共享单 Bank 的 Weight/Input 为 21。原始记录与源码快照位于 `data/results/tile_timing_20261028/`。详细方法与结论见 [实验记录](../tools/experiments/compute_timing.md#2026-10-28先验证单-tile-端口时序)。
+
+此验证覆盖 Python 单 Tile 内部端口与计算调度；外部加载/读回控制器、复位时序、非法任务的硬件握手、NI/归约争用和 NMC Tile RTL 尚需独立实现与验证。
+
+## 2026-10-28：单 Tile RTL 与 Python 逐周期对照
+
+上述单 Tile 的下一阶段现已实现。`src/rtl/nmc_tile/` 包含 MAC、显式单口 SRAM 组织、Task/Result/LocalDone 控制与外部加载接口。运行 `python tools/rtl/run_tile_rtl.py --seeds 32 --output-dir dump/rtl_tile_20261028`：71 个用例/77 段任务执行全部通过。5×3 两次结果握手为 cycle 6/13，Done 为 14；每个结果与 Done 各阻塞三周期时共 24 周期。
+
+每个边沿与 Python 请求级模型核对请求、返回、累加器、写回和握手；外部端口读回全部 Result SRAM，覆盖复位保留和重启。Verilator lint 通过，Yosys `check -assert` 通过；检查六块存储、49,152 bit、每块一个同步读口和一个写口，Host/Compute 显式互斥复用。该检查使用通用存储结构，不提供具体 SRAM 宏时序、面积、功耗或 Fmax。
+
+完整说明及结果入口见 [Tile RTL](../src/rtl/nmc_tile/README.md)。项目回归现为 234 项；完整波形保存在上述 dump 目录，GitHub Actions 也保存回归 artifact。剩余系统工作与两台电脑的分工见 [并行计划](parallel_work.zh-CN.md)。

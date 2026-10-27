@@ -386,6 +386,38 @@ T_local_no_stall = G * (K_local + 4) + 1
 
 最后的 `+1` 是 LocalDone。命令握手周期不计入该式。若 ResultBeat 或 LocalDone 被反压，实际周期按阻塞周期增加。
 
+### 9.2 单 Tile 端口与 Bank 参考组织（2026-10-28 补充）
+
+以下给出满足 9.1 的一种可执行端口组织，作为 RTL 实现与对照模型的起点；它不增加 v0.1 的外部接口约束，也不代表已选定的 SRAM 宏或器件实测时序。
+
+| 区域 | 参考组织/容量 | Compute 请求 | 读延迟 | 请求启动间隔 |
+|---|---|---|---:|---:|
+| Weight | 1 Bank，1024×32 bit，共 4096 B | 每周期一个 32-bit Word，供 4 个 Lane 使用 | 1 周期 | 1 周期 |
+| Input | 1 Bank，1024×8 bit，共 1024 B | 每周期一个 INT8，广播到 4 个 Lane | 1 周期 | 1 周期 |
+| Result | 4 Bank，每 Bank 64×32 bit，共 1024 B | 每 Bank 每周期最多写一个 INT32，合计最多 4 个 | 不在计算阶段读取 | 1 周期 |
+
+每 Bank 采用一个读/写服务端口；Weight、Input、Result 的端口彼此独立。Weight 和 Input 因而可以同周期读，逻辑读取量最多为 `4+1=5 B/cycle`。Result 的四个 Bank 按 INT32 word 交错：`bank = floor(Y_addr/4) mod 4`。连续四个结果落入不同 Bank，即使 `Y_base` 只按 4 B 对齐、未按 16 B 对齐，仍可在一个周期内写完；无效 Lane 不发写请求。该组织满足 6.1 的对齐要求。
+
+上述为内部 Compute 端口。6.2 的外部加载/读回端口仍是 32 bit，且只在 IDLE 访问。尤其不能由内部每周期写 128 bit 推断外部端口同样有该带宽；窄 Input Bank 如何串行处理外部 32-bit 写、请求接收与提交的时序，仍属于待实现的加载控制器。
+
+精确的时钟约定如下：
+
+- cycle 0 为已接受、已验证有效任务的 `INIT_ACC`；统计不含命令/VALIDATE、预加载或外部读回。
+- cycle `c` 接受的读请求在 `c+L` 可被 MAC 消费。数据在请求接受时采样，响应按 `(group,k,region)` 匹配，不能在发请求的同一周期使用同步读结果。
+- 读延迟 `L` 与启动间隔 `II` 独立；`L=3, II=1` 允许连续三周期发请求。MAC 仅在当前 `k` 的 Weight/Input 都返回后更新 accumulator，默认一次更新占一个时钟、每周期最多一次 4-Lane 更新。
+- 默认提供 2 个在途 `(Weight Word, Input byte)` 操作数对槽位。请求被拒绝时保持字段，收到数据后保留到对应 MAC；槽位在 MAC 后释放，下一周期可重用。最长读延迟为 `L` 时，本参考调度需要至少 `L+1` 个槽位才能在 `II=1` 下保持持续发起。
+- 最后一次 MAC 后进入写回；写请求在获准的边沿提交。全部有效 Lane 写完后，下一周期允许 ResultBeat 握手。被阻塞时保持完整结果，不预取下一组；最后一组握手后的下一周期才允许 LocalDone。
+
+因此，4-Lane 表示峰值每周期完成 **4 次标量 MAC 更新**，并非每周期产生 4 个完整点积结果。无阻塞时每 `K_local+4` 周期交出一组最多 4 个结果；5×3 的两组 ResultBeat 分别在 cycle 6、13 握手，LocalDone 在 cycle 14 握手，共 15 周期。
+
+逐请求入口为 [`PortScheduledCompute`](../../src/simulator/system/tile_timing.py) 和 [`TileMemoryPorts`](../../src/simulator/system/tile_memory.py)。端口组织由 `TileMemoryConfig` 显式指定并写入实验结果；`hardware.py` 中原有的 `banks_per_tile/bank_width_bytes` 是粗粒度元数据，尚不能表达三块 SRAM 的独立端口，不应被解释成三块 SRAM 共用一个 32-bit 端口。容量和地址仍沿用统一硬件配置。
+
+该模型可将 Weight/Input 映射到共享的 1/2/4 个 Bank，或减少 Result Bank，进行地址冲突与逐 Bank round-robin 仲裁对照。共享 Weight/Input 时两者使用相同几何参数，`bank = floor(byte_addr/word_bytes) mod banks`，每 Bank 最多接受 `ports_per_bank` 个请求；每个端口同时受 `issue_interval` 约束。仲裁仅在实际接受请求时轮转，未获准请求由调用方保留。模型区分同周期竞争造成的等待和端口尚未恢复造成的等待，单位均为请求·周期，不能直接与任务周期相加。默认独立 Weight/Input 组织没有两者之间的 Bank 竞争；共享组织属于另行标记的硬件敏感性对照。
+
+返回由预留操作数槽位接收，不提供响应反压；外部加载、NI/归约争用、复位和非法任务的硬件握手未纳入此单 Tile 入口。模型与测试只证明这套端口和计算时序的一致性；RTL、综合频率、器件时序与完整系统性能仍需独立验证。
+
+同日后续实现见 [单 Tile RTL](../../src/rtl/nmc_tile/README.md)：固定端口基线已完成 71 个用例/77 段执行的逐周期对照，含加载、复位和非法任务处理，并通过通用 SRAM 结构检查。其结果不覆盖具体 SRAM 宏时序或多 Tile 系统性能。
+
 ## 10. Compute 到 NI 的 ResultBeat 接口
 
 ### 10.1 信号

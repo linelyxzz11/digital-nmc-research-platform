@@ -2,13 +2,15 @@
 
 面向 GEMV 的数字近存计算（NMC）研究平台，研究有限 Bank、MAC、NoC 带宽和 FIFO 条件下的切分、放置与端点归约。
 
-当前可运行：单 Tile GEMV、Packet/NI/2×2 XY Mesh，以及 Demo 1 行切分/FINAL 收集、Demo 2 K 切分/INT32 PSUM 归约的多 Tile 闭环，配套 Python 自检查测试。输入通过 NoC 写入并收齐 ACK 后启动计算，Root 完成收集或归约后向 Host 发送全局 DONE。Compute 和归约仍为功能模型，通信调度周期不代表完整 GEMV 延迟。Mapper v0.1 已提供 ROW/K 切分、容量检查和 ROW 优先的 auto 选择，生成与现有 TileTask/Packet 字段一致的 JSON 计划；Demo 1/2 CLI 可通过 `--plan` 直接读取并执行该计划。性能优化 Mapper、完整时序模型和 NMC RTL 仍待实现。早期 RV32I CPU 示例仅作本地学习参考。
+当前可运行：单 Tile GEMV、Packet/NI/2×2 XY Mesh，以及 Demo 1 行切分/FINAL 收集、Demo 2 K 切分/INT32 PSUM 归约的多 Tile 闭环。输入通过 NoC 写入并收齐 ACK 后启动计算，Root 完成收集或归约后向 Host 发送全局 DONE。系统支持可选 Compute 参考时序；归约仍为功能操作，完整系统延迟尚未校准。单 Tile Compute RTL 已实现，具备 SRAM/外部加载/结果握手，并与 Python 模型逐周期对照。Mapper v0.1 提供 ROW/K 切分、容量检查和一阶代价选择；Demo 1/2 CLI 可通过 `--plan` 执行 JSON 计划。有限吞吐归约、详细 Tile 时序的系统接入和多 Tile NMC RTL 是后续工作。早期 RV32I CPU 示例仅作本地学习参考。
 
 ## 从这里开始
 
 - 定义计算/通信接口：[Compute v0.1](docs/spec/compute_architecture_v0.1.md)、[Communication v0.1](docs/spec/communication_architecture_v0.1.md)。
 - 运行 Demo：[Demo 0 指南](docs/validation.md#demo0)、[Comm 0A–0C 记录](docs/validation.md#comm)、[NMC Demo 1](docs/validation.md#demo1)、[NMC Demo 2](docs/validation.md#demo2)。
 - Mapper：[v0.1 使用说明与规则](src/compiler/README.md)。
+- 实验：[Root 接收压力](tools/experiments/pressure_sweep.md)、[Compute/SRAM 参考时序对照与单 Tile 逐请求验证](tools/experiments/compute_timing.md)。另见 [Tile 端口与 Bank 参考合同](docs/spec/compute_architecture_v0.1.md#92-单-tile-端口与-bank-参考组织2026-10-28-补充)；默认 Demo 行为不变，端点归约仍为功能操作。
+- 硬件验证：[单 Tile RTL](src/rtl/nmc_tile/README.md)，包含 SRAM/控制/MAC 和 Python 逐周期对照；另两台电脑的分工见 [并行推进计划](docs/parallel_work.zh-CN.md)。
 - 阅读计划：[团队路线](docs/project_plan.zh-CN.md)、[Proposal](docs/proposal.md)。文献调研保存在本地 `docs/papers/`，不随 GitHub 仓库发布。
 - 使用 VS Code：直接打开仓库根目录。本地的 `Digital-NMC.code-workspace` 与论文工作区为可选配置，不是运行依赖。
 
@@ -17,6 +19,7 @@
 ```text
 computer architecture project/
 ├── src/                 # 代码：Python 模型、Mapper、RTL、测试
+│   ├── hardware.py      # 统一硬件资源配置（SRAM、Bank、FIFO、Mesh）
 │   ├── simulator/
 │   ├── compiler/
 │   ├── rtl/             # legacy_cpu/ 仅为早期示例
@@ -63,6 +66,13 @@ PYTHONPATH=src python -m simulator.system.demo1 --plan dump/mapper_plan.json --w
 PYTHONPATH=src python -m compiler.auto_mapper_v0_1 --workload data/workloads/demo1_gemv.json --strategy k -o dump/mapper_plan_k.json
 PYTHONPATH=src python -m simulator.system.demo2 --plan dump/mapper_plan_k.json --workload data/workloads/demo1_gemv.json
 python -m pytest -q -p no:cacheprovider src/tests/test_mapper_v0_1.py src/tests/test_plan_runner.py
+# 批量计划对比：ROW/K × worker/Root 放置，输出 JSON/CSV
+PYTHONPATH=src python tools/experiments/mapper_sweep.py --demo --placements all --output data/results/mapper_sweep_demo.json --csv data/results/mapper_sweep_demo.csv
+PYTHONPATH=src python tools/experiments/mapper_sweep.py --workload data/workloads/demo1_gemv.json --k-splits all
+# 形状矩阵：suite = frontier + half + extremes + aspect
+PYTHONPATH=src python tools/experiments/mapper_sweep.py --shapes suite --output data/results/mapper_sweep_suite.json --csv data/results/mapper_sweep_suite.csv
+PYTHONPATH=src python tools/experiments/mapper_sweep.py --shapes 16x128,128x16,32x64,64x32 --top 2
+python -m pytest -q -p no:cacheprovider src/tests/test_mapper_sweep.py
 # 检查随 Git 发布的文档链接
 python tools/check_layout.py --tracked
 ```
