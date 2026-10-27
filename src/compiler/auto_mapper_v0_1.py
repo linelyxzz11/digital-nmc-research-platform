@@ -24,12 +24,24 @@ import sys
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-HOST_TILE = 0
-TILE_COUNT = 4
-LANES = 4
-W_BASE, X_BASE, Y_BASE = 0x0000, 0x1000, 0x2000
-W_BYTES, X_BYTES, Y_BYTES = 4096, 1024, 1024
+from hardware import DEFAULT_HARDWARE
+
+
+HOST_TILE = DEFAULT_HARDWARE.host_tile
+TILE_COUNT = DEFAULT_HARDWARE.tile_count
+LANES = DEFAULT_HARDWARE.lanes_per_tile
+W_BASE = DEFAULT_HARDWARE.weight.base
+X_BASE = DEFAULT_HARDWARE.input.base
+Y_BASE = DEFAULT_HARDWARE.result.base
+W_BYTES = DEFAULT_HARDWARE.weight.size
+X_BYTES = DEFAULT_HARDWARE.input.size
+Y_BYTES = DEFAULT_HARDWARE.result.size
+MAX_M = DEFAULT_HARDWARE.max_local_rows
+MAX_K = DEFAULT_HARDWARE.max_local_k
+GLOBAL_INDEX_LIMIT = DEFAULT_HARDWARE.global_index_limit
 
 DEMO_W = [[1, 2, 3, 4], [-1, 0, 2, -2], [3, -1, 0, 1], [2, 2, -1, 0]]
 DEMO_X = [2, -1, 3, 1]
@@ -50,7 +62,7 @@ def _validate_request(W, x, workers, root_tile, tid, global_row_base) -> tuple[i
     if not isinstance(x, (list, tuple)) or not x:
         raise MappingError("x must be a nonempty vector")
     m, k = len(W), len(x)
-    _integer(m, 1, Y_BYTES // 4, "M (including the Root output-capacity limit)")
+    _integer(m, 1, MAX_M, "M (including the Root output-capacity limit)")
     if any(not isinstance(row, (list, tuple)) or len(row) != k for row in W):
         raise MappingError("every row of W must have exactly len(x) elements")
     for row_index, row in enumerate(W):
@@ -69,17 +81,18 @@ def _validate_request(W, x, workers, root_tile, tid, global_row_base) -> tuple[i
         raise MappingError("Root must be distinct from the computing workers")
     _integer(tid, 0, 0xFFFF, "tid")
     _integer(global_row_base, 0, 0xFFFF, "global_row_base")
-    if global_row_base + m > 0x10000:
+    if global_row_base + m > GLOBAL_INDEX_LIMIT:
         raise MappingError("global output indices overflow the 16-bit index field")
     return m, k
 
 
 def _resources(tile: int, m: int, k: int) -> dict[str, int]:
-    _integer(m, 1, 256, f"Tile {tile} m_local")
-    _integer(k, 1, 1024, f"Tile {tile} k_local")
+    _integer(m, 1, MAX_M, f"Tile {tile} m_local")
+    _integer(k, 1, MAX_K, f"Tile {tile} k_local")
     groups = (m + LANES - 1) // LANES
     used = {"tile_id": tile, "m_local": m, "k_local": k,
             "row_groups": groups, "weight_bytes": LANES * groups * k,
+            "mac_cycles": (m * k + LANES - 1) // LANES,
             "input_bytes": k, "result_bytes": 4 * m}
     for field, capacity in (("weight_bytes", W_BYTES), ("input_bytes", X_BYTES),
                             ("result_bytes", Y_BYTES)):
@@ -147,6 +160,12 @@ def _candidate(W, x, *, partition, workers, root_tile, tid, global_row_base,
                                "wstrb": (1 << len(chunk)) - 1, "sequence": sequence,
                                "wdata": sum((v & 0xFF) << (8 * i) for i, v in enumerate(chunk))})
 
+    compute_cycles = max(item["mac_cycles"] for item in usage)
+    # Additive first-order score: MAC cycles plus one cycle per input write, ACK,
+    # result beat and the global DONE. It assumes no compute/communication overlap.
+    packet_count = (2 * len(writes)
+                    + sum((item["m_local"] + LANES - 1) // LANES for item in usage) + 1)
+
     return {
         "partition": partition,
         "split": split,
@@ -162,7 +181,10 @@ def _candidate(W, x, *, partition, workers, root_tile, tid, global_row_base,
         "diagnostics": {"tiles": usage, "input_write_count": len(writes),
                         "total_weight_bytes": sum(u["weight_bytes"] for u in usage),
                         "total_input_bytes": sum(u["input_bytes"] for u in usage),
-                        "useful_mac_count": m * k},
+                        "useful_mac_count": m * k,
+                        "estimated_compute_cycles": compute_cycles,
+                        "estimated_packets": packet_count,
+                        "cost_score": compute_cycles + packet_count},
     }
 
 
@@ -170,8 +192,9 @@ def map_gemv(W, x, *, strategy="auto", workers=(1, 2), root_tile=3,
              tid=1, global_row_base=0, k_split=None) -> dict[str, Any]:
     """Create a plan, without modifying inputs or touching simulator state.
 
-    auto uses only the default balanced ROW and K candidates. ROW wins whenever
-    it fits. This is a reproducible capacity baseline, not a speed prediction.
+    auto compares the default balanced ROW and K candidates by a first-order
+    cost_score = MAC/4 cycles per Tile + write+ACK+result+DONE packets;
+    ROW wins ties. This is a planning proxy, not a speed prediction.
     Explicit row/k requests fail rather than silently switching strategies.
     """
     m, k = _validate_request(W, x, workers, root_tile, tid, global_row_base)
@@ -187,25 +210,28 @@ def map_gemv(W, x, *, strategy="auto", workers=(1, 2), root_tile=3,
             candidates[name] = _candidate(
                 W, x, partition=name, workers=workers, root_tile=root_tile,
                 tid=tid, global_row_base=global_row_base, k_split=k_split)
-            summaries[name] = {"feasible": True}
+            summaries[name] = {"feasible": True,
+                               "cost_score": candidates[name]["diagnostics"]["cost_score"]}
         except MappingError as error:
             summaries[name] = {"feasible": False, "reason": str(error)}
             failures.append(f"{name}: {error}")
-    chosen = next((name for name in names if name in candidates), None)
+    if strategy == "auto":
+        chosen = min(candidates, key=lambda name: (candidates[name]["diagnostics"]["cost_score"],
+                                                   names.index(name))) if candidates else None
+    else:
+        chosen = next(iter(candidates), None)
     if chosen is None:
         raise MappingError("no legal default mapping; " + "; ".join(failures))
     plan = candidates[chosen]
     plan.update({
         "plan_version": "0.1",
         "strategy_requested": strategy,
-        "selection_policy": "row_first_capacity_baseline" if strategy == "auto" else "explicit",
-        "choice_reason": ("ROW is feasible and has baseline priority" if chosen == "ROW"
-                          else "ROW is infeasible; default K is feasible") if strategy == "auto"
-                         else f"explicit {chosen} request",
-        "hardware": {"mesh_x": 2, "mesh_y": 2, "tile_count": TILE_COUNT,
-                     "host_tile": HOST_TILE, "workers": list(workers), "root_tile": root_tile,
-                     "lanes_per_worker": LANES, "weight_sram_bytes": W_BYTES,
-                     "input_sram_bytes": X_BYTES, "result_sram_bytes": Y_BYTES},
+        "selection_policy": "cost_score_min_row_tiebreak" if strategy == "auto" else "explicit",
+        "choice_reason": (f"{chosen} has the lower cost_score "
+                          f"({candidates[chosen]['diagnostics']['cost_score']}); ROW wins ties")
+                         if strategy == "auto" else f"explicit {chosen} request",
+        "hardware": {**DEFAULT_HARDWARE.describe(),
+                     "workers": list(workers), "root_tile": root_tile},
         "workload": {"m": m, "k": k, "operand_type": "signed_int8",
                      "accumulator_type": "signed_int32_wrap"},
         "execution_contract": {

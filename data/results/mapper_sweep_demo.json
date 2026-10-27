@@ -1,0 +1,768 @@
+{
+  "workload": {
+    "m": 4,
+    "k": 4
+  },
+  "options": {
+    "partitions": [
+      "row",
+      "k"
+    ],
+    "placements": "all",
+    "k_splits": "default",
+    "tid": 1,
+    "global_row_base": 0,
+    "timing_scope": "cycle-stepped NoC schedule; functional Compute; not total GEMV latency"
+  },
+  "results": [
+    {
+      "m": 4,
+      "k": 4,
+      "strategy": "ROW",
+      "workers": [
+        1,
+        2
+      ],
+      "root_tile": 0,
+      "k_split": null,
+      "status": "ok",
+      "partition": "ROW",
+      "golden_ok": true,
+      "metrics": {
+        "network_schedule_cycles": 22,
+        "flit_hops": 10,
+        "max_router_fifo_occupancy": 2,
+        "input_acks": 2,
+        "result_packet_count": 2,
+        "psum_elements": 0,
+        "compute_cycles": 2,
+        "estimated_packets": 7,
+        "cost_score": 9
+      },
+      "plan": {
+        "input_write_count": 2,
+        "total_weight_bytes": 32,
+        "total_input_bytes": 8,
+        "useful_mac_count": 16
+      }
+    },
+    {
+      "m": 4,
+      "k": 4,
+      "strategy": "ROW",
+      "workers": [
+        1,
+        2
+      ],
+      "root_tile": 3,
+      "k_split": null,
+      "status": "ok",
+      "partition": "ROW",
+      "golden_ok": true,
+      "metrics": {
+        "network_schedule_cycles": 24,
+        "flit_hops": 12,
+        "max_router_fifo_occupancy": 2,
+        "input_acks": 2,
+        "result_packet_count": 2,
+        "psum_elements": 0,
+        "compute_cycles": 2,
+        "estimated_packets": 7,
+        "cost_score": 9
+      },
+      "plan": {
+        "input_write_count": 2,
+        "total_weight_bytes": 32,
+        "total_input_bytes": 8,
+        "useful_mac_count": 16
+      }
+    },
+    {
+      "m": 4,
+      "k": 4,
+      "strategy": "ROW",
+      "workers": [
+        1,
+        3
+      ],
+      "root_tile": 0,
+      "k_split": null,
+      "status": "ok",
+      "partition": "ROW",
+      "golden_ok": true,
+      "metrics": {
+        "network_schedule_cycles": 24,
+        "flit_hops": 15,
+        "max_router_fifo_occupancy": 2,
+        "input_acks": 2,
+        "result_packet_count": 2,
+        "psum_elements": 0,
+        "compute_cycles": 2,
+        "estimated_packets": 7,
+        "cost_score": 9
+      },
+      "plan": {
+        "input_write_count": 2,
+        "total_weight_bytes": 32,
+        "total_input_bytes": 8,
+        "useful_mac_count": 16
+      }
+    },
+    {
+      "m": 4,
+      "k": 4,
+      "strategy": "ROW",
+      "workers": [
+        1,
+        3
+      ],
+      "root_tile": 2,
+      "k_split": null,
+      "status": "ok",
+      "partition": "ROW",
+      "golden_ok": true,
+      "metrics": {
+        "network_schedule_cycles": 25,
+        "flit_hops": 16,
+        "max_router_fifo_occupancy": 2,
+        "input_acks": 2,
+        "result_packet_count": 2,
+        "psum_elements": 0,
+        "compute_cycles": 2,
+        "estimated_packets": 7,
+        "cost_score": 9
+      },
+      "plan": {
+        "input_write_count": 2,
+        "total_weight_bytes": 32,
+        "total_input_bytes": 8,
+        "useful_mac_count": 16
+      }
+    },
+    {
+      "m": 4,
+      "k": 4,
+      "strategy": "ROW",
+      "workers": [
+        2,
+        1
+      ],
+      "root_tile": 0,
+      "k_split": null,
+      "status": "ok",
+      "partition": "ROW",
+      "golden_ok": true,
+      "metrics": {
+        "network_schedule_cycles": 22,
+        "flit_hops": 10,
+        "max_router_fifo_occupancy": 2,
+        "input_acks": 2,
+        "result_packet_count": 2,
+        "psum_elements": 0,
+        "compute_cycles": 2,
+        "estimated_packets": 7,
+        "cost_score": 9
+      },
+      "plan": {
+        "input_write_count": 2,
+        "total_weight_bytes": 32,
+        "total_input_bytes": 8,
+        "useful_mac_count": 16
+      }
+    },
+    {
+      "m": 4,
+      "k": 4,
+      "strategy": "ROW",
+      "workers": [
+        2,
+        1
+      ],
+      "root_tile": 3,
+      "k_split": null,
+      "status": "ok",
+      "partition": "ROW",
+      "golden_ok": true,
+      "metrics": {
+        "network_schedule_cycles": 24,
+        "flit_hops": 12,
+        "max_router_fifo_occupancy": 2,
+        "input_acks": 2,
+        "result_packet_count": 2,
+        "psum_elements": 0,
+        "compute_cycles": 2,
+        "estimated_packets": 7,
+        "cost_score": 9
+      },
+      "plan": {
+        "input_write_count": 2,
+        "total_weight_bytes": 32,
+        "total_input_bytes": 8,
+        "useful_mac_count": 16
+      }
+    },
+    {
+      "m": 4,
+      "k": 4,
+      "strategy": "ROW",
+      "workers": [
+        2,
+        3
+      ],
+      "root_tile": 0,
+      "k_split": null,
+      "status": "ok",
+      "partition": "ROW",
+      "golden_ok": true,
+      "metrics": {
+        "network_schedule_cycles": 24,
+        "flit_hops": 15,
+        "max_router_fifo_occupancy": 2,
+        "input_acks": 2,
+        "result_packet_count": 2,
+        "psum_elements": 0,
+        "compute_cycles": 2,
+        "estimated_packets": 7,
+        "cost_score": 9
+      },
+      "plan": {
+        "input_write_count": 2,
+        "total_weight_bytes": 32,
+        "total_input_bytes": 8,
+        "useful_mac_count": 16
+      }
+    },
+    {
+      "m": 4,
+      "k": 4,
+      "strategy": "ROW",
+      "workers": [
+        2,
+        3
+      ],
+      "root_tile": 1,
+      "k_split": null,
+      "status": "ok",
+      "partition": "ROW",
+      "golden_ok": true,
+      "metrics": {
+        "network_schedule_cycles": 25,
+        "flit_hops": 16,
+        "max_router_fifo_occupancy": 2,
+        "input_acks": 2,
+        "result_packet_count": 2,
+        "psum_elements": 0,
+        "compute_cycles": 2,
+        "estimated_packets": 7,
+        "cost_score": 9
+      },
+      "plan": {
+        "input_write_count": 2,
+        "total_weight_bytes": 32,
+        "total_input_bytes": 8,
+        "useful_mac_count": 16
+      }
+    },
+    {
+      "m": 4,
+      "k": 4,
+      "strategy": "ROW",
+      "workers": [
+        3,
+        1
+      ],
+      "root_tile": 0,
+      "k_split": null,
+      "status": "ok",
+      "partition": "ROW",
+      "golden_ok": true,
+      "metrics": {
+        "network_schedule_cycles": 24,
+        "flit_hops": 15,
+        "max_router_fifo_occupancy": 2,
+        "input_acks": 2,
+        "result_packet_count": 2,
+        "psum_elements": 0,
+        "compute_cycles": 2,
+        "estimated_packets": 7,
+        "cost_score": 9
+      },
+      "plan": {
+        "input_write_count": 2,
+        "total_weight_bytes": 32,
+        "total_input_bytes": 8,
+        "useful_mac_count": 16
+      }
+    },
+    {
+      "m": 4,
+      "k": 4,
+      "strategy": "ROW",
+      "workers": [
+        3,
+        1
+      ],
+      "root_tile": 2,
+      "k_split": null,
+      "status": "ok",
+      "partition": "ROW",
+      "golden_ok": true,
+      "metrics": {
+        "network_schedule_cycles": 25,
+        "flit_hops": 16,
+        "max_router_fifo_occupancy": 2,
+        "input_acks": 2,
+        "result_packet_count": 2,
+        "psum_elements": 0,
+        "compute_cycles": 2,
+        "estimated_packets": 7,
+        "cost_score": 9
+      },
+      "plan": {
+        "input_write_count": 2,
+        "total_weight_bytes": 32,
+        "total_input_bytes": 8,
+        "useful_mac_count": 16
+      }
+    },
+    {
+      "m": 4,
+      "k": 4,
+      "strategy": "ROW",
+      "workers": [
+        3,
+        2
+      ],
+      "root_tile": 0,
+      "k_split": null,
+      "status": "ok",
+      "partition": "ROW",
+      "golden_ok": true,
+      "metrics": {
+        "network_schedule_cycles": 24,
+        "flit_hops": 15,
+        "max_router_fifo_occupancy": 2,
+        "input_acks": 2,
+        "result_packet_count": 2,
+        "psum_elements": 0,
+        "compute_cycles": 2,
+        "estimated_packets": 7,
+        "cost_score": 9
+      },
+      "plan": {
+        "input_write_count": 2,
+        "total_weight_bytes": 32,
+        "total_input_bytes": 8,
+        "useful_mac_count": 16
+      }
+    },
+    {
+      "m": 4,
+      "k": 4,
+      "strategy": "ROW",
+      "workers": [
+        3,
+        2
+      ],
+      "root_tile": 1,
+      "k_split": null,
+      "status": "ok",
+      "partition": "ROW",
+      "golden_ok": true,
+      "metrics": {
+        "network_schedule_cycles": 25,
+        "flit_hops": 16,
+        "max_router_fifo_occupancy": 2,
+        "input_acks": 2,
+        "result_packet_count": 2,
+        "psum_elements": 0,
+        "compute_cycles": 2,
+        "estimated_packets": 7,
+        "cost_score": 9
+      },
+      "plan": {
+        "input_write_count": 2,
+        "total_weight_bytes": 32,
+        "total_input_bytes": 8,
+        "useful_mac_count": 16
+      }
+    },
+    {
+      "m": 4,
+      "k": 4,
+      "strategy": "K",
+      "workers": [
+        1,
+        2
+      ],
+      "root_tile": 0,
+      "k_split": null,
+      "status": "ok",
+      "partition": "K",
+      "golden_ok": true,
+      "metrics": {
+        "network_schedule_cycles": 22,
+        "flit_hops": 10,
+        "max_router_fifo_occupancy": 2,
+        "input_acks": 2,
+        "result_packet_count": 2,
+        "psum_elements": 8,
+        "compute_cycles": 2,
+        "estimated_packets": 7,
+        "cost_score": 9
+      },
+      "plan": {
+        "input_write_count": 2,
+        "total_weight_bytes": 16,
+        "total_input_bytes": 4,
+        "useful_mac_count": 16
+      }
+    },
+    {
+      "m": 4,
+      "k": 4,
+      "strategy": "K",
+      "workers": [
+        1,
+        2
+      ],
+      "root_tile": 3,
+      "k_split": null,
+      "status": "ok",
+      "partition": "K",
+      "golden_ok": true,
+      "metrics": {
+        "network_schedule_cycles": 24,
+        "flit_hops": 12,
+        "max_router_fifo_occupancy": 2,
+        "input_acks": 2,
+        "result_packet_count": 2,
+        "psum_elements": 8,
+        "compute_cycles": 2,
+        "estimated_packets": 7,
+        "cost_score": 9
+      },
+      "plan": {
+        "input_write_count": 2,
+        "total_weight_bytes": 16,
+        "total_input_bytes": 4,
+        "useful_mac_count": 16
+      }
+    },
+    {
+      "m": 4,
+      "k": 4,
+      "strategy": "K",
+      "workers": [
+        1,
+        3
+      ],
+      "root_tile": 0,
+      "k_split": null,
+      "status": "ok",
+      "partition": "K",
+      "golden_ok": true,
+      "metrics": {
+        "network_schedule_cycles": 24,
+        "flit_hops": 15,
+        "max_router_fifo_occupancy": 2,
+        "input_acks": 2,
+        "result_packet_count": 2,
+        "psum_elements": 8,
+        "compute_cycles": 2,
+        "estimated_packets": 7,
+        "cost_score": 9
+      },
+      "plan": {
+        "input_write_count": 2,
+        "total_weight_bytes": 16,
+        "total_input_bytes": 4,
+        "useful_mac_count": 16
+      }
+    },
+    {
+      "m": 4,
+      "k": 4,
+      "strategy": "K",
+      "workers": [
+        1,
+        3
+      ],
+      "root_tile": 2,
+      "k_split": null,
+      "status": "ok",
+      "partition": "K",
+      "golden_ok": true,
+      "metrics": {
+        "network_schedule_cycles": 25,
+        "flit_hops": 16,
+        "max_router_fifo_occupancy": 2,
+        "input_acks": 2,
+        "result_packet_count": 2,
+        "psum_elements": 8,
+        "compute_cycles": 2,
+        "estimated_packets": 7,
+        "cost_score": 9
+      },
+      "plan": {
+        "input_write_count": 2,
+        "total_weight_bytes": 16,
+        "total_input_bytes": 4,
+        "useful_mac_count": 16
+      }
+    },
+    {
+      "m": 4,
+      "k": 4,
+      "strategy": "K",
+      "workers": [
+        2,
+        1
+      ],
+      "root_tile": 0,
+      "k_split": null,
+      "status": "ok",
+      "partition": "K",
+      "golden_ok": true,
+      "metrics": {
+        "network_schedule_cycles": 22,
+        "flit_hops": 10,
+        "max_router_fifo_occupancy": 2,
+        "input_acks": 2,
+        "result_packet_count": 2,
+        "psum_elements": 8,
+        "compute_cycles": 2,
+        "estimated_packets": 7,
+        "cost_score": 9
+      },
+      "plan": {
+        "input_write_count": 2,
+        "total_weight_bytes": 16,
+        "total_input_bytes": 4,
+        "useful_mac_count": 16
+      }
+    },
+    {
+      "m": 4,
+      "k": 4,
+      "strategy": "K",
+      "workers": [
+        2,
+        1
+      ],
+      "root_tile": 3,
+      "k_split": null,
+      "status": "ok",
+      "partition": "K",
+      "golden_ok": true,
+      "metrics": {
+        "network_schedule_cycles": 24,
+        "flit_hops": 12,
+        "max_router_fifo_occupancy": 2,
+        "input_acks": 2,
+        "result_packet_count": 2,
+        "psum_elements": 8,
+        "compute_cycles": 2,
+        "estimated_packets": 7,
+        "cost_score": 9
+      },
+      "plan": {
+        "input_write_count": 2,
+        "total_weight_bytes": 16,
+        "total_input_bytes": 4,
+        "useful_mac_count": 16
+      }
+    },
+    {
+      "m": 4,
+      "k": 4,
+      "strategy": "K",
+      "workers": [
+        2,
+        3
+      ],
+      "root_tile": 0,
+      "k_split": null,
+      "status": "ok",
+      "partition": "K",
+      "golden_ok": true,
+      "metrics": {
+        "network_schedule_cycles": 24,
+        "flit_hops": 15,
+        "max_router_fifo_occupancy": 2,
+        "input_acks": 2,
+        "result_packet_count": 2,
+        "psum_elements": 8,
+        "compute_cycles": 2,
+        "estimated_packets": 7,
+        "cost_score": 9
+      },
+      "plan": {
+        "input_write_count": 2,
+        "total_weight_bytes": 16,
+        "total_input_bytes": 4,
+        "useful_mac_count": 16
+      }
+    },
+    {
+      "m": 4,
+      "k": 4,
+      "strategy": "K",
+      "workers": [
+        2,
+        3
+      ],
+      "root_tile": 1,
+      "k_split": null,
+      "status": "ok",
+      "partition": "K",
+      "golden_ok": true,
+      "metrics": {
+        "network_schedule_cycles": 25,
+        "flit_hops": 16,
+        "max_router_fifo_occupancy": 2,
+        "input_acks": 2,
+        "result_packet_count": 2,
+        "psum_elements": 8,
+        "compute_cycles": 2,
+        "estimated_packets": 7,
+        "cost_score": 9
+      },
+      "plan": {
+        "input_write_count": 2,
+        "total_weight_bytes": 16,
+        "total_input_bytes": 4,
+        "useful_mac_count": 16
+      }
+    },
+    {
+      "m": 4,
+      "k": 4,
+      "strategy": "K",
+      "workers": [
+        3,
+        1
+      ],
+      "root_tile": 0,
+      "k_split": null,
+      "status": "ok",
+      "partition": "K",
+      "golden_ok": true,
+      "metrics": {
+        "network_schedule_cycles": 24,
+        "flit_hops": 15,
+        "max_router_fifo_occupancy": 2,
+        "input_acks": 2,
+        "result_packet_count": 2,
+        "psum_elements": 8,
+        "compute_cycles": 2,
+        "estimated_packets": 7,
+        "cost_score": 9
+      },
+      "plan": {
+        "input_write_count": 2,
+        "total_weight_bytes": 16,
+        "total_input_bytes": 4,
+        "useful_mac_count": 16
+      }
+    },
+    {
+      "m": 4,
+      "k": 4,
+      "strategy": "K",
+      "workers": [
+        3,
+        1
+      ],
+      "root_tile": 2,
+      "k_split": null,
+      "status": "ok",
+      "partition": "K",
+      "golden_ok": true,
+      "metrics": {
+        "network_schedule_cycles": 25,
+        "flit_hops": 16,
+        "max_router_fifo_occupancy": 2,
+        "input_acks": 2,
+        "result_packet_count": 2,
+        "psum_elements": 8,
+        "compute_cycles": 2,
+        "estimated_packets": 7,
+        "cost_score": 9
+      },
+      "plan": {
+        "input_write_count": 2,
+        "total_weight_bytes": 16,
+        "total_input_bytes": 4,
+        "useful_mac_count": 16
+      }
+    },
+    {
+      "m": 4,
+      "k": 4,
+      "strategy": "K",
+      "workers": [
+        3,
+        2
+      ],
+      "root_tile": 0,
+      "k_split": null,
+      "status": "ok",
+      "partition": "K",
+      "golden_ok": true,
+      "metrics": {
+        "network_schedule_cycles": 24,
+        "flit_hops": 15,
+        "max_router_fifo_occupancy": 2,
+        "input_acks": 2,
+        "result_packet_count": 2,
+        "psum_elements": 8,
+        "compute_cycles": 2,
+        "estimated_packets": 7,
+        "cost_score": 9
+      },
+      "plan": {
+        "input_write_count": 2,
+        "total_weight_bytes": 16,
+        "total_input_bytes": 4,
+        "useful_mac_count": 16
+      }
+    },
+    {
+      "m": 4,
+      "k": 4,
+      "strategy": "K",
+      "workers": [
+        3,
+        2
+      ],
+      "root_tile": 1,
+      "k_split": null,
+      "status": "ok",
+      "partition": "K",
+      "golden_ok": true,
+      "metrics": {
+        "network_schedule_cycles": 25,
+        "flit_hops": 16,
+        "max_router_fifo_occupancy": 2,
+        "input_acks": 2,
+        "result_packet_count": 2,
+        "psum_elements": 8,
+        "compute_cycles": 2,
+        "estimated_packets": 7,
+        "cost_score": 9
+      },
+      "plan": {
+        "input_write_count": 2,
+        "total_weight_bytes": 16,
+        "total_input_bytes": 4,
+        "useful_mac_count": 16
+      }
+    }
+  ],
+  "calibration": {
+    "shapes_checked": 1,
+    "agreements": 1,
+    "mismatches": 0
+  }
+}

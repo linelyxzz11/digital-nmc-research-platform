@@ -1,0 +1,2 @@
+# Python csv.writer emits RFC 4180 CRLF; keep raw experiment bytes intact.
+*.csv whitespace=cr-at-eol
