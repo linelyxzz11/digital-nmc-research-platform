@@ -21,4 +21,4 @@ python -m pytest -q -p no:cacheprovider src/tests/test_timed_root.py
 
 Mapper 回归将生成计划实例化为现有 TileTask、MEM_WRITE 和 GatherConfig，与 Demo 1/2 对照任务、预加载字节和 ACK 集合，再通过现有功能模型与 Root 端点核对数值和完成次数；同时检查一阶代价 `cost_score` 的组成与 auto 选择。Plan Runner 回归把 JSON 计划交给真实调度链执行，要求结果、事件 Trace、ACK 集合和摘要与硬编码 Demo 完全一致，并覆盖 CLI 往返、错误分区入口和 30 余种篡改计划的拒绝。Plan Sweep 回归覆盖候选枚举、形状预设、大 K 采样切分、不可行候选记录、确定性、排序、一阶代价校准、CSV 写出和 JSON/CSV CLI；它仍不代表完整周期模型或 RTL 等价。
 
-64 Tile v0.2 后续新增 35 项，项目共 347 项：实例隔离、64-bit 来源完成 mask、新旧 2×2 周期/任务一致性、ROW/K/二维分块、有限多层归约与反压、错误来源原子拒绝、plan 篡改检查、三机分片的续跑/完整性/版本检查。新增 Mapper→RTL 入口将三个新 leaf 任务经 ID 重映射送入既有 Tile RTL，逐周期与 SRAM 对照；不声称实现完整 64 Tile RTL。
+64 Tile v0.2 后续新增 37 项，项目共 349 项：实例隔离、64-bit 来源完成 mask、新旧 2×2 周期/任务一致性、ROW/K/二维分块、有限多层归约与反压、错误来源原子拒绝、plan 篡改检查、三机分片的续跑/完整性/版本检查，以及多位 Tile ID 的 JSON 校验往返。新增 Mapper→RTL 入口将三个新 leaf 任务经 ID 重映射送入既有 Tile RTL，逐周期与 SRAM 对照；不声称实现完整 64 Tile RTL。

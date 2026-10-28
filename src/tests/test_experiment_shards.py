@@ -1,5 +1,6 @@
 """Multi-PC transport: deterministic manifest, resume and strict merge checks."""
 from pathlib import Path
+import json
 import runpy
 
 import pytest
@@ -98,3 +99,16 @@ def test_resealed_but_false_plan_and_numeric_results_are_rejected(api,tmp_path):
     body=dict(data);body.pop('sha256');body['jobs'][0]['plan_sha256']='false-plan'
     api['save'](path,api['seal'](body))
     with pytest.raises(ValueError,match='plan disagrees'): api['load_manifest'](path)
+
+
+def test_hash_survives_json_roundtrip_with_multi_digit_tile_keys(api):
+    value={'compute':{7:{'cycles':4},16:{'cycles':8},63:{'cycles':12}}}
+    assert api['digest'](value)==api['digest'](json.loads(json.dumps(value)))
+
+
+def test_complete_smoke_with_spread_multi_digit_ids_roundtrips_and_merges(api,tmp_path):
+    path=tmp_path/'smoke.json';api['prepare'](path,profile='smoke',shards=3)
+    directories=[tmp_path/f'pc-{i}' for i in range(3)]
+    for i,directory in enumerate(directories): api['run_shard'](path,i,directory)
+    result=api['merge'](path,directories,tmp_path/'merged')
+    assert result['complete'] and result['jobs']==result['ok']==12

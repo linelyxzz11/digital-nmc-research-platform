@@ -27,7 +27,10 @@ CONTRACT='scalable-gemv-v0.2'
 
 
 def digest(value):
-    return hashlib.sha256(json.dumps(value,sort_keys=True,separators=(',',':'),ensure_ascii=True).encode()).hexdigest()
+    # JSON converts integer dictionary keys to strings. Normalize before sorting
+    # so a recorded {7:...,16:...} hashes identically after another PC loads it.
+    normalized=json.loads(json.dumps(value,ensure_ascii=True,allow_nan=False))
+    return hashlib.sha256(json.dumps(normalized,sort_keys=True,separators=(',',':'),ensure_ascii=True,allow_nan=False).encode()).hexdigest()
 
 
 def seal(value,key='sha256'): return dict(value,**{key:digest(value)})
