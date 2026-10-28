@@ -1,0 +1,2770 @@
+{
+  "contract": "scalable-gemv-v0.2",
+  "hardware": {
+    "host_tile": 0,
+    "mesh_x": 8,
+    "mesh_y": 8,
+    "root_tile": 0,
+    "root_timing": {
+      "add_cycles": 1,
+      "done_queue_packets": 1,
+      "lanes_per_cycle": 4,
+      "read_cycles": 1,
+      "reduction_entries": 256,
+      "rx_queue_packets": 2,
+      "update_cycles": 1,
+      "write_cycles": 1
+    },
+    "tile_timing": {
+      "mac_interval": 1,
+      "memory": {
+        "input": {
+          "banks": 1,
+          "issue_interval": 1,
+          "ports_per_bank": 1,
+          "read_latency": 1,
+          "word_bytes": 1
+        },
+        "result": {
+          "banks": 4,
+          "issue_interval": 1,
+          "ports_per_bank": 1,
+          "read_latency": 1,
+          "word_bytes": 4
+        },
+        "share_weight_input": false,
+        "weight": {
+          "banks": 1,
+          "issue_interval": 1,
+          "ports_per_bank": 1,
+          "read_latency": 1,
+          "word_bytes": 4
+        }
+      },
+      "operand_slots": 2
+    }
+  },
+  "jobs": [
+    {
+      "expected_status": "ok",
+      "index": 0,
+      "job_id": "37e1bb82958a9c72ad9a",
+      "plan_sha256": "9a687229dc3108725df8dc652d072d88121520fb1aaa0a79ea04a3e5d39ffdc9",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          16
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 1,
+      "job_id": "9769f86c5a81a23e9aea",
+      "plan_sha256": "71568198941a0d8bd7813ecb98d107edc7b9a08ede874c3cbfc3b23cd05b0171",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          16
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 2,
+      "job_id": "fca1989de09837a95c57",
+      "plan_sha256": "c9dba184e9743ac4297f013e761f6118404059adff1756d26efd4e67a1b098c9",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          16
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 3,
+      "job_id": "77dd5acf1676d2b7b0a7",
+      "plan_sha256": "c40e6d2d5d4937b21db7693f70d11818857768dc0c0efed4d231d6ebf6b67b7c",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          16
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 4,
+      "job_id": "d45b950987c5b761133a",
+      "plan_sha256": "c3a329070902f0f34f1f84f56d1147d523c18942c859d59c374daf89c1f0f51f",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          16,
+          1
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 5,
+      "job_id": "fcffc676c1bf53c27289",
+      "plan_sha256": "7e22e7a73588cd1c82d2d49b7448a6ce0cd959e2dd1f80065eddf890bc932590",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          16,
+          1
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 6,
+      "job_id": "8df37ea36a89c6b95fdf",
+      "plan_sha256": "1f3bb3da5db11cbb1ee312900e0d3dd08be937725528d09e6df898e29171f1ef",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          16,
+          1
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 7,
+      "job_id": "84dd522e156cb7f66a47",
+      "plan_sha256": "608e86ffe3ea4e448ffeb40cb29eff2c0aedd4253ea79b0c2282b8e078e6d1f0",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          16,
+          1
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 8,
+      "job_id": "0d63e024e2aeeb0e9432",
+      "plan_sha256": "1224de5cde6809d10ee857ecf4c3ffe16823db045ca6b2224036de355c658fb3",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          4
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 9,
+      "job_id": "3d49fe7b3455185db561",
+      "plan_sha256": "c37ac713984aa2b9840ee274e38e2544f21dad373839c244d183b1cca3ae358b",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          4
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 10,
+      "job_id": "dbd50efdfe832a1bbf65",
+      "plan_sha256": "a9152d924ae6fd91ec527cc9c7569e3b60051dff8f5648fdef4a5c9326eac7e0",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          4
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 11,
+      "job_id": "777f427fcd79c737054a",
+      "plan_sha256": "64c77abde93d8d9490db9ac4153a369b7802fda2598789fa24a26fcadf78fbcf",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          4
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 12,
+      "job_id": "c8b3b219c9f2019fb594",
+      "plan_sha256": "657452169d6434aa870ce53fefe20870faf11dbe8747122f59818b863268b446",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          32
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 13,
+      "job_id": "97026aae267dff57c4d3",
+      "plan_sha256": "fa7e8de1305e1bd37db5815bea9f13f48369c555838d8dc66bf7630eb444cc35",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          32
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 14,
+      "job_id": "9771622854e8ac0a5a7c",
+      "plan_sha256": "5bb559c64446e6386ddb12d307e119a31a3ff123fc3eea3a09a1519b258a7ff1",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          32
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 15,
+      "job_id": "d4b7e8cd7262848d8599",
+      "plan_sha256": "3a09358d117c97401b10c684ff44aa8aab3544b89ed6b0293869a8dd10490616",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          32
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 16,
+      "job_id": "c3739bae9790bd1d86cc",
+      "plan_sha256": "c142bbba73573bab98d2d586478d8e5bf8f19f87d7abdbfd2fcd39dd5468f382",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          32,
+          1
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 17,
+      "job_id": "0dd0515e696aa97a0269",
+      "plan_sha256": "3c7813563aa68184b6cef4b3c7770c9fb4ca76372a3a65dc4202b12b74a133f1",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          32,
+          1
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 18,
+      "job_id": "c2dc863c1c1ccdfcaae4",
+      "plan_sha256": "360d414d0a99d7a1713ba81d3faa765519681bd51ddf7113036cc84324d1c5a5",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          32,
+          1
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 19,
+      "job_id": "bc8f51c74dbb453c2555",
+      "plan_sha256": "1800689a1cfb472d4b7027b9e82f93aa937dea74d2b9cc34c036d2fe5ba8a067",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          32,
+          1
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 20,
+      "job_id": "0a1f1caf3336985c5ff9",
+      "plan_sha256": "08bd21030619294610086d544bfe907293449fcecf6fd29edb09d467da9d489d",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          8
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 21,
+      "job_id": "18879cee072723147976",
+      "plan_sha256": "05e1523af8a14d9e1f2f6fbc09681c13ef06992e751b4ba2e2436e3530c7e35c",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          8
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 22,
+      "job_id": "2f352753fe975c11914d",
+      "plan_sha256": "1eda8ca21f28cdec1d99b177c250536810aa221c6c52786f6aa9804d803dd173",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          8
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 23,
+      "job_id": "7cccc46351f03558f603",
+      "plan_sha256": "9c52da5b6fa66af51dd73d42c3d43714e106d69246703b05ca90f7129ba5ff23",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          8
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 24,
+      "job_id": "ccdd69566b6859d47b36",
+      "plan_sha256": "4270c92b6b6abb9f5a2a00633214fb5affe521311015aa8be6bd989444feec7d",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          8,
+          4
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 25,
+      "job_id": "7969da16e156f6201e54",
+      "plan_sha256": "6fb71edc3d27a358acd2042c75cce50249ce55eeaf4262744157506bb76a80e4",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          8,
+          4
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 26,
+      "job_id": "6c4251a16bd380c5d2d3",
+      "plan_sha256": "336c91021a47923a26166c114e936c97c1c1352ba7f04e4b363207f5d2849873",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          8,
+          4
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 27,
+      "job_id": "b93b4db38f126686e276",
+      "plan_sha256": "c5b78ef73938ce4b5081c138c88b24a4ee341d7c70c47bdb2d3d78934b6dece4",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          8,
+          4
+        ],
+        "host_tile": 0,
+        "k": 128,
+        "m": 32,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 28,
+      "job_id": "97f54aa8bf8bbf6742c8",
+      "plan_sha256": "0d84637a86811cb7209a41685d4dee10c99d43ab75b30718b8b45f4278f14a2f",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          16
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 29,
+      "job_id": "ce40197c3e94e2960506",
+      "plan_sha256": "a989b275e1beccdd25b8414cb5c336e4d622a233f28628b0a00d034add661222",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          16
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 30,
+      "job_id": "5eeefff30a2fedac0a71",
+      "plan_sha256": "88626928aab8ef477e51be7abb214ef1fad8a6028128ab2fa7b20fb2db417db5",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          16
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 31,
+      "job_id": "5e9fd855962212dd1146",
+      "plan_sha256": "b41e25358a0769b7dcd98e623d477c1ca48fac0084919aa0c1f3381df9ddb851",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          16
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 32,
+      "job_id": "9de7248fc79c743270ef",
+      "plan_sha256": "e9e03c18a8e6da58fff480cf8df3fce934e32b8e6eff798f014c32912590f6fb",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          16,
+          1
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 33,
+      "job_id": "729bcf313885dd5bdd2a",
+      "plan_sha256": "d5f0e5a60f3e6979fee526a4dde3a5c8b253d34781c82892f3b99b46fc5e6efc",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          16,
+          1
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 34,
+      "job_id": "b4cfd473a9ab3f4b9238",
+      "plan_sha256": "c2c6c2d7df33f4c048811e473d6b5f2bfb6846e7e2a1c5cf13707b0e2f6c2717",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          16,
+          1
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 35,
+      "job_id": "bc09473069b1f9821029",
+      "plan_sha256": "9b6bc00e3a3f99e734cdfddfd40f6b1d8167d258ab266da2cbbd58b844c1278d",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          16,
+          1
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 36,
+      "job_id": "5b3e539d9bdee326f6f1",
+      "plan_sha256": "598b6e368238982f7a4e8835e449bc61e335eda33861513896894fd0e4b656e1",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          4
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 37,
+      "job_id": "41b7a46cceafc124fbe0",
+      "plan_sha256": "e1c7d051ad2303d63456a1da19b2a99ca89a0f5ef5d9418a3e624dd223a42a3c",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          4
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 38,
+      "job_id": "d2c033bc16853e0d539e",
+      "plan_sha256": "c73df22fcdbe6f7cb43d4eda0dddf1e922f5b193100bbbbecdc42ea142d5af00",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          4
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 39,
+      "job_id": "0d2b1c24c0d7a32a12e6",
+      "plan_sha256": "d969e0005c44580a47561e79d110a831f835be3fe10d40048e887ed169f751e3",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          4
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 40,
+      "job_id": "d3fcb8989665aa5d4901",
+      "plan_sha256": "c4a7ef56249943b913d98fcee06c81413bc3bfacd4a1a993bb10dc6620ae2727",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          32
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 41,
+      "job_id": "9be3d4c2bb910b5e9433",
+      "plan_sha256": "eb30170c5324e2a67aa1f7cce6cfa7a77bc99f9b5efbc9881727f5608fa59203",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          32
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 42,
+      "job_id": "63df39f7139df98a695b",
+      "plan_sha256": "73b56d6787f88752e3a50926de29212e1836ad0f886bc3bf4488f5c8ecadd972",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          32
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 43,
+      "job_id": "9cb541b8133d0fda5fe0",
+      "plan_sha256": "6cf94e7cdc8592cc734280b1dacef3ecb0054bddc193e42b6e25db9f6f92b7a9",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          32
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 44,
+      "job_id": "6c97b69214f035c6cf91",
+      "plan_sha256": "85323aa55bd6e7ecb03b2ac5d3a47c69096001ceef22f4d97bedb7aecf4db462",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          32,
+          1
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 45,
+      "job_id": "04f669a08e581c948dbe",
+      "plan_sha256": "3ab6b6c66c9deb092332892ddcc50363b06d3905fd6bb3b1f264b58734ff4ba7",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          32,
+          1
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 46,
+      "job_id": "201153dd0ef1754cd8c0",
+      "plan_sha256": "860ab4d7211bb7729e7ef8a00db4dd7744eaa5d9fdcbe1ce67b7699ad0b8e50f",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          32,
+          1
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 47,
+      "job_id": "25e1fd8b0f6cc4cd70d1",
+      "plan_sha256": "c4bb8d72989c12316f6e800c58e8ff731aa5b5e22bf30fac4a35e03cbee76c2b",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          32,
+          1
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 48,
+      "job_id": "2f93e25214a216661bb4",
+      "plan_sha256": "398c110a8b02c7a99626353b4391f20029cca63de8170b8440bbfdb2244f3902",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          8
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 49,
+      "job_id": "cb72e3200cd7409db8e7",
+      "plan_sha256": "9f41f92c928eacc45a4e97feb59c78b4fa094701cdec977e80989f2187a308dd",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          8
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 50,
+      "job_id": "ae2efc13eead86e8e341",
+      "plan_sha256": "f0c8cb1784c59e4458917ba2a19fa975f8514626b10c44c83eb21432a7eb93ca",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          8
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 51,
+      "job_id": "b20807448c781fc19adf",
+      "plan_sha256": "c85eaf5ec9f5522dbd9417f79e710736b15b585861e979dae7e70f170ae88573",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          8
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 52,
+      "job_id": "4d9850656694a1b8d581",
+      "plan_sha256": "591903cab0efb530649799697900ae5f7dc480b051a0e647ea23b8dd57f920a6",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          8,
+          4
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 53,
+      "job_id": "1efea48fd26049d6e051",
+      "plan_sha256": "31ce4b55dcaaaefcfbd42e5e420a9a5dfdb744097c9ada90b4334cb7e809676b",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          8,
+          4
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 54,
+      "job_id": "0166ce8d1d028d3a31ae",
+      "plan_sha256": "6366a47885959e14ca8f17114e3bf85e15c9c2a17de0805f9d1f6456565e4a21",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          8,
+          4
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 55,
+      "job_id": "045e6873d8712cd13a9e",
+      "plan_sha256": "66a512973dfd06d9583f79208f3f951886163d9a9074af50ae9453fb7294813a",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          8,
+          4
+        ],
+        "host_tile": 0,
+        "k": 32,
+        "m": 128,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 56,
+      "job_id": "0462b2563e2311881143",
+      "plan_sha256": "2478e6285b8b14b3933d7abd9f5eb4806c0594d6ae7f83f41b931641e6a1e80e",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          16
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 57,
+      "job_id": "846b96ce2bfe41a32765",
+      "plan_sha256": "c388056abe7b0b1251fcf5fcaa944aabfbabbfd45f543849216083f55bcb0330",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          16
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 58,
+      "job_id": "f87b569d8d0f73a4244a",
+      "plan_sha256": "1037ecc97260206b8f0292e53de9d9fcd15ec0651b0ff1fe03eb93fa6712a59c",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          16
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 59,
+      "job_id": "6693c374c3c4a65689ce",
+      "plan_sha256": "7e2d218599506288fba678371dee59785575cbe3d1073b43a9d5814843059bcf",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          16
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 60,
+      "job_id": "da9a808d25ef1a23afe3",
+      "plan_sha256": "7a05d6dbfd7019c77ccdc562c7c3598b75415fb12e0c9fecb605c387755c7be3",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          16,
+          1
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 61,
+      "job_id": "07908757c3ef750e08e7",
+      "plan_sha256": "fea4a1ec9292b7eba885807f0f0068a6e1a13a925115087bd9356718bee6b542",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          16,
+          1
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 62,
+      "job_id": "a106aed3ec0625bb6a45",
+      "plan_sha256": "6167221a6098813fd2eb17e330f48c92d4f99bb4e86dd050a8bbf4eb040c6cbb",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          16,
+          1
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 63,
+      "job_id": "613edb6976eea1541502",
+      "plan_sha256": "01e169c2313b6b1cd7bd4b07fbcc93648e1f897e2554b6643bad775e2262977c",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          16,
+          1
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 64,
+      "job_id": "5d39fb589427b5df40b9",
+      "plan_sha256": "27747b0843e63cdde0a3ed878d854e75210601fe55b69b90c8a8386226f0260c",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          4
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 65,
+      "job_id": "29707ad827c911abac03",
+      "plan_sha256": "c1b5d8e645f1f34628fe33f8fc52594e0204dc5a716ff5e9099a6f144ecd6831",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          4
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 66,
+      "job_id": "8015e0e91eaf91bcb998",
+      "plan_sha256": "256fb18e73494ffc9977b9030b2bd6759e3b450970bf54503d31ca321ecdbbd3",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          4
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 67,
+      "job_id": "80ab058f1115aa1f6794",
+      "plan_sha256": "4762580b06bdb3683b5083c89228e71a5a7e5ddf89a2c765a71bf6210bf27001",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          4
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 68,
+      "job_id": "a343fb479c12e09be369",
+      "plan_sha256": "d587812ed094b1e14d475fb0acb3730faf5a1a54998a210506d258f9041279be",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          32
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 69,
+      "job_id": "591da4b99af6bc3c972e",
+      "plan_sha256": "d5786fea21afc38c2889daa23d96b647d86c89e950b2793eb02405fd14b555d1",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          32
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 70,
+      "job_id": "9ef475d69f23e4ab5d25",
+      "plan_sha256": "1b5c6d91d117d5d43d6c20970240736839904ce4b70884f51c5b53f4a3808b36",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          32
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 71,
+      "job_id": "fe74fe4e180f7a8aebea",
+      "plan_sha256": "af7eef8e947f904ee276bddc0d90e44fbaa1ed63390f8c977d6482ee6ff27213",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          32
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 72,
+      "job_id": "2af128c9f473f2d354ec",
+      "plan_sha256": "0dc5bb2cf8e45c1c6e2c6ad6127e235989f29c6aa3154d278769acd9f02929a5",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          32,
+          1
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 73,
+      "job_id": "d4ada25af8d9d322dd6f",
+      "plan_sha256": "4ae98d29b026ca3928bb88716c6df03d71adf3ab56d29cd5dbd9ad4d79921263",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          32,
+          1
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 74,
+      "job_id": "512a0a08b0a21f612f24",
+      "plan_sha256": "6a770af8b7aa5486f250013a9c446fd0aa4089ca260c4355977a49ee52608b1b",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          32,
+          1
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 75,
+      "job_id": "c3d4c0fa0e5d09ea3dc8",
+      "plan_sha256": "6a1a6e894fa0a2518b5fcd52a72c10ca5504c63da2ec2e83e62186b9d7b12df8",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          32,
+          1
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 76,
+      "job_id": "1a2e9be84fb930f9779c",
+      "plan_sha256": "05f3a023ba48f2de99ba9ec5d35846aaf5604d5b00fd9b411bd7649b1780d6af",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          8
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 77,
+      "job_id": "29a4d5d39896ea74730f",
+      "plan_sha256": "087b7cf7d30bbb305ea6a25c9713a9c73918705f0af80bc634b9872d68d641fa",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          8
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 78,
+      "job_id": "68b78aae2f366f399557",
+      "plan_sha256": "0decb5678f0558ebe084a2298f0b2090a182879e7ec8643ecf13f7a156680912",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          8
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 79,
+      "job_id": "a3a5def815dd3deacd27",
+      "plan_sha256": "34bc9c8950ea381af1c5072ce9697da62d051ac2c071317d4227a60f9355f831",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          8
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 80,
+      "job_id": "f851b1b814e00efd6b04",
+      "plan_sha256": "ce678d0974e64c096aef18f75c884cdb1863b18ec6ca60bd3d45e19b6026313b",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          8,
+          4
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 81,
+      "job_id": "5d2fbc4977079efad441",
+      "plan_sha256": "c27b3eaf205db9780acbef4eb535f81d55953be6d268b9c32a5e3e3d69d94a21",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          8,
+          4
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 82,
+      "job_id": "4facc000f043b32750a3",
+      "plan_sha256": "0d8e15e11d096c86d65033146014392900c019ebe06ffaee990a7cb6fb1f3846",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          8,
+          4
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 83,
+      "job_id": "728ff47140eeac672476",
+      "plan_sha256": "0900d52df9643a7b93199654307c97b730e25b8566d7cccc01d0f59cb3cb1eb7",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          8,
+          4
+        ],
+        "host_tile": 0,
+        "k": 256,
+        "m": 64,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 84,
+      "job_id": "4d8a1166a951442ca8cf",
+      "plan_sha256": "20a3348ea162e2f6e4a4e5404c7a66b05537ac0a56a9a654cdb7ba102ef7f1e0",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          16
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 85,
+      "job_id": "fed751025994b7ca28a8",
+      "plan_sha256": "731c6f2658e613d0f2b8cc19299f3b9fb3077747ffbe8996cd40aeb95f77ed40",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          16
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 86,
+      "job_id": "58867818e407209f7e09",
+      "plan_sha256": "413e7acef1c18cfe1c71b3a88dee495425a0fe582425a0e8f9bcf2cd9092a0b1",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          16
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 87,
+      "job_id": "9c516a7f9510156bb03f",
+      "plan_sha256": "90f3e68169bedb87979f9b0d79384f39c8172d5eb8e823bfdf1eb1090bdd7992",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          16
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 88,
+      "job_id": "a30af1dec5640ffd4fed",
+      "plan_sha256": "61c4952e17492154523b79b7f5e59b3ce56473e8efbf246086c7330a7923ae0c",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          16,
+          1
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 89,
+      "job_id": "79787b3c407bf6b33d2c",
+      "plan_sha256": "82325781f43db911ce6f95ffdf3504560177c3b6be075241e2266346618ba604",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          16,
+          1
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 90,
+      "job_id": "35f41b99c4f95326dffc",
+      "plan_sha256": "42575e2c13407aa7a863f55d97ba148f6470a67b228907121a555f02eb564c09",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          16,
+          1
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 91,
+      "job_id": "b2d63516d7640498bd46",
+      "plan_sha256": "9216ff15b6b34875f5742a15205ea7045741ed4b07ab60bc11339c576a964d6c",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          16,
+          1
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 92,
+      "job_id": "75e52ae6f3f9a808fd28",
+      "plan_sha256": "f4db8386a0ab423cf7aec9669cd28c76917d3b4f8e2062d6f32f3a3bee1ddbf9",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          4
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 93,
+      "job_id": "877a96be2d75e01c1efc",
+      "plan_sha256": "0263599c3acd41e13aec7a89833ff8296caa3954b281dbd6f44f5a12e83aab55",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          4
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 94,
+      "job_id": "ec5d23ca82792f9196a9",
+      "plan_sha256": "46c09fcc3a3ee7d76c2785c64ca902415b98a3a54855ea7402038f6aff4327e1",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          4
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 95,
+      "job_id": "88aadfabc03460694eff",
+      "plan_sha256": "1d3a0ce1ab7af670a766cfa7ecd5bc8960828b537ac499ddac97d717e336b00f",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          4
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 96,
+      "job_id": "ae6056102d3b0c6889df",
+      "plan_sha256": "e388896643c7a1258f5bfdcf057e524b912c1d88942aee3f96f41204316952b7",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          32
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 97,
+      "job_id": "1af57f1fecf38b53f9b3",
+      "plan_sha256": "773aa6ecbb934badea98af445d116803aa92bf2438679e94f3d03433abe8464d",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          32
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 98,
+      "job_id": "0cdeda71862b06e57e68",
+      "plan_sha256": "b3a056ab9ab2cf7fdb5dd13315d9267ed3e65bdea6e8aeb99d4094fd9d997c20",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          32
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 99,
+      "job_id": "1b5d57abc0617d87a634",
+      "plan_sha256": "dfa6be7726b9ca97397c0e95a477cdd2d28a9d0125650a8bf7004e8a9ccd7d49",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          32
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 100,
+      "job_id": "d165e4d16c77a87acdd4",
+      "plan_sha256": "36fc44027e34f37335cde3a0f243faf18af7a9c7d85c070172c2c84ca7241f28",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          32,
+          1
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 101,
+      "job_id": "54c78615b246ec10dbaf",
+      "plan_sha256": "2a33e2cf28e0bb35bded90aac818a11ee5e1ff4c6c66ab64e2eca37fd1e502ae",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          32,
+          1
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 102,
+      "job_id": "fec715e29f4e69dbac3e",
+      "plan_sha256": "900db8fb8ecfbdc9e5f0bcb9c9b54e2253cbee1440c6dd6549a35563fb8b0b0f",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          32,
+          1
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 103,
+      "job_id": "73afab96caf350aa873d",
+      "plan_sha256": "bf70d929375dc3c5e641f3ad2ed0f3841b0b45bd779d461a22e57ad6ea9e72e9",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          32,
+          1
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 104,
+      "job_id": "3f52be3a3c0eba7b5598",
+      "plan_sha256": "07fd0e7c62264acd47ca7542ed5752f04d87f8160c5d8a061a76ebdde163524a",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          8
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 105,
+      "job_id": "5b8b8071bf22a84d1847",
+      "plan_sha256": "254facc3c83ab033446955e2ee43b85505f32538f248d21febe3a71606f83dbb",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          8
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 106,
+      "job_id": "8ebe3140272ac2469d07",
+      "plan_sha256": "0c74bf2b00d169175b43b4f26ee63fed3035626e3f64d07dd927b3b8a5fb2fc9",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          8
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 107,
+      "job_id": "1efa7834033fefd4c566",
+      "plan_sha256": "04bc9a6b614c7a5586ce10faef027877164a055fe821d0db1c153c0aecd889fb",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          8
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 108,
+      "job_id": "6bafcff8eaeb12991c68",
+      "plan_sha256": "311e3d51ac1778ab4d60ac85e11c817d9d323e3584ea7f63ec2e3f4b9ee4dd2a",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          8,
+          4
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 109,
+      "job_id": "7da03c6fb1d7111b51f7",
+      "plan_sha256": "449b06fc5ed42ce1113e945b8c7315bb878a612ec099f6c8ab4922d1f5b533a7",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          8,
+          4
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 110,
+      "job_id": "90834b3f26d855df59bc",
+      "plan_sha256": "92d133bda721ac069ed3966d328f304f7c8ad159c1185b589b7018728e05f32c",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          8,
+          4
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 111,
+      "job_id": "1fbaab5696886d17ff90",
+      "plan_sha256": "dc3897265960b9d45287123c335fc038a55f72a801547437eac3cb9eceeb996e",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          8,
+          4
+        ],
+        "host_tile": 0,
+        "k": 64,
+        "m": 256,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    }
+  ],
+  "prepared_from_commit": "c5d0ee87448d40d908e2ec031446000cc8995d92",
+  "profile": "main",
+  "schema_version": 1,
+  "sha256": "f7e98f5511f70a930340764452de229b0d4bfefe230e1483a94e5ccd73ca4dfd",
+  "shards": 3,
+  "source_sha256": {
+    "pyproject.toml": "e7f42fc55a826f32afd0ccf94819bc08b9715bab91602e28a2f8af399d08b642",
+    "requirements.txt": "f6cbf18a7b3965f12327069ea80bceb9aa09da97dfb3b30e615d5eb119256aec",
+    "src/compiler/__init__.py": "e4aba99cc09fc3b939b16f9b4ada4104a7565230f8fa8120876ed56115c7d5f9",
+    "src/compiler/auto_mapper_v0_1.py": "57dbfd936b135d9594d20af867f00c74e812d8009a4e42787b07f8cea8624f79",
+    "src/compiler/grid_mapper.py": "c42845f5612add2cb364958937993a8fefc4e8740234bdd8821ebfe7830d7e2e",
+    "src/hardware.py": "583e43a8c1152c33d4ed60cfc356f0d05a77565810229c7c33bc403ffabcc8c8",
+    "src/simulator/__init__.py": "c433defde033fc2f2e62da6c6e66c6bbc6d8b3cc75f6df61349f994be6181147",
+    "src/simulator/communication/__init__.py": "7cb6d906a9bd63db2fc42d0547e96083574948a25fd920a939e2d88a3d74e6dc",
+    "src/simulator/communication/scalable.py": "d00b747867d06aa3791c7799315c5f8ae22469d19f2245edd4548e90d8016266",
+    "src/simulator/communication/v0_1.py": "3e44c32e050aa234b2f80cd3fa340d18573f6be8f4fc08806b826ca762dd9fb4",
+    "src/simulator/functional/__init__.py": "cf6ad18c2d47b3492e59d3fcf4d1b5d5de6bf823fe5ae5c20949c0635598e274",
+    "src/simulator/functional/demo0_model.py": "48d663e891722c5e2c5ccd7635669566bc4c31fdaa79f62f8b3c079c8ea9809f",
+    "src/simulator/system/__init__.py": "1172c8910c6d2a224c18b68c2063af9a2208de46b04593c74949c2d595b3c8ab",
+    "src/simulator/system/compute_timing.py": "e512f4eda89a0051486ab6fef2a522fe7fd02551796ac9c52133007b12b25e3e",
+    "src/simulator/system/demo1.py": "4185e7d93c50d5b8b45d6853fdca08e6c5aba3fa322a45eae409df75cf6a580b",
+    "src/simulator/system/demo2.py": "0169a581863f74f7de8f640bed9c46affeaaffa677246a0e190c1912f5bfc4b0",
+    "src/simulator/system/endpoint_common.py": "99de8a7fea103e14ce5ecdf5c2fd8011b07ac97c089580538fa6d1a0183116d9",
+    "src/simulator/system/root_config.py": "3dceeff1b8146bd9965c5deb64106d0c75a6a3270dc6b4f00218f8d1938599d8",
+    "src/simulator/system/scalable.py": "9ddb0e58e9c289d6e98f16b1088b75e56d1b1ee58a61237922e5b4779cd97a63",
+    "src/simulator/system/tile_config.py": "2e8bdd2208acb274ca873e5f8c33f78b10ec86f32bcc7f781ea1f79c0bc286f0",
+    "src/simulator/system/tile_memory.py": "11822bfcfc7e1a9532b390be7af669916f02d85e90692eb39f271b13e5cc32b8",
+    "src/simulator/system/tile_timing.py": "05f69c24cb81836210a25907918dc380962c8df5f74bccc9afe2cc9736a8bf80",
+    "src/simulator/system/timed_endpoint.py": "1a1b9b4b5e48f05e814a17944dc6ddd4d195351dcc26c520de7598e38d580e46",
+    "tools/experiments/mapper_sweep.py": "a599347901461f478aaf6b0961c5d68c637f72bf16d56f18914fef386caa0097",
+    "tools/experiments/scalable_experiments.py": "a04d5bc2bfa33c0a0ae9e402e424a7bdd11dec5c7574706939e9232f8cf49b1a"
+  },
+  "workload": "deterministic-int8-formula-v1"
+}

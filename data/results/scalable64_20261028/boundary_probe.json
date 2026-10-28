@@ -1,0 +1,558 @@
+{
+  "commit": "3d57272fe0989dcbf68bb26cba9c0246e836480e",
+  "results": [
+    {
+      "metrics": {
+        "compute_stats": {
+          "1": {
+            "bank_conflict_request_cycles": 0,
+            "done_stall_cycles": 0,
+            "lane_slot_utilization": 0.041666666666666664,
+            "local_elapsed_cycles": 6,
+            "mac_active_cycles": 1,
+            "mac_interval_wait_cycles": 0,
+            "max_operand_slots_used": 1,
+            "operand_wait_cycles": 1,
+            "port_busy_request_cycles": 0,
+            "read_bytes": 5,
+            "read_requests": 2,
+            "result_stall_cycles": 0,
+            "stage_cycles": {
+              "EMIT_RESULT": 1,
+              "INIT_ACC": 1,
+              "LOCAL_DONE": 1,
+              "RUN": 2,
+              "WRITE_RESULT": 1
+            },
+            "useful_mac_ops": 1,
+            "write_bytes": 4,
+            "write_requests": 1
+          },
+          "2": {
+            "bank_conflict_request_cycles": 0,
+            "done_stall_cycles": 0,
+            "lane_slot_utilization": 0.041666666666666664,
+            "local_elapsed_cycles": 6,
+            "mac_active_cycles": 1,
+            "mac_interval_wait_cycles": 0,
+            "max_operand_slots_used": 1,
+            "operand_wait_cycles": 1,
+            "port_busy_request_cycles": 0,
+            "read_bytes": 5,
+            "read_requests": 2,
+            "result_stall_cycles": 0,
+            "stage_cycles": {
+              "EMIT_RESULT": 1,
+              "INIT_ACC": 1,
+              "LOCAL_DONE": 1,
+              "RUN": 2,
+              "WRITE_RESULT": 1
+            },
+            "useful_mac_ops": 1,
+            "write_bytes": 4,
+            "write_requests": 1
+          },
+          "8": {
+            "bank_conflict_request_cycles": 0,
+            "done_stall_cycles": 0,
+            "lane_slot_utilization": 0.041666666666666664,
+            "local_elapsed_cycles": 6,
+            "mac_active_cycles": 1,
+            "mac_interval_wait_cycles": 0,
+            "max_operand_slots_used": 1,
+            "operand_wait_cycles": 1,
+            "port_busy_request_cycles": 0,
+            "read_bytes": 5,
+            "read_requests": 2,
+            "result_stall_cycles": 0,
+            "stage_cycles": {
+              "EMIT_RESULT": 1,
+              "INIT_ACC": 1,
+              "LOCAL_DONE": 1,
+              "RUN": 2,
+              "WRITE_RESULT": 1
+            },
+            "useful_mac_ops": 1,
+            "write_bytes": 4,
+            "write_requests": 1
+          },
+          "9": {
+            "bank_conflict_request_cycles": 0,
+            "done_stall_cycles": 0,
+            "lane_slot_utilization": 0.041666666666666664,
+            "local_elapsed_cycles": 6,
+            "mac_active_cycles": 1,
+            "mac_interval_wait_cycles": 0,
+            "max_operand_slots_used": 1,
+            "operand_wait_cycles": 1,
+            "port_busy_request_cycles": 0,
+            "read_bytes": 5,
+            "read_requests": 2,
+            "result_stall_cycles": 0,
+            "stage_cycles": {
+              "EMIT_RESULT": 1,
+              "INIT_ACC": 1,
+              "LOCAL_DONE": 1,
+              "RUN": 2,
+              "WRITE_RESULT": 1
+            },
+            "useful_mac_ops": 1,
+            "write_bytes": 4,
+            "write_requests": 1
+          }
+        },
+        "cycles": 64,
+        "endpoint_stats": {
+          "0": {
+            "accepted_packets": 4,
+            "add_elements": 4,
+            "done_accepted_count": 1,
+            "done_created_count": 1,
+            "done_stall_cycles": 0,
+            "elapsed_cycles": 64,
+            "forwarded_result_packets": 0,
+            "max_done_queue": 1,
+            "max_output_slots": 0,
+            "max_reduction_entries": 1,
+            "max_rx_slots": 2,
+            "partial_update_elements": 4,
+            "processed_packets": 4,
+            "read_elements": 4,
+            "reduction_full_cycles": 0,
+            "result_write_elements": 1,
+            "result_write_stall_cycles": 0,
+            "rx_blocked_flit_cycles": 2,
+            "rx_full_cycles": 7,
+            "service_cycles": 22,
+            "stage_cycles": {
+              "ADD": 4,
+              "CREATE_DONE": 1,
+              "DISPATCH": 4,
+              "IDLE": 42,
+              "PACKET_DONE": 4,
+              "READ": 4,
+              "UPDATE": 4,
+              "WRITE_RESULT": 1
+            }
+          }
+        },
+        "grid": [
+          1,
+          4
+        ],
+        "hardware_budget": {
+          "input_bytes_per_tile": 1024,
+          "mac_lanes_per_tile": 4,
+          "physical_tiles": 64,
+          "reduction_capability_per_tile": {
+            "add_cycles": 1,
+            "done_queue_packets": 1,
+            "lanes_per_cycle": 4,
+            "read_cycles": 1,
+            "reduction_entries": 256,
+            "rx_queue_packets": 2,
+            "update_cycles": 1,
+            "write_cycles": 1
+          },
+          "result_bytes_per_tile": 1024,
+          "weight_bytes_per_tile": 4096
+        },
+        "input_acks": 4,
+        "k": 4,
+        "m": 1,
+        "mesh": [
+          8,
+          8
+        ],
+        "network": {
+          "fifo_full_input_cycles": 0,
+          "flit_hops": 30,
+          "link_flits": {
+            "0->1": 6,
+            "0->8": 2,
+            "1->0": 6,
+            "1->2": 2,
+            "1->9": 2,
+            "2->1": 3,
+            "8->0": 6,
+            "9->8": 3
+          },
+          "max_fifo_occupancy": 3,
+          "ni_inject_stall_tile_cycles": 0,
+          "output_blocked_port_cycles": 2
+        },
+        "packet_counts": {
+          "MemAckPacket": 4,
+          "MemWritePacket": 4,
+          "ResultPacket": 4,
+          "TransactionDonePacket": 1
+        },
+        "phase_cycles": {
+          "completion_drain": 2,
+          "compute_and_gather": 30,
+          "input_load": 32
+        },
+        "plan_sha256": "c1c6ff5fe3b2b6a99180678ba42a9c5dc3f6a6ee7838ff32fd58c68ab66cb9c3",
+        "reducer_tiles": [],
+        "reduction": "central",
+        "root": 0,
+        "root_timing": {
+          "add_cycles": 1,
+          "done_queue_packets": 1,
+          "lanes_per_cycle": 4,
+          "read_cycles": 1,
+          "reduction_entries": 256,
+          "rx_queue_packets": 2,
+          "update_cycles": 1,
+          "write_cycles": 1
+        },
+        "schema_version": 1,
+        "scope": "weight-resident; functional input commit; timed Tile/Root/NoC; module-calibrated, not full-system RTL",
+        "tile_timing": {
+          "mac_interval": 1,
+          "memory": {
+            "input": {
+              "banks": 1,
+              "issue_interval": 1,
+              "ports_per_bank": 1,
+              "read_latency": 1,
+              "word_bytes": 1
+            },
+            "result": {
+              "banks": 4,
+              "issue_interval": 1,
+              "ports_per_bank": 1,
+              "read_latency": 1,
+              "word_bytes": 4
+            },
+            "share_weight_input": false,
+            "weight": {
+              "banks": 1,
+              "issue_interval": 1,
+              "ports_per_bank": 1,
+              "read_latency": 1,
+              "word_bytes": 4
+            }
+          },
+          "operand_slots": 2
+        },
+        "transaction_done": 1,
+        "workers": [
+          1,
+          8,
+          2,
+          9
+        ],
+        "y": [
+          64
+        ]
+      },
+      "spec": {
+        "grid": [
+          1,
+          4
+        ],
+        "k": 4,
+        "m": 1,
+        "placement": "compact",
+        "reduction": "central"
+      }
+    },
+    {
+      "metrics": {
+        "compute_stats": {
+          "1": {
+            "bank_conflict_request_cycles": 0,
+            "done_stall_cycles": 0,
+            "lane_slot_utilization": 0.041666666666666664,
+            "local_elapsed_cycles": 6,
+            "mac_active_cycles": 1,
+            "mac_interval_wait_cycles": 0,
+            "max_operand_slots_used": 1,
+            "operand_wait_cycles": 1,
+            "port_busy_request_cycles": 0,
+            "read_bytes": 5,
+            "read_requests": 2,
+            "result_stall_cycles": 0,
+            "stage_cycles": {
+              "EMIT_RESULT": 1,
+              "INIT_ACC": 1,
+              "LOCAL_DONE": 1,
+              "RUN": 2,
+              "WRITE_RESULT": 1
+            },
+            "useful_mac_ops": 1,
+            "write_bytes": 4,
+            "write_requests": 1
+          },
+          "2": {
+            "bank_conflict_request_cycles": 0,
+            "done_stall_cycles": 0,
+            "lane_slot_utilization": 0.041666666666666664,
+            "local_elapsed_cycles": 6,
+            "mac_active_cycles": 1,
+            "mac_interval_wait_cycles": 0,
+            "max_operand_slots_used": 1,
+            "operand_wait_cycles": 1,
+            "port_busy_request_cycles": 0,
+            "read_bytes": 5,
+            "read_requests": 2,
+            "result_stall_cycles": 0,
+            "stage_cycles": {
+              "EMIT_RESULT": 1,
+              "INIT_ACC": 1,
+              "LOCAL_DONE": 1,
+              "RUN": 2,
+              "WRITE_RESULT": 1
+            },
+            "useful_mac_ops": 1,
+            "write_bytes": 4,
+            "write_requests": 1
+          },
+          "8": {
+            "bank_conflict_request_cycles": 0,
+            "done_stall_cycles": 0,
+            "lane_slot_utilization": 0.041666666666666664,
+            "local_elapsed_cycles": 6,
+            "mac_active_cycles": 1,
+            "mac_interval_wait_cycles": 0,
+            "max_operand_slots_used": 1,
+            "operand_wait_cycles": 1,
+            "port_busy_request_cycles": 0,
+            "read_bytes": 5,
+            "read_requests": 2,
+            "result_stall_cycles": 0,
+            "stage_cycles": {
+              "EMIT_RESULT": 1,
+              "INIT_ACC": 1,
+              "LOCAL_DONE": 1,
+              "RUN": 2,
+              "WRITE_RESULT": 1
+            },
+            "useful_mac_ops": 1,
+            "write_bytes": 4,
+            "write_requests": 1
+          },
+          "9": {
+            "bank_conflict_request_cycles": 0,
+            "done_stall_cycles": 0,
+            "lane_slot_utilization": 0.041666666666666664,
+            "local_elapsed_cycles": 6,
+            "mac_active_cycles": 1,
+            "mac_interval_wait_cycles": 0,
+            "max_operand_slots_used": 1,
+            "operand_wait_cycles": 1,
+            "port_busy_request_cycles": 0,
+            "read_bytes": 5,
+            "read_requests": 2,
+            "result_stall_cycles": 0,
+            "stage_cycles": {
+              "EMIT_RESULT": 1,
+              "INIT_ACC": 1,
+              "LOCAL_DONE": 1,
+              "RUN": 2,
+              "WRITE_RESULT": 1
+            },
+            "useful_mac_ops": 1,
+            "write_bytes": 4,
+            "write_requests": 1
+          }
+        },
+        "cycles": 74,
+        "endpoint_stats": {
+          "0": {
+            "accepted_packets": 1,
+            "add_elements": 0,
+            "done_accepted_count": 1,
+            "done_created_count": 1,
+            "done_stall_cycles": 0,
+            "elapsed_cycles": 74,
+            "forwarded_result_packets": 0,
+            "max_done_queue": 1,
+            "max_output_slots": 0,
+            "max_reduction_entries": 0,
+            "max_rx_slots": 1,
+            "partial_update_elements": 0,
+            "processed_packets": 1,
+            "read_elements": 0,
+            "reduction_full_cycles": 0,
+            "result_write_elements": 1,
+            "result_write_stall_cycles": 0,
+            "rx_blocked_flit_cycles": 0,
+            "rx_full_cycles": 0,
+            "service_cycles": 4,
+            "stage_cycles": {
+              "ADD": 0,
+              "CREATE_DONE": 1,
+              "DISPATCH": 1,
+              "IDLE": 70,
+              "PACKET_DONE": 1,
+              "READ": 0,
+              "UPDATE": 0,
+              "WRITE_RESULT": 1
+            }
+          },
+          "10": {
+            "accepted_packets": 4,
+            "add_elements": 4,
+            "done_accepted_count": 1,
+            "done_created_count": 1,
+            "done_stall_cycles": 0,
+            "elapsed_cycles": 74,
+            "forwarded_result_packets": 1,
+            "max_done_queue": 1,
+            "max_output_slots": 1,
+            "max_reduction_entries": 1,
+            "max_rx_slots": 2,
+            "partial_update_elements": 4,
+            "processed_packets": 4,
+            "read_elements": 4,
+            "reduction_full_cycles": 0,
+            "result_write_elements": 1,
+            "result_write_stall_cycles": 0,
+            "rx_blocked_flit_cycles": 2,
+            "rx_full_cycles": 7,
+            "service_cycles": 22,
+            "stage_cycles": {
+              "ADD": 4,
+              "CREATE_DONE": 1,
+              "DISPATCH": 4,
+              "IDLE": 52,
+              "PACKET_DONE": 4,
+              "READ": 4,
+              "UPDATE": 4,
+              "WRITE_RESULT": 1
+            }
+          }
+        },
+        "grid": [
+          1,
+          4
+        ],
+        "hardware_budget": {
+          "input_bytes_per_tile": 1024,
+          "mac_lanes_per_tile": 4,
+          "physical_tiles": 64,
+          "reduction_capability_per_tile": {
+            "add_cycles": 1,
+            "done_queue_packets": 1,
+            "lanes_per_cycle": 4,
+            "read_cycles": 1,
+            "reduction_entries": 256,
+            "rx_queue_packets": 2,
+            "update_cycles": 1,
+            "write_cycles": 1
+          },
+          "result_bytes_per_tile": 1024,
+          "weight_bytes_per_tile": 4096
+        },
+        "input_acks": 4,
+        "k": 4,
+        "m": 1,
+        "mesh": [
+          8,
+          8
+        ],
+        "network": {
+          "fifo_full_input_cycles": 0,
+          "flit_hops": 36,
+          "link_flits": {
+            "0->1": 6,
+            "0->8": 2,
+            "1->0": 2,
+            "1->2": 4,
+            "1->9": 2,
+            "10->9": 2,
+            "2->1": 1,
+            "2->10": 4,
+            "8->0": 4,
+            "8->9": 2,
+            "9->10": 4,
+            "9->8": 3
+          },
+          "max_fifo_occupancy": 3,
+          "ni_inject_stall_tile_cycles": 0,
+          "output_blocked_port_cycles": 2
+        },
+        "packet_counts": {
+          "MemAckPacket": 4,
+          "MemWritePacket": 4,
+          "ResultPacket": 5,
+          "TransactionDonePacket": 1
+        },
+        "phase_cycles": {
+          "completion_drain": 2,
+          "compute_and_gather": 40,
+          "input_load": 32
+        },
+        "plan_sha256": "7533133fe2e0562770c8389949a3e1ec3865b9b69ea0547147acfe285814bd87",
+        "reducer_tiles": [
+          10
+        ],
+        "reduction": "tree",
+        "root": 0,
+        "root_timing": {
+          "add_cycles": 1,
+          "done_queue_packets": 1,
+          "lanes_per_cycle": 4,
+          "read_cycles": 1,
+          "reduction_entries": 256,
+          "rx_queue_packets": 2,
+          "update_cycles": 1,
+          "write_cycles": 1
+        },
+        "schema_version": 1,
+        "scope": "weight-resident; functional input commit; timed Tile/Root/NoC; module-calibrated, not full-system RTL",
+        "tile_timing": {
+          "mac_interval": 1,
+          "memory": {
+            "input": {
+              "banks": 1,
+              "issue_interval": 1,
+              "ports_per_bank": 1,
+              "read_latency": 1,
+              "word_bytes": 1
+            },
+            "result": {
+              "banks": 4,
+              "issue_interval": 1,
+              "ports_per_bank": 1,
+              "read_latency": 1,
+              "word_bytes": 4
+            },
+            "share_weight_input": false,
+            "weight": {
+              "banks": 1,
+              "issue_interval": 1,
+              "ports_per_bank": 1,
+              "read_latency": 1,
+              "word_bytes": 4
+            }
+          },
+          "operand_slots": 2
+        },
+        "transaction_done": 1,
+        "workers": [
+          1,
+          8,
+          2,
+          9
+        ],
+        "y": [
+          64
+        ]
+      },
+      "spec": {
+        "grid": [
+          1,
+          4
+        ],
+        "k": 4,
+        "m": 1,
+        "placement": "compact",
+        "reduction": "tree"
+      }
+    }
+  ],
+  "scope": "Exploratory small-workload probe outside the predeclared 112-job main set"
+}

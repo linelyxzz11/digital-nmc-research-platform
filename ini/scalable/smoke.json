@@ -1,0 +1,370 @@
+{
+  "contract": "scalable-gemv-v0.2",
+  "hardware": {
+    "host_tile": 0,
+    "mesh_x": 8,
+    "mesh_y": 8,
+    "root_tile": 0,
+    "root_timing": {
+      "add_cycles": 1,
+      "done_queue_packets": 1,
+      "lanes_per_cycle": 4,
+      "read_cycles": 1,
+      "reduction_entries": 256,
+      "rx_queue_packets": 2,
+      "update_cycles": 1,
+      "write_cycles": 1
+    },
+    "tile_timing": {
+      "mac_interval": 1,
+      "memory": {
+        "input": {
+          "banks": 1,
+          "issue_interval": 1,
+          "ports_per_bank": 1,
+          "read_latency": 1,
+          "word_bytes": 1
+        },
+        "result": {
+          "banks": 4,
+          "issue_interval": 1,
+          "ports_per_bank": 1,
+          "read_latency": 1,
+          "word_bytes": 4
+        },
+        "share_weight_input": false,
+        "weight": {
+          "banks": 1,
+          "issue_interval": 1,
+          "ports_per_bank": 1,
+          "read_latency": 1,
+          "word_bytes": 4
+        }
+      },
+      "operand_slots": 2
+    }
+  },
+  "jobs": [
+    {
+      "expected_status": "ok",
+      "index": 0,
+      "job_id": "4490ba5695bec9866fbd",
+      "plan_sha256": "bc393983f91381b97689043bd1b91385de1ca5aa44d03e4d2f815bd0b18a3685",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          4
+        ],
+        "host_tile": 0,
+        "k": 16,
+        "m": 16,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 1,
+      "job_id": "c8f2a38c05f96d079a74",
+      "plan_sha256": "65efbe9a7e709e4c925dd6bb64cce613064a44046864a4199752cfad271f5f0a",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          4
+        ],
+        "host_tile": 0,
+        "k": 16,
+        "m": 16,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 2,
+      "job_id": "963452d7d9d2d334dd05",
+      "plan_sha256": "020d25251102769b2d67d655112ead382ec5456692415ce30ae18a3ea48ec17b",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          4
+        ],
+        "host_tile": 0,
+        "k": 16,
+        "m": 16,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 3,
+      "job_id": "0d2553c6ab96532ac4cd",
+      "plan_sha256": "fd3c4bc56866ce59ba792bc2c7c20226fca1ebf2255c271edd5e71aa9cc0363f",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          1,
+          4
+        ],
+        "host_tile": 0,
+        "k": 16,
+        "m": 16,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 4,
+      "job_id": "7a1de7960ce0816d3388",
+      "plan_sha256": "46ffe80ae9b56a16192f290d966603942c70bef0831a76ee2e0e14aa08a6ccb8",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          1
+        ],
+        "host_tile": 0,
+        "k": 16,
+        "m": 16,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 5,
+      "job_id": "ab97b28d9beebfa8fa24",
+      "plan_sha256": "def22c18586feda2354bf3290760e4f8976e4acbd456a21010635b65cdbde0c6",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          1
+        ],
+        "host_tile": 0,
+        "k": 16,
+        "m": 16,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 6,
+      "job_id": "7518a09ee4f37ec26048",
+      "plan_sha256": "ed9393d1153de9ab1fce7b59f21ac2b22a945b484b3bce4e3b6c83df8374c570",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          1
+        ],
+        "host_tile": 0,
+        "k": 16,
+        "m": 16,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 7,
+      "job_id": "9317929a37fab6409814",
+      "plan_sha256": "85e00fb66e589504c027b9202a0bf8b074da8633d639073a4360a0fad226dbc3",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          4,
+          1
+        ],
+        "host_tile": 0,
+        "k": 16,
+        "m": 16,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 8,
+      "job_id": "81518340c5d9dce71bd3",
+      "plan_sha256": "0f54bd37174cf90ce6b6a16839827072e1e8cf25e7987d2043091d7ccffd5c20",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          2,
+          2
+        ],
+        "host_tile": 0,
+        "k": 16,
+        "m": 16,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 9,
+      "job_id": "67ca30f456508f576e69",
+      "plan_sha256": "6560d8b54f2a0ab2876ab786ffc8b9a84134ccb5428d29b7b6602870194c7018",
+      "shard": 0,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          2,
+          2
+        ],
+        "host_tile": 0,
+        "k": 16,
+        "m": 16,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "compact",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 10,
+      "job_id": "5130411d9a4525e16033",
+      "plan_sha256": "296c12a50749960287fdae61067c9159d18c4539af1ee3f6cbd282a1e40ad747",
+      "shard": 1,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          2,
+          2
+        ],
+        "host_tile": 0,
+        "k": 16,
+        "m": 16,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "central",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    },
+    {
+      "expected_status": "ok",
+      "index": 11,
+      "job_id": "b8812cec3f30c727aa84",
+      "plan_sha256": "6a885b4d84fa66a59ecdd4bd2f3df82f80c85d38ec5c5d87e3b892ece8aaa0d4",
+      "shard": 2,
+      "spec": {
+        "fan_in": 4,
+        "grid": [
+          2,
+          2
+        ],
+        "host_tile": 0,
+        "k": 16,
+        "m": 16,
+        "mesh_x": 8,
+        "mesh_y": 8,
+        "placement": "spread",
+        "reduction": "tree",
+        "root_tile": 0,
+        "seed": 0,
+        "tid": 1
+      }
+    }
+  ],
+  "prepared_from_commit": "c5d0ee87448d40d908e2ec031446000cc8995d92",
+  "profile": "smoke",
+  "schema_version": 1,
+  "sha256": "f7227036ac53993d92b65f9b3fedf47d460592979d9435335e69762eef213da2",
+  "shards": 3,
+  "source_sha256": {
+    "pyproject.toml": "e7f42fc55a826f32afd0ccf94819bc08b9715bab91602e28a2f8af399d08b642",
+    "requirements.txt": "f6cbf18a7b3965f12327069ea80bceb9aa09da97dfb3b30e615d5eb119256aec",
+    "src/compiler/__init__.py": "e4aba99cc09fc3b939b16f9b4ada4104a7565230f8fa8120876ed56115c7d5f9",
+    "src/compiler/auto_mapper_v0_1.py": "57dbfd936b135d9594d20af867f00c74e812d8009a4e42787b07f8cea8624f79",
+    "src/compiler/grid_mapper.py": "c42845f5612add2cb364958937993a8fefc4e8740234bdd8821ebfe7830d7e2e",
+    "src/hardware.py": "583e43a8c1152c33d4ed60cfc356f0d05a77565810229c7c33bc403ffabcc8c8",
+    "src/simulator/__init__.py": "c433defde033fc2f2e62da6c6e66c6bbc6d8b3cc75f6df61349f994be6181147",
+    "src/simulator/communication/__init__.py": "7cb6d906a9bd63db2fc42d0547e96083574948a25fd920a939e2d88a3d74e6dc",
+    "src/simulator/communication/scalable.py": "d00b747867d06aa3791c7799315c5f8ae22469d19f2245edd4548e90d8016266",
+    "src/simulator/communication/v0_1.py": "3e44c32e050aa234b2f80cd3fa340d18573f6be8f4fc08806b826ca762dd9fb4",
+    "src/simulator/functional/__init__.py": "cf6ad18c2d47b3492e59d3fcf4d1b5d5de6bf823fe5ae5c20949c0635598e274",
+    "src/simulator/functional/demo0_model.py": "48d663e891722c5e2c5ccd7635669566bc4c31fdaa79f62f8b3c079c8ea9809f",
+    "src/simulator/system/__init__.py": "1172c8910c6d2a224c18b68c2063af9a2208de46b04593c74949c2d595b3c8ab",
+    "src/simulator/system/compute_timing.py": "e512f4eda89a0051486ab6fef2a522fe7fd02551796ac9c52133007b12b25e3e",
+    "src/simulator/system/demo1.py": "4185e7d93c50d5b8b45d6853fdca08e6c5aba3fa322a45eae409df75cf6a580b",
+    "src/simulator/system/demo2.py": "0169a581863f74f7de8f640bed9c46affeaaffa677246a0e190c1912f5bfc4b0",
+    "src/simulator/system/endpoint_common.py": "99de8a7fea103e14ce5ecdf5c2fd8011b07ac97c089580538fa6d1a0183116d9",
+    "src/simulator/system/root_config.py": "3dceeff1b8146bd9965c5deb64106d0c75a6a3270dc6b4f00218f8d1938599d8",
+    "src/simulator/system/scalable.py": "9ddb0e58e9c289d6e98f16b1088b75e56d1b1ee58a61237922e5b4779cd97a63",
+    "src/simulator/system/tile_config.py": "2e8bdd2208acb274ca873e5f8c33f78b10ec86f32bcc7f781ea1f79c0bc286f0",
+    "src/simulator/system/tile_memory.py": "11822bfcfc7e1a9532b390be7af669916f02d85e90692eb39f271b13e5cc32b8",
+    "src/simulator/system/tile_timing.py": "05f69c24cb81836210a25907918dc380962c8df5f74bccc9afe2cc9736a8bf80",
+    "src/simulator/system/timed_endpoint.py": "1a1b9b4b5e48f05e814a17944dc6ddd4d195351dcc26c520de7598e38d580e46",
+    "tools/experiments/mapper_sweep.py": "a599347901461f478aaf6b0961c5d68c637f72bf16d56f18914fef386caa0097",
+    "tools/experiments/scalable_experiments.py": "a04d5bc2bfa33c0a0ae9e402e424a7bdd11dec5c7574706939e9232f8cf49b1a"
+  },
+  "workload": "deterministic-int8-formula-v1"
+}

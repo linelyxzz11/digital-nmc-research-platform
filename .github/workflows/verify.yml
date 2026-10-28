@@ -28,6 +28,9 @@ jobs:
           name: tile-root-rtl-verification
           path: |
             dump/ci_pytest/**/results.json
+            dump/ci_pytest/**/*.result.json
+            dump/ci_pytest/**/summary.json
+            dump/ci_pytest/**/manifest.json
             dump/ci_pytest/**/trace.csv
             dump/ci_pytest/**/interface_trace.csv
             dump/ci_pytest/**/memory.csv

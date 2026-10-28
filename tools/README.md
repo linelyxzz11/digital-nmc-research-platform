@@ -10,5 +10,6 @@
 - `experiments/mapping_headroom.py`：对既有有限 Root 数据审计固定 ROW、K、当前 AUTO 和两选一事后上界，报告共同可行集合上的加速比/regret及全套覆盖率。
 - `experiments/mapping_candidate_sweep.py`：固定硬件，扫描全部合法 worker/Root 放置与采样 K 切分，核对数值、ACK/Done，输出周期/停顿及有限候选上界。
 - `experiments/unindp_native.py`：临时克隆本机 UniNDP 作者仓库，复跑三类 AiM GEMV，保存作者原生 latency、指令/DRAM 计数、依赖与源码版本；不将其称为本项目的同硬件移植。见 [对照口径](../docs/unindp_evaluation.zh-CN.md)。
+- `experiments/scalable_experiments.py`：固定 8×8/64 Tile 的 12 项冒烟和 112 项主实验，支持 `prepare/run/merge`、三电脑分片、断点续跑、模型/计划/结果校验和严格完整性检查。[运行说明](../docs/distributed_experiments.zh-CN.md)。
 
 实验读取 `ini/` 的配置和 `data/workloads/` 的数据，把原始输出写入 `dump/`，精选结果写入 `data/results/`。
