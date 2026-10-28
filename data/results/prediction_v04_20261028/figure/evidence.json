@@ -1,0 +1,29 @@
+{
+  "claim_anchor": "bounded-prediction-repair",
+  "main_claim": "The bounded surrogate repairs ranking and task-cycle prediction on predeclared fresh shapes; search overhead is reported separately.",
+  "material_passport": {
+    "summary": "summary.json",
+    "records": "records.json.gz",
+    "phases": "phase_errors.csv"
+  },
+  "mapping": {
+    "n_shapes": 8,
+    "budget": 1,
+    "baseline": "unchanged UniNDP-adapted plus compact",
+    "chart": "individual paired shape ratios; lower is faster"
+  },
+  "prediction": {
+    "n_candidates": 220,
+    "chart": "signed error against Python evaluator, not RTL"
+  },
+  "statistics": "single deterministic run per candidate; controls may be equivalent; no confidence or significance claims",
+  "scope": "same hardware and evaluator; raw numerical validation precedes export; prior 16 shapes are development only",
+  "exports": [
+    "fresh_mapping.svg",
+    "fresh_mapping.pdf",
+    "fresh_mapping.png",
+    "fresh_prediction_error.svg",
+    "fresh_prediction_error.pdf",
+    "fresh_prediction_error.png"
+  ]
+}

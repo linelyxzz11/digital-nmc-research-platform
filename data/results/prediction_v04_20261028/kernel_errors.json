@@ -1,0 +1,30 @@
+[
+  {
+    "split": "development-replay",
+    "policy": "noc-v03",
+    "candidates": 440,
+    "kernel_mape": 0.035947309182282755,
+    "max_kernel_relative_error": 0.34615384615384615
+  },
+  {
+    "split": "development-replay",
+    "policy": "noc-v04",
+    "candidates": 440,
+    "kernel_mape": 0.022597442699246212,
+    "max_kernel_relative_error": 0.16326530612244897
+  },
+  {
+    "split": "fresh",
+    "policy": "noc-v03",
+    "candidates": 220,
+    "kernel_mape": 0.04096057725340423,
+    "max_kernel_relative_error": 0.3655367231638418
+  },
+  {
+    "split": "fresh",
+    "policy": "noc-v04",
+    "candidates": 220,
+    "kernel_mape": 0.02067668168358838,
+    "max_kernel_relative_error": 0.1744186046511628
+  }
+]

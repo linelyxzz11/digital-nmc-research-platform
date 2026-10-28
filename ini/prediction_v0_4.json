@@ -1,0 +1,12 @@
+{
+  "version": "prediction-v0.4",
+  "seed": 70417,
+  "mesh": [8, 8],
+  "grids": [[1, 16], [16, 1], [4, 4], [1, 32], [32, 1], [4, 8], [8, 4]],
+  "placements": ["compact", "spread"],
+  "reductions": ["central", "tree"],
+  "budgets": [1, 2, 4],
+  "fresh_shapes": [[23, 79], [47, 143], [79, 47], [111, 173], [159, 91], [223, 43], [95, 287], [191, 239]],
+  "baseline": "unindp-adapted with fixed compact placement, unchanged resource predictor",
+  "protocol": "Known cases are development regressions; fresh shapes are evaluated only after the predictor is frozen. Select before collecting the catalogue oracle. Report proxy ranking time plus fresh numerical evaluations, not only evaluation count."
+}

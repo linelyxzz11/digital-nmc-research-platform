@@ -111,3 +111,7 @@ v0.2 复用原 TileTask、SRAM 布局、Compute 周期模型、有限 Root 和 R
 共同候选范围保持不变，新增 predictor→top-K→精确执行的自动选择。UniNDP 适配保留可核对的平坦 PU 划分/剪枝/分配与搜索流程，SRAM 代价替换 DRAM 后端；通信感知策略增加实际单播距离和 XY 链路资源预留。两者共享有限 Tile/Root/NoC evaluator，精确预算相同，事后最优只用作质量参考，不能把启发式或移植子集声称为完整 UniNDP。[搜索合同](mapping_search_v0.3.md)。
 
 新增 64 Tile 集成 RTL，计算与树节点共享固定物理预算。NI 注册队列、真实窄 X 写入、任务接受/VALIDATE 使系统周期与旧 Python 功能输入提交有差别；数值/包协议必须完全一致，周期偏差按输入与 kernel 单独保存。默认四 Lane 归约端点直接对齐 TimedRoot 的每个服务边沿；不把集成仿真通过说成芯片 PPA 或所有参数已校准。[RTL 范围](../../src/rtl/nmc_mesh/README.md)。
+
+## v0.4：修复输入开销与有界反压预测
+
+输入 stop-and-wait 的参考协议为每包 `2*d+5`，原 NoC 预测多算两周期。仅修正常数仍会低估长输出 K 切分的拥塞，因此改用有限 credit 的整包逐跳近似，并把源结果释放与 NI 握手关联；加载留下的 RR 状态也恢复。它复用端点服务合同，但不执行真实矩阵计算或完整 Flit Mesh，不叫精确 evaluator。保留旧预测与强资源基线，显式报告每候选包级推演开销，并以冻结后的新形状验证。[合同与复现](bounded_prediction_v0.4.md)。
