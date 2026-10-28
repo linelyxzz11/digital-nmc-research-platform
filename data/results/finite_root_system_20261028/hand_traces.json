@@ -1,0 +1,2208 @@
+{
+  "1": {
+    "lanes": 1,
+    "cycles": 34,
+    "trace": [
+      {
+        "cycle": 0,
+        "stage": "DISPATCH",
+        "rx_slots": 2,
+        "queued_packets": 2,
+        "header_reserved": false,
+        "active": false,
+        "reduction_entries": 0,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [],
+        "source": 1,
+        "packet_base_index": 100,
+        "rx_slots_after": 1,
+        "reduction_entries_after": 0,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {},
+        "last_mask": 0
+      },
+      {
+        "cycle": 1,
+        "stage": "READ",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 0,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          100
+        ],
+        "source": 1,
+        "packet_base_index": 100,
+        "read_values": [
+          [
+            100,
+            0,
+            0,
+            1
+          ]
+        ],
+        "rx_slots_after": 1,
+        "reduction_entries_after": 0,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {},
+        "last_mask": 0
+      },
+      {
+        "cycle": 2,
+        "stage": "ADD",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 0,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          100
+        ],
+        "source": 1,
+        "packet_base_index": 100,
+        "updated_values": [
+          [
+            100,
+            1,
+            2
+          ]
+        ],
+        "rx_slots_after": 1,
+        "reduction_entries_after": 0,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {},
+        "last_mask": 0
+      },
+      {
+        "cycle": 3,
+        "stage": "UPDATE",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 0,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          100
+        ],
+        "source": 1,
+        "packet_base_index": 100,
+        "rx_slots_after": 1,
+        "reduction_entries_after": 1,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1
+        },
+        "last_mask": 0
+      },
+      {
+        "cycle": 4,
+        "stage": "READ",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 1,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          101
+        ],
+        "source": 1,
+        "packet_base_index": 100,
+        "read_values": [
+          [
+            101,
+            0,
+            0,
+            -2
+          ]
+        ],
+        "rx_slots_after": 1,
+        "reduction_entries_after": 1,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1
+        },
+        "last_mask": 0
+      },
+      {
+        "cycle": 5,
+        "stage": "ADD",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 1,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          101
+        ],
+        "source": 1,
+        "packet_base_index": 100,
+        "updated_values": [
+          [
+            101,
+            -2,
+            2
+          ]
+        ],
+        "rx_slots_after": 1,
+        "reduction_entries_after": 1,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1
+        },
+        "last_mask": 0
+      },
+      {
+        "cycle": 6,
+        "stage": "UPDATE",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 1,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          101
+        ],
+        "source": 1,
+        "packet_base_index": 100,
+        "rx_slots_after": 1,
+        "reduction_entries_after": 2,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1,
+          "101": -2
+        },
+        "last_mask": 0
+      },
+      {
+        "cycle": 7,
+        "stage": "READ",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 2,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          102
+        ],
+        "source": 1,
+        "packet_base_index": 100,
+        "read_values": [
+          [
+            102,
+            0,
+            0,
+            3
+          ]
+        ],
+        "rx_slots_after": 1,
+        "reduction_entries_after": 2,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1,
+          "101": -2
+        },
+        "last_mask": 0
+      },
+      {
+        "cycle": 8,
+        "stage": "ADD",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 2,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          102
+        ],
+        "source": 1,
+        "packet_base_index": 100,
+        "updated_values": [
+          [
+            102,
+            3,
+            2
+          ]
+        ],
+        "rx_slots_after": 1,
+        "reduction_entries_after": 2,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1,
+          "101": -2
+        },
+        "last_mask": 0
+      },
+      {
+        "cycle": 9,
+        "stage": "UPDATE",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 2,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          102
+        ],
+        "source": 1,
+        "packet_base_index": 100,
+        "rx_slots_after": 1,
+        "reduction_entries_after": 3,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1,
+          "101": -2,
+          "102": 3
+        },
+        "last_mask": 0
+      },
+      {
+        "cycle": 10,
+        "stage": "READ",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 3,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          103
+        ],
+        "source": 1,
+        "packet_base_index": 100,
+        "read_values": [
+          [
+            103,
+            0,
+            0,
+            -4
+          ]
+        ],
+        "rx_slots_after": 1,
+        "reduction_entries_after": 3,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1,
+          "101": -2,
+          "102": 3
+        },
+        "last_mask": 0
+      },
+      {
+        "cycle": 11,
+        "stage": "ADD",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 3,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          103
+        ],
+        "source": 1,
+        "packet_base_index": 100,
+        "updated_values": [
+          [
+            103,
+            -4,
+            2
+          ]
+        ],
+        "rx_slots_after": 1,
+        "reduction_entries_after": 3,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1,
+          "101": -2,
+          "102": 3
+        },
+        "last_mask": 0
+      },
+      {
+        "cycle": 12,
+        "stage": "UPDATE",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 3,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          103
+        ],
+        "source": 1,
+        "packet_base_index": 100,
+        "rx_slots_after": 1,
+        "reduction_entries_after": 4,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1,
+          "101": -2,
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 0
+      },
+      {
+        "cycle": 13,
+        "stage": "PACKET_DONE",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 4,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          103
+        ],
+        "source": 1,
+        "packet_base_index": 100,
+        "rx_slots_after": 1,
+        "reduction_entries_after": 4,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1,
+          "101": -2,
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 14,
+        "stage": "DISPATCH",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": false,
+        "reduction_entries": 4,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [],
+        "source": 2,
+        "packet_base_index": 100,
+        "rx_slots_after": 0,
+        "reduction_entries_after": 4,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1,
+          "101": -2,
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 15,
+        "stage": "READ",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 4,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          100
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "read_values": [
+          [
+            100,
+            1,
+            2,
+            4
+          ]
+        ],
+        "rx_slots_after": 0,
+        "reduction_entries_after": 4,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1,
+          "101": -2,
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 16,
+        "stage": "ADD",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 4,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          100
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "updated_values": [
+          [
+            100,
+            5,
+            6
+          ]
+        ],
+        "rx_slots_after": 0,
+        "reduction_entries_after": 4,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1,
+          "101": -2,
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 17,
+        "stage": "UPDATE",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 4,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          100
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "rx_slots_after": 0,
+        "reduction_entries_after": 4,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 5,
+          "101": -2,
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 18,
+        "stage": "WRITE_RESULT",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 4,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          100
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "written_indices": [
+          100
+        ],
+        "rx_slots_after": 0,
+        "reduction_entries_after": 3,
+        "done_valid_after": false,
+        "completed_outputs": 1,
+        "values": {
+          "100": 5
+        },
+        "partial_sums": {
+          "101": -2,
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 19,
+        "stage": "READ",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 3,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          101
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "read_values": [
+          [
+            101,
+            -2,
+            2,
+            5
+          ]
+        ],
+        "rx_slots_after": 0,
+        "reduction_entries_after": 3,
+        "done_valid_after": false,
+        "completed_outputs": 1,
+        "values": {
+          "100": 5
+        },
+        "partial_sums": {
+          "101": -2,
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 20,
+        "stage": "ADD",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 3,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          101
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "updated_values": [
+          [
+            101,
+            3,
+            6
+          ]
+        ],
+        "rx_slots_after": 0,
+        "reduction_entries_after": 3,
+        "done_valid_after": false,
+        "completed_outputs": 1,
+        "values": {
+          "100": 5
+        },
+        "partial_sums": {
+          "101": -2,
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 21,
+        "stage": "UPDATE",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 3,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          101
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "rx_slots_after": 0,
+        "reduction_entries_after": 3,
+        "done_valid_after": false,
+        "completed_outputs": 1,
+        "values": {
+          "100": 5
+        },
+        "partial_sums": {
+          "101": 3,
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 22,
+        "stage": "WRITE_RESULT",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 3,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          101
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "written_indices": [
+          101
+        ],
+        "rx_slots_after": 0,
+        "reduction_entries_after": 2,
+        "done_valid_after": false,
+        "completed_outputs": 2,
+        "values": {
+          "100": 5,
+          "101": 3
+        },
+        "partial_sums": {
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 23,
+        "stage": "READ",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 2,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          102
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "read_values": [
+          [
+            102,
+            3,
+            2,
+            -6
+          ]
+        ],
+        "rx_slots_after": 0,
+        "reduction_entries_after": 2,
+        "done_valid_after": false,
+        "completed_outputs": 2,
+        "values": {
+          "100": 5,
+          "101": 3
+        },
+        "partial_sums": {
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 24,
+        "stage": "ADD",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 2,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          102
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "updated_values": [
+          [
+            102,
+            -3,
+            6
+          ]
+        ],
+        "rx_slots_after": 0,
+        "reduction_entries_after": 2,
+        "done_valid_after": false,
+        "completed_outputs": 2,
+        "values": {
+          "100": 5,
+          "101": 3
+        },
+        "partial_sums": {
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 25,
+        "stage": "UPDATE",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 2,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          102
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "rx_slots_after": 0,
+        "reduction_entries_after": 2,
+        "done_valid_after": false,
+        "completed_outputs": 2,
+        "values": {
+          "100": 5,
+          "101": 3
+        },
+        "partial_sums": {
+          "102": -3,
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 26,
+        "stage": "WRITE_RESULT",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 2,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          102
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "written_indices": [
+          102
+        ],
+        "rx_slots_after": 0,
+        "reduction_entries_after": 1,
+        "done_valid_after": false,
+        "completed_outputs": 3,
+        "values": {
+          "100": 5,
+          "101": 3,
+          "102": -3
+        },
+        "partial_sums": {
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 27,
+        "stage": "READ",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 1,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          103
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "read_values": [
+          [
+            103,
+            -4,
+            2,
+            -7
+          ]
+        ],
+        "rx_slots_after": 0,
+        "reduction_entries_after": 1,
+        "done_valid_after": false,
+        "completed_outputs": 3,
+        "values": {
+          "100": 5,
+          "101": 3,
+          "102": -3
+        },
+        "partial_sums": {
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 28,
+        "stage": "ADD",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 1,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          103
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "updated_values": [
+          [
+            103,
+            -11,
+            6
+          ]
+        ],
+        "rx_slots_after": 0,
+        "reduction_entries_after": 1,
+        "done_valid_after": false,
+        "completed_outputs": 3,
+        "values": {
+          "100": 5,
+          "101": 3,
+          "102": -3
+        },
+        "partial_sums": {
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 29,
+        "stage": "UPDATE",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 1,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          103
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "rx_slots_after": 0,
+        "reduction_entries_after": 1,
+        "done_valid_after": false,
+        "completed_outputs": 3,
+        "values": {
+          "100": 5,
+          "101": 3,
+          "102": -3
+        },
+        "partial_sums": {
+          "103": -11
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 30,
+        "stage": "WRITE_RESULT",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 1,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          103
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "written_indices": [
+          103
+        ],
+        "rx_slots_after": 0,
+        "reduction_entries_after": 0,
+        "done_valid_after": false,
+        "completed_outputs": 4,
+        "values": {
+          "100": 5,
+          "101": 3,
+          "102": -3,
+          "103": -11
+        },
+        "partial_sums": {},
+        "last_mask": 2
+      },
+      {
+        "cycle": 31,
+        "stage": "PACKET_DONE",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 0,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          103
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "rx_slots_after": 0,
+        "reduction_entries_after": 0,
+        "done_valid_after": false,
+        "completed_outputs": 4,
+        "values": {
+          "100": 5,
+          "101": 3,
+          "102": -3,
+          "103": -11
+        },
+        "partial_sums": {},
+        "last_mask": 6
+      },
+      {
+        "cycle": 32,
+        "stage": "CREATE_DONE",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": false,
+        "reduction_entries": 0,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [],
+        "source": null,
+        "packet_base_index": null,
+        "rx_slots_after": 0,
+        "reduction_entries_after": 0,
+        "done_valid_after": true,
+        "completed_outputs": 4,
+        "values": {
+          "100": 5,
+          "101": 3,
+          "102": -3,
+          "103": -11
+        },
+        "partial_sums": {},
+        "last_mask": 6
+      },
+      {
+        "cycle": 33,
+        "stage": "IDLE",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": false,
+        "reduction_entries": 0,
+        "done_valid": true,
+        "done_ready": true,
+        "indices": [],
+        "source": null,
+        "packet_base_index": null,
+        "rx_slots_after": 0,
+        "reduction_entries_after": 0,
+        "done_valid_after": false,
+        "completed_outputs": 4,
+        "values": {
+          "100": 5,
+          "101": 3,
+          "102": -3,
+          "103": -11
+        },
+        "partial_sums": {},
+        "last_mask": 6
+      }
+    ]
+  },
+  "2": {
+    "lanes": 2,
+    "cycles": 20,
+    "trace": [
+      {
+        "cycle": 0,
+        "stage": "DISPATCH",
+        "rx_slots": 2,
+        "queued_packets": 2,
+        "header_reserved": false,
+        "active": false,
+        "reduction_entries": 0,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [],
+        "source": 1,
+        "packet_base_index": 100,
+        "rx_slots_after": 1,
+        "reduction_entries_after": 0,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {},
+        "last_mask": 0
+      },
+      {
+        "cycle": 1,
+        "stage": "READ",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 0,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          100,
+          101
+        ],
+        "source": 1,
+        "packet_base_index": 100,
+        "read_values": [
+          [
+            100,
+            0,
+            0,
+            1
+          ],
+          [
+            101,
+            0,
+            0,
+            -2
+          ]
+        ],
+        "rx_slots_after": 1,
+        "reduction_entries_after": 0,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {},
+        "last_mask": 0
+      },
+      {
+        "cycle": 2,
+        "stage": "ADD",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 0,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          100,
+          101
+        ],
+        "source": 1,
+        "packet_base_index": 100,
+        "updated_values": [
+          [
+            100,
+            1,
+            2
+          ],
+          [
+            101,
+            -2,
+            2
+          ]
+        ],
+        "rx_slots_after": 1,
+        "reduction_entries_after": 0,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {},
+        "last_mask": 0
+      },
+      {
+        "cycle": 3,
+        "stage": "UPDATE",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 0,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          100,
+          101
+        ],
+        "source": 1,
+        "packet_base_index": 100,
+        "rx_slots_after": 1,
+        "reduction_entries_after": 2,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1,
+          "101": -2
+        },
+        "last_mask": 0
+      },
+      {
+        "cycle": 4,
+        "stage": "READ",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 2,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          102,
+          103
+        ],
+        "source": 1,
+        "packet_base_index": 100,
+        "read_values": [
+          [
+            102,
+            0,
+            0,
+            3
+          ],
+          [
+            103,
+            0,
+            0,
+            -4
+          ]
+        ],
+        "rx_slots_after": 1,
+        "reduction_entries_after": 2,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1,
+          "101": -2
+        },
+        "last_mask": 0
+      },
+      {
+        "cycle": 5,
+        "stage": "ADD",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 2,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          102,
+          103
+        ],
+        "source": 1,
+        "packet_base_index": 100,
+        "updated_values": [
+          [
+            102,
+            3,
+            2
+          ],
+          [
+            103,
+            -4,
+            2
+          ]
+        ],
+        "rx_slots_after": 1,
+        "reduction_entries_after": 2,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1,
+          "101": -2
+        },
+        "last_mask": 0
+      },
+      {
+        "cycle": 6,
+        "stage": "UPDATE",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 2,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          102,
+          103
+        ],
+        "source": 1,
+        "packet_base_index": 100,
+        "rx_slots_after": 1,
+        "reduction_entries_after": 4,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1,
+          "101": -2,
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 0
+      },
+      {
+        "cycle": 7,
+        "stage": "PACKET_DONE",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 4,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          102,
+          103
+        ],
+        "source": 1,
+        "packet_base_index": 100,
+        "rx_slots_after": 1,
+        "reduction_entries_after": 4,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1,
+          "101": -2,
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 8,
+        "stage": "DISPATCH",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": false,
+        "reduction_entries": 4,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [],
+        "source": 2,
+        "packet_base_index": 100,
+        "rx_slots_after": 0,
+        "reduction_entries_after": 4,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1,
+          "101": -2,
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 9,
+        "stage": "READ",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 4,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          100,
+          101
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "read_values": [
+          [
+            100,
+            1,
+            2,
+            4
+          ],
+          [
+            101,
+            -2,
+            2,
+            5
+          ]
+        ],
+        "rx_slots_after": 0,
+        "reduction_entries_after": 4,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1,
+          "101": -2,
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 10,
+        "stage": "ADD",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 4,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          100,
+          101
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "updated_values": [
+          [
+            100,
+            5,
+            6
+          ],
+          [
+            101,
+            3,
+            6
+          ]
+        ],
+        "rx_slots_after": 0,
+        "reduction_entries_after": 4,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1,
+          "101": -2,
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 11,
+        "stage": "UPDATE",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 4,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          100,
+          101
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "rx_slots_after": 0,
+        "reduction_entries_after": 4,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 5,
+          "101": 3,
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 12,
+        "stage": "WRITE_RESULT",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 4,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          100,
+          101
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "written_indices": [
+          100,
+          101
+        ],
+        "rx_slots_after": 0,
+        "reduction_entries_after": 2,
+        "done_valid_after": false,
+        "completed_outputs": 2,
+        "values": {
+          "100": 5,
+          "101": 3
+        },
+        "partial_sums": {
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 13,
+        "stage": "READ",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 2,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          102,
+          103
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "read_values": [
+          [
+            102,
+            3,
+            2,
+            -6
+          ],
+          [
+            103,
+            -4,
+            2,
+            -7
+          ]
+        ],
+        "rx_slots_after": 0,
+        "reduction_entries_after": 2,
+        "done_valid_after": false,
+        "completed_outputs": 2,
+        "values": {
+          "100": 5,
+          "101": 3
+        },
+        "partial_sums": {
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 14,
+        "stage": "ADD",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 2,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          102,
+          103
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "updated_values": [
+          [
+            102,
+            -3,
+            6
+          ],
+          [
+            103,
+            -11,
+            6
+          ]
+        ],
+        "rx_slots_after": 0,
+        "reduction_entries_after": 2,
+        "done_valid_after": false,
+        "completed_outputs": 2,
+        "values": {
+          "100": 5,
+          "101": 3
+        },
+        "partial_sums": {
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 15,
+        "stage": "UPDATE",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 2,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          102,
+          103
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "rx_slots_after": 0,
+        "reduction_entries_after": 2,
+        "done_valid_after": false,
+        "completed_outputs": 2,
+        "values": {
+          "100": 5,
+          "101": 3
+        },
+        "partial_sums": {
+          "102": -3,
+          "103": -11
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 16,
+        "stage": "WRITE_RESULT",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 2,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          102,
+          103
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "written_indices": [
+          102,
+          103
+        ],
+        "rx_slots_after": 0,
+        "reduction_entries_after": 0,
+        "done_valid_after": false,
+        "completed_outputs": 4,
+        "values": {
+          "100": 5,
+          "101": 3,
+          "102": -3,
+          "103": -11
+        },
+        "partial_sums": {},
+        "last_mask": 2
+      },
+      {
+        "cycle": 17,
+        "stage": "PACKET_DONE",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 0,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          102,
+          103
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "rx_slots_after": 0,
+        "reduction_entries_after": 0,
+        "done_valid_after": false,
+        "completed_outputs": 4,
+        "values": {
+          "100": 5,
+          "101": 3,
+          "102": -3,
+          "103": -11
+        },
+        "partial_sums": {},
+        "last_mask": 6
+      },
+      {
+        "cycle": 18,
+        "stage": "CREATE_DONE",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": false,
+        "reduction_entries": 0,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [],
+        "source": null,
+        "packet_base_index": null,
+        "rx_slots_after": 0,
+        "reduction_entries_after": 0,
+        "done_valid_after": true,
+        "completed_outputs": 4,
+        "values": {
+          "100": 5,
+          "101": 3,
+          "102": -3,
+          "103": -11
+        },
+        "partial_sums": {},
+        "last_mask": 6
+      },
+      {
+        "cycle": 19,
+        "stage": "IDLE",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": false,
+        "reduction_entries": 0,
+        "done_valid": true,
+        "done_ready": true,
+        "indices": [],
+        "source": null,
+        "packet_base_index": null,
+        "rx_slots_after": 0,
+        "reduction_entries_after": 0,
+        "done_valid_after": false,
+        "completed_outputs": 4,
+        "values": {
+          "100": 5,
+          "101": 3,
+          "102": -3,
+          "103": -11
+        },
+        "partial_sums": {},
+        "last_mask": 6
+      }
+    ]
+  },
+  "4": {
+    "lanes": 4,
+    "cycles": 13,
+    "trace": [
+      {
+        "cycle": 0,
+        "stage": "DISPATCH",
+        "rx_slots": 2,
+        "queued_packets": 2,
+        "header_reserved": false,
+        "active": false,
+        "reduction_entries": 0,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [],
+        "source": 1,
+        "packet_base_index": 100,
+        "rx_slots_after": 1,
+        "reduction_entries_after": 0,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {},
+        "last_mask": 0
+      },
+      {
+        "cycle": 1,
+        "stage": "READ",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 0,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          100,
+          101,
+          102,
+          103
+        ],
+        "source": 1,
+        "packet_base_index": 100,
+        "read_values": [
+          [
+            100,
+            0,
+            0,
+            1
+          ],
+          [
+            101,
+            0,
+            0,
+            -2
+          ],
+          [
+            102,
+            0,
+            0,
+            3
+          ],
+          [
+            103,
+            0,
+            0,
+            -4
+          ]
+        ],
+        "rx_slots_after": 1,
+        "reduction_entries_after": 0,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {},
+        "last_mask": 0
+      },
+      {
+        "cycle": 2,
+        "stage": "ADD",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 0,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          100,
+          101,
+          102,
+          103
+        ],
+        "source": 1,
+        "packet_base_index": 100,
+        "updated_values": [
+          [
+            100,
+            1,
+            2
+          ],
+          [
+            101,
+            -2,
+            2
+          ],
+          [
+            102,
+            3,
+            2
+          ],
+          [
+            103,
+            -4,
+            2
+          ]
+        ],
+        "rx_slots_after": 1,
+        "reduction_entries_after": 0,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {},
+        "last_mask": 0
+      },
+      {
+        "cycle": 3,
+        "stage": "UPDATE",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 0,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          100,
+          101,
+          102,
+          103
+        ],
+        "source": 1,
+        "packet_base_index": 100,
+        "rx_slots_after": 1,
+        "reduction_entries_after": 4,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1,
+          "101": -2,
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 0
+      },
+      {
+        "cycle": 4,
+        "stage": "PACKET_DONE",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 4,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          100,
+          101,
+          102,
+          103
+        ],
+        "source": 1,
+        "packet_base_index": 100,
+        "rx_slots_after": 1,
+        "reduction_entries_after": 4,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1,
+          "101": -2,
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 5,
+        "stage": "DISPATCH",
+        "rx_slots": 1,
+        "queued_packets": 1,
+        "header_reserved": false,
+        "active": false,
+        "reduction_entries": 4,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [],
+        "source": 2,
+        "packet_base_index": 100,
+        "rx_slots_after": 0,
+        "reduction_entries_after": 4,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1,
+          "101": -2,
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 6,
+        "stage": "READ",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 4,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          100,
+          101,
+          102,
+          103
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "read_values": [
+          [
+            100,
+            1,
+            2,
+            4
+          ],
+          [
+            101,
+            -2,
+            2,
+            5
+          ],
+          [
+            102,
+            3,
+            2,
+            -6
+          ],
+          [
+            103,
+            -4,
+            2,
+            -7
+          ]
+        ],
+        "rx_slots_after": 0,
+        "reduction_entries_after": 4,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1,
+          "101": -2,
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 7,
+        "stage": "ADD",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 4,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          100,
+          101,
+          102,
+          103
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "updated_values": [
+          [
+            100,
+            5,
+            6
+          ],
+          [
+            101,
+            3,
+            6
+          ],
+          [
+            102,
+            -3,
+            6
+          ],
+          [
+            103,
+            -11,
+            6
+          ]
+        ],
+        "rx_slots_after": 0,
+        "reduction_entries_after": 4,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 1,
+          "101": -2,
+          "102": 3,
+          "103": -4
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 8,
+        "stage": "UPDATE",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 4,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          100,
+          101,
+          102,
+          103
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "rx_slots_after": 0,
+        "reduction_entries_after": 4,
+        "done_valid_after": false,
+        "completed_outputs": 0,
+        "values": {},
+        "partial_sums": {
+          "100": 5,
+          "101": 3,
+          "102": -3,
+          "103": -11
+        },
+        "last_mask": 2
+      },
+      {
+        "cycle": 9,
+        "stage": "WRITE_RESULT",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 4,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          100,
+          101,
+          102,
+          103
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "written_indices": [
+          100,
+          101,
+          102,
+          103
+        ],
+        "rx_slots_after": 0,
+        "reduction_entries_after": 0,
+        "done_valid_after": false,
+        "completed_outputs": 4,
+        "values": {
+          "100": 5,
+          "101": 3,
+          "102": -3,
+          "103": -11
+        },
+        "partial_sums": {},
+        "last_mask": 2
+      },
+      {
+        "cycle": 10,
+        "stage": "PACKET_DONE",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": true,
+        "reduction_entries": 0,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [
+          100,
+          101,
+          102,
+          103
+        ],
+        "source": 2,
+        "packet_base_index": 100,
+        "rx_slots_after": 0,
+        "reduction_entries_after": 0,
+        "done_valid_after": false,
+        "completed_outputs": 4,
+        "values": {
+          "100": 5,
+          "101": 3,
+          "102": -3,
+          "103": -11
+        },
+        "partial_sums": {},
+        "last_mask": 6
+      },
+      {
+        "cycle": 11,
+        "stage": "CREATE_DONE",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": false,
+        "reduction_entries": 0,
+        "done_valid": false,
+        "done_ready": true,
+        "indices": [],
+        "source": null,
+        "packet_base_index": null,
+        "rx_slots_after": 0,
+        "reduction_entries_after": 0,
+        "done_valid_after": true,
+        "completed_outputs": 4,
+        "values": {
+          "100": 5,
+          "101": 3,
+          "102": -3,
+          "103": -11
+        },
+        "partial_sums": {},
+        "last_mask": 6
+      },
+      {
+        "cycle": 12,
+        "stage": "IDLE",
+        "rx_slots": 0,
+        "queued_packets": 0,
+        "header_reserved": false,
+        "active": false,
+        "reduction_entries": 0,
+        "done_valid": true,
+        "done_ready": true,
+        "indices": [],
+        "source": null,
+        "packet_base_index": null,
+        "rx_slots_after": 0,
+        "reduction_entries_after": 0,
+        "done_valid_after": false,
+        "completed_outputs": 4,
+        "values": {
+          "100": 5,
+          "101": 3,
+          "102": -3,
+          "103": -11
+        },
+        "partial_sums": {},
+        "last_mask": 6
+      }
+    ]
+  }
+}

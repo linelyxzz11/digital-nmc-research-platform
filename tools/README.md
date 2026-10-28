@@ -5,5 +5,6 @@
 - `experiments/`：实验说明及后续批量运行、统计和绘图脚本。
 - `rtl/run_tile_rtl.py`：编译单 Tile RTL、检查 SRAM 综合资源、与 Python 逐边沿比较，并保存 CSV/波形；完整运行需要 Icarus Verilog、Verilator 和 Yosys。
 - `experiments/timed_tile_system.py`：验证逐请求 Tile 与公式参考在全部 24 个形状上的系统基线一致性，并比较显式端口配置的影响；原压力脚本也支持 `--compute-model tile --tile-config FILE`。
+- `experiments/finite_root_system.py`：固定 Tile，比较真实有限 Root 队列/吞吐/写回的五组配置，不使用人工 ejection gate；同时保存独立手算时间线。
 
 实验读取 `ini/` 的配置和 `data/workloads/` 的数据，把原始输出写入 `dump/`，精选结果写入 `data/results/`。
