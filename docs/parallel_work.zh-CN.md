@@ -1,26 +1,26 @@
 # 三台电脑的下一阶段分工
 
-当前基线是单 Tile RTL 与 Python 时序对齐，2×2 系统默认仍使用原功能/公式 Compute；归约端点仍是功能操作。现有回归的计算量较小，空闲电脑的主要价值是独立开发、测试与复现。建议先推进以下两个可独立交付的模块。
+当前单 Tile RTL 已与 Python 对齐，逐请求 SRAM/Bank/MAC 也已在本机接入 2×2 调度循环；归约端点仍是功能操作。现有回归的计算量较小，继续在本机依次推进即可。空闲电脑可用于扩大参数/随机扫描或独立环境复现。
 
-## 电脑 A：把已验证的 Tile 时序接入 2×2 系统
+## 阶段 A：Tile 时序接入（已在本机完成）
 
-从 `rtl/tile-compute-v0-1` 的已发布提交新建 `sim/timed-tile-system` 分支。主要负责 `src/simulator/system/demo1.py` 的 runner 接入和对应集成测试，复用 `PortScheduledCompute`；保持旧入口兼容，通过显式参数选择详细 SRAM 配置。逐周期推进 Compute/NI/Mesh，记录每 Tile 的 MAC、Bank 等待、Result 反压和统一计时窗口。
+`sim/timed-tile-system` 分支已复用 `PortScheduledCompute`，提供 `tile_timing=TileComputeConfig()` 和 CLI `--compute-model tile`，兼容旧入口。逐周期推进 Compute/NI/Mesh，记录每 Tile 的 MAC、Bank 等待、Result 反压和统一计时窗口。
 
-验收：ROW/K 数值、ACK 集合、ResultBeat/Done 次数不变；独立端口基线与原公式时序对照一致；改变单 Bank 启动间隔或 Result Bank 数会产生可解释的时间差。使用现有 suite 的全部 24 个形状及固定放置，预先记录容量不可行项，保存配置、种子和源码提交号。
+验收已通过：ROW/K 数值、ACK 集合、ResultBeat/Done 次数不变；独立端口基线与原公式时序对照一致；改变单 Bank 启动间隔或 Result Bank 数产生可解释的时间差。全部 24 个形状、固定放置、两种接收条件的基线 86 次可行执行网络指标完全一致，10 次不可行状态一致；五组对照共 480 条记录。配置、源码哈希与快照已保存。
 
-电脑 A 拥有系统 runner 的集成修改，之后负责把电脑 B 的组件接入；这能减少两个分支同时改调度循环的冲突。初始交付先使用当前功能归约端点，明确其时间边界。
+下一阶段仍由同一集成分支维护 runner，接入独立 Root 组件；当前输入写提交与归约均为功能操作，权重预加载和命令/VALIDATE 不计时。
 
-## 电脑 B：有限容量、有限吞吐的 Root 端点
+## 阶段 B：有限容量、有限吞吐的 Root 端点（下一步）
 
-从同一提交新建 `sim/finite-root-endpoint` 分支，主要新增独立的 `timed_endpoint.py` 和单元测试。先定义组件接口，再实现有限接收队列、PSUM 匹配缓冲、归约读/改/写服务、完成队列及明确的 ready 条件；所有容量、加法吞吐和写回延迟均显式可配置。
+从阶段 A 的已发布提交新建 `sim/finite-root-endpoint` 分支，主要新增独立的 `timed_endpoint.py` 和单元测试。先定义组件接口，再实现有限接收队列、PSUM 匹配缓冲、归约读/改/写服务、完成队列及明确的 ready 条件；所有容量、加法吞吐和写回延迟均显式可配置。
 
-建议接口为 `can_accept(packet)`、`accept(packet)`、`step()` 和完成事件读取。`accept` 只入有界队列，实际数值更新由 `step` 的服务状态机执行；错误包检查保持原来的原子性。输出队列满时不得丢 Done。先与现有 FINAL gather/PSUM reduce 逐项核对数值、来源 mask 和错误语义，再向电脑 A 交付接入。
+建议接口为 `can_accept(packet)`、`accept(packet)`、`step()` 和完成事件读取。`accept` 只入有界队列，实际数值更新由 `step` 的服务状态机执行；错误包检查保持原来的原子性。输出队列满时不得丢 Done。先与现有 FINAL gather/PSUM reduce 逐项核对数值、来源 mask 和错误语义，再接入系统调度循环。
 
-验收：给出可手算的两来源/四输出 Trace；覆盖队列满、部分和缓冲满、慢写回、乱序来源、重复包和完成反压。给出服务周期和占用统计，能够区分队列等待、归约运算和结果写回。第一阶段仅提交独立组件和测试，系统 runner 的集成由电脑 A 完成。
+验收：给出可手算的两来源/四输出 Trace；覆盖队列满、部分和缓冲满、慢写回、乱序来源、重复包和完成反压。给出服务周期和占用统计，能够区分队列等待、归约运算和结果写回。先交付独立组件和测试，再补系统 runner 的集成。
 
-## 当前电脑：RTL 维护、复现与实验整合
+## 本机继续维护、复现与实验整合
 
-保持单 Tile RTL/接口回归，审核两台电脑的组件合同。两个分支分别通过测试后，先合并独立 Root 组件，再由电脑 A 完成接入，最后在同一固定硬件配置下比较 ROW、K 和后续 mapper。
+保持单 Tile RTL/接口回归，先完成独立 Root 组件及其手算/反压测试，再接入阶段 A 的系统循环，最后在同一固定硬件配置下比较 ROW、K 和后续 mapper。
 
 主要比较指标为 **同一计时窗口内的模型任务完成周期**，主基线为固定 K；同时报告固定 ROW。辅助统计为 MAC 利用率、Bank 等待、NI 注入阻塞、Root 队列占用、NoC flit-hop 与映射可行性。权重预加载是否计时必须统一声明。不同 Bank/端点配置属于硬件敏感性实验，不能算成 mapper 在相同硬件下的收益。
 

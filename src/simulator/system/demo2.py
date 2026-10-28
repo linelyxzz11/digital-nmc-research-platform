@@ -1,7 +1,7 @@
 """Demo 2: K partition, network-scattered inputs and endpoint INT32 PSUM reduction.
 
-Uses the same Host/Compute/NI/Mesh loop as Demo 1. Compute and reduction are
-functional; mesh cycles are not a prediction of total GEMV latency.
+Uses the same configurable Host/Compute/NI/Mesh loop as Demo 1. Input commits
+and endpoint reduction remain functional in every Compute mode.
 """
 from __future__ import annotations
 
@@ -15,7 +15,10 @@ from simulator.functional import Demo0Tile, int32_wrap
 from simulator.system.demo1 import (
     DEMO_W, DEMO_X, FinalGather, GatherConfig, NMCRun, PlanError, TransactionError,
     emit_run, load_workload, _run_partitioned, load_plan, run_plan,
+    add_compute_arguments, compute_arguments,
 )
+from simulator.system.compute_timing import ComputeTiming
+from simulator.system.tile_config import TileComputeConfig
 
 
 class PSumReduce(FinalGather):
@@ -94,12 +97,16 @@ def run_demo2(
     k_split: int | None = None,
     sink_ready: Callable[[int, int, str], bool] | None = None,
     max_cycles: int = 10000,
+    compute_timing: ComputeTiming | None = None,
+    tile_timing: TileComputeConfig | None = None,
+    capture_tile_trace: bool = False,
 ) -> NMCRun:
     """Split W columns and x into two nonempty contiguous K partitions."""
     return _run_partitioned(matrix, vector, tid=tid, global_row_base=global_row_base,
                             workers=workers, root_tile=root_tile, sink_ready=sink_ready,
                             max_cycles=max_cycles, partition="K", endpoint_factory=PSumReduce,
-                            k_split=k_split)
+                            k_split=k_split, compute_timing=compute_timing,
+                            tile_timing=tile_timing, capture_tile_trace=capture_tile_trace)
 
 
 def main() -> None:
@@ -108,11 +115,13 @@ def main() -> None:
     parser.add_argument("--k-split", type=int, help="K split position; default ceil(K/2)")
     parser.add_argument("--plan", type=Path, help="execute a Mapper JSON plan instead of the built-in GEMV")
     parser.add_argument("--workload", type=Path, help='optional {"W","x"} JSON for the golden check')
+    add_compute_arguments(parser)
     args = parser.parse_args()
     try:
+        compute = compute_arguments(args)
         if args.plan is not None:
             plan = load_plan(args.plan)
-            run = run_plan(plan, endpoint_factory=PSumReduce, expected_partition="K")
+            run = run_plan(plan, endpoint_factory=PSumReduce, expected_partition="K", **compute)
             workload = None
             if args.workload is not None:
                 workload = load_workload(args.workload)
@@ -121,7 +130,7 @@ def main() -> None:
         else:
             if args.workload is not None:
                 raise PlanError("--workload requires --plan")
-            run = run_demo2(k_split=args.k_split)
+            run = run_demo2(k_split=args.k_split, **compute)
             workload = (DEMO_W, DEMO_X)
     except PlanError as error:
         print(f"demo2: {error}", file=sys.stderr)

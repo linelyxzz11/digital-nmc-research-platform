@@ -418,6 +418,8 @@ T_local_no_stall = G * (K_local + 4) + 1
 
 同日后续实现见 [单 Tile RTL](../../src/rtl/nmc_tile/README.md)：固定端口基线已完成 71 个用例/77 段执行的逐周期对照，含加载、复位和非法任务处理，并通过通用 SRAM 结构检查。其结果不覆盖具体 SRAM 宏时序或多 Tile 系统性能。
 
+逐请求模型随后已接入 Python 2×2 runner：`tile_timing=TileComputeConfig()` 令 Compute 与 NI/Mesh 同时钟推进，可显式覆盖 Bank、端口启动间隔、读延迟和操作数槽位。默认端口与公式参考的完整系统 Trace 一致；配置和接口说明见 [系统实验](../../tools/experiments/compute_timing.md#timed-tile-system)。该接入沿用功能输入写提交与功能归约，未将 RTL 加载器和归约服务时间计入完整系统。
+
 ## 10. Compute 到 NI 的 ResultBeat 接口
 
 ### 10.1 信号

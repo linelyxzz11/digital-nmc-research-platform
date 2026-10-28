@@ -25,6 +25,7 @@ from hardware import DEFAULT_HARDWARE
 from simulator.system.demo1 import FinalGather, plan_from_mapping, run_plan
 from simulator.system.demo2 import PSumReduce
 from simulator.system.compute_timing import ComputeTiming
+from simulator.system.tile_config import TileComputeConfig
 from tools.experiments.mapper_sweep import enumerate_cases, generate_workload, parse_shapes, _golden
 
 
@@ -78,7 +79,8 @@ class RootServiceGate:
         return ready
 
 
-def measure(matrix, vector, case, profile, offset=0, max_cycles=10000, compute_timing=None):
+def measure(matrix, vector, case, profile, offset=0, max_cycles=10000, compute_timing=None,
+            tile_timing=None):
     record = {"m": len(matrix), "k": len(vector), "partition": case.strategy.upper(),
               "workers": list(case.workers), "root": case.root_tile, "k_split": case.k_split,
               "profile": profile.name, "phase_offset": offset % profile.period}
@@ -97,7 +99,7 @@ def measure(matrix, vector, case, profile, offset=0, max_cycles=10000, compute_t
 
     try:
         run = run_plan(plan, endpoint_factory=endpoint_factory, sink_ready=gate,
-                       max_cycles=max_cycles, compute_timing=compute_timing)
+                       max_cycles=max_cycles, compute_timing=compute_timing, tile_timing=tile_timing)
     except TimeoutError as error:
         return {**record, "status": "timeout", "reason": str(error)}
     trace, mesh = run.trace, run.mesh
@@ -127,9 +129,19 @@ def measure(matrix, vector, case, profile, offset=0, max_cycles=10000, compute_t
         # 2x2 mesh: eight directed inter-router links, including unused links.
         "mean_link_utilization": mesh.flit_hops / (8 * mesh.cycle),
     }
-    if compute_timing is not None:
+    if compute_timing is not None or tile_timing is not None:
         metrics["modeled_schedule_cycles"] = metrics.pop("network_schedule_cycles")
         metrics["compute_and_gather_cycles"] = metrics.pop("result_gather_cycles")
+    if tile_timing is not None:
+        stats = list(run.compute_stats.values())
+        metrics.update(
+            tile_mac_active_cycles=sum(s['mac_active_cycles'] for s in stats),
+            tile_useful_mac_ops=sum(s['useful_mac_ops'] for s in stats),
+            bank_conflict_request_cycles=sum(s['bank_conflict_request_cycles'] for s in stats),
+            port_busy_request_cycles=sum(s['port_busy_request_cycles'] for s in stats),
+            tile_result_stall_cycles=sum(s['result_stall_cycles'] for s in stats),
+            tile_lane_slot_utilization=sum(s['useful_mac_ops'] for s in stats)
+                / (4 * sum(s['local_elapsed_cycles'] for s in stats)))
     return {**record, "status": "ok" if good else "validation_failure",
             "golden_ok": run.y == _golden(matrix, vector), "metrics": metrics,
             "compute_stats": run.compute_stats,
@@ -188,7 +200,10 @@ def compare(rows):
 
 
 def run_experiment(shapes, profiles=("open", "half", "quarter", "eighth", "burst64"),
-                   offsets=(0,), placement="all", max_cycles=10000, compute_timing=None):
+                   offsets=(0,), placement="all", max_cycles=10000, compute_timing=None,
+                   tile_timing=None):
+    if compute_timing is not None and tile_timing is not None:
+        raise ValueError("choose either formula compute_timing or request-level tile_timing")
     if len(set(profiles)) != len(profiles) or "open" not in profiles:
         raise ValueError("profiles must be unique and include open for paired comparisons")
     if any(name not in PROFILES for name in profiles):
@@ -202,16 +217,19 @@ def run_experiment(shapes, profiles=("open", "half", "quarter", "eighth", "burst
             for name in profiles:
                 profile = PROFILES[name]
                 for offset in sorted({value % profile.period for value in offsets}):
-                    rows.append(measure(matrix, vector, case, profile, offset, max_cycles, compute_timing))
+                    rows.append(measure(matrix, vector, case, profile, offset, max_cycles,
+                                        compute_timing, tile_timing))
     return {
         "schema_version": 2,
-        "scope": (("reference Compute/SRAM timing + " if compute_timing else "functional Compute + ")
+        "scope": (("request-level Compute/SRAM timing + " if tile_timing else
+                   "reference Compute/SRAM timing + " if compute_timing else "functional Compute + ")
                   + "cycle-stepped NoC with synthetic Root RESULT ejection service; functional reduction; not RTL-calibrated full GEMV latency"),
         "hardware": DEFAULT_HARDWARE.describe(),
         "options": {"shapes": [list(s) for s in shapes], "placement": placement,
                     "profiles": [asdict(PROFILES[name]) for name in profiles],
                     "phase_offsets": list(offsets), "max_cycles": max_cycles,
-                    "compute_timing": asdict(compute_timing) if compute_timing is not None else None},
+                    "compute_timing": asdict(compute_timing) if compute_timing is not None else None,
+                    **({"tile_timing": asdict(tile_timing)} if tile_timing is not None else {})},
         "summary": {"cases": len(rows), **{status: sum(r["status"] == status for r in rows)
                     for status in ("ok", "infeasible", "timeout", "validation_failure")}},
         "comparison": compare(rows), "results": rows,
@@ -253,17 +271,22 @@ def main(argv=None):
     parser.add_argument("--phase-offsets", default="0")
     parser.add_argument("--placements", choices=("default", "all"), default="all")
     parser.add_argument("--max-cycles", type=int, default=10000)
-    parser.add_argument("--compute-model", choices=("functional", "reference", "weight-ii2"), default="functional")
+    parser.add_argument("--compute-model", choices=("functional", "reference", "weight-ii2", "tile"), default="functional")
+    parser.add_argument("--tile-config", type=Path, help="partial JSON overrides for --compute-model tile")
     parser.add_argument("--output-dir", type=Path)
     args = parser.parse_args(argv)
     try:
         if args.max_cycles <= 0:
             raise ValueError("max-cycles must be positive")
-        timing = (None if args.compute_model == "functional" else
+        if args.tile_config is not None and args.compute_model != "tile":
+            raise ValueError("--tile-config requires --compute-model tile")
+        tile = ((TileComputeConfig.load(args.tile_config) if args.tile_config else TileComputeConfig())
+                if args.compute_model == "tile" else None)
+        timing = (None if args.compute_model in ("functional", "tile") else
                   ComputeTiming(weight_read_interval=2 if args.compute_model == "weight-ii2" else 1))
         payload = run_experiment(parse_shapes(args.shapes), tuple(args.profiles.split(",")),
                                  tuple(int(v) for v in args.phase_offsets.split(",")),
-                                 args.placements, args.max_cycles, timing)
+                                 args.placements, args.max_cycles, timing, tile)
     except ValueError as error:
         parser.error(str(error))
     payload["provenance"] = provenance()

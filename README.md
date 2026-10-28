@@ -2,7 +2,7 @@
 
 面向 GEMV 的数字近存计算（NMC）研究平台，研究有限 Bank、MAC、NoC 带宽和 FIFO 条件下的切分、放置与端点归约。
 
-当前可运行：单 Tile GEMV、Packet/NI/2×2 XY Mesh，以及 Demo 1 行切分/FINAL 收集、Demo 2 K 切分/INT32 PSUM 归约的多 Tile 闭环。输入通过 NoC 写入并收齐 ACK 后启动计算，Root 完成收集或归约后向 Host 发送全局 DONE。系统支持可选 Compute 参考时序；归约仍为功能操作，完整系统延迟尚未校准。单 Tile Compute RTL 已实现，具备 SRAM/外部加载/结果握手，并与 Python 模型逐周期对照。Mapper v0.1 提供 ROW/K 切分、容量检查和一阶代价选择；Demo 1/2 CLI 可通过 `--plan` 执行 JSON 计划。有限吞吐归约、详细 Tile 时序的系统接入和多 Tile NMC RTL 是后续工作。早期 RV32I CPU 示例仅作本地学习参考。
+当前可运行：单 Tile GEMV、Packet/NI/2×2 XY Mesh，以及 Demo 1 行切分/FINAL 收集、Demo 2 K 切分/INT32 PSUM 归约的多 Tile 闭环。输入通过 NoC 写入并收齐 ACK 后启动计算，Root 完成收集或归约后向 Host 发送全局 DONE。系统支持功能、公式和逐请求 Tile 三种 Compute 入口；详细 SRAM/Bank/MAC 与 NI/Mesh 已共享时钟，输入提交和归约仍为功能操作，完整系统延迟尚未校准。单 Tile Compute RTL 已实现，具备 SRAM/外部加载/结果握手，并与 Python 模型逐周期对照。Mapper v0.1 提供 ROW/K 切分、容量检查和一阶代价选择；Demo 1/2 CLI 可通过 `--plan` 执行 JSON 计划。有限吞吐归约和多 Tile NMC RTL 是后续工作。早期 RV32I CPU 示例仅作本地学习参考。
 
 ## 从这里开始
 
@@ -73,6 +73,10 @@ PYTHONPATH=src python tools/experiments/mapper_sweep.py --workload data/workload
 PYTHONPATH=src python tools/experiments/mapper_sweep.py --shapes suite --output data/results/mapper_sweep_suite.json --csv data/results/mapper_sweep_suite.csv
 PYTHONPATH=src python tools/experiments/mapper_sweep.py --shapes 16x128,128x16,32x64,64x32 --top 2
 python -m pytest -q -p no:cacheprovider src/tests/test_mapper_sweep.py
+# 详细 Tile SRAM/Bank 时序，与 NI/Mesh 共用时钟；--plan 同样支持这些选项
+PYTHONPATH=src python -m simulator.system.demo1 --compute-model tile --tile-config ini/tile_system/baseline.json --tile-trace --trace dump/tile_row.json
+PYTHONPATH=src python -m simulator.system.demo2 --compute-model tile --tile-config ini/tile_system/result_1bank.json --trace dump/tile_k.json
+python tools/experiments/timed_tile_system.py --output-dir dump/timed_tile_system_20261028
 # 检查随 Git 发布的文档链接
 python tools/check_layout.py --tracked
 ```
