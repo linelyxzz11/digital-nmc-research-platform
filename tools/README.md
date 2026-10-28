@@ -13,3 +13,10 @@
 - `experiments/scalable_experiments.py`：固定 8×8/64 Tile 的 12 项冒烟和 112 项主实验，支持 `prepare/run/merge`、三电脑分片、断点续跑、模型/计划/结果校验和严格完整性检查。[运行说明](../docs/distributed_experiments.zh-CN.md)。
 
 实验读取 `ini/` 的配置和 `data/workloads/` 的数据，把原始输出写入 `dump/`，精选结果写入 `data/results/`。
+
+新增入口：
+
+- `experiments/verify_unindp_port.py`：直接核对固定作者提交的 Partition/Mapping 方法；不需要作者 Python 依赖。
+- `experiments/mapping_evaluation.py`：先执行各策略，再补完候选参考；16 个形状、相同硬件和目录、四种精确评估预算，支持按完整形状分片和续跑。
+- `experiments/plot_mapping_quality.py`：从汇总生成全部 holdout 形状的配对预算散点图，保留 SVG/PDF/PNG 和数据溯源。
+- `rtl/run_mesh_rtl.py`：完整 64 Tile RTL 的九例执行、线格式/数值/完成/反压检查与真实 SRAM 读回。

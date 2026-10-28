@@ -1,6 +1,7 @@
 `timescale 1ns/1ps
 module nmc_tile_compute #(
-    parameter integer TILE_ID = 1
+    parameter integer TILE_ID = 1,
+    parameter integer TILE_COUNT = 4
 ) (
     input logic clk, rst_n,
     input logic task_valid,
@@ -101,7 +102,7 @@ module nmc_tile_compute #(
         if (opcode_q != 1) validation_status = 1;
         else if (version_q != 1 || kind_q > 1) validation_status = 2;
         else if (m_q == 0 || m_q > 256 || k_q == 0 || k_q > 1024) validation_status = 3;
-        else if (tile_q != 8'(TILE_ID) || tile_q >= 4 || dst_q >= 4) validation_status = 4;
+        else if (tile_q != 8'(TILE_ID) || int'(tile_q) >= TILE_COUNT || int'(dst_q) >= TILE_COUNT) validation_status = 4;
         else if (global_end > 65535) validation_status = 2;
         else if (|w_q[1:0] || |y_q[1:0]) validation_status = 6;
         else if (weight_end > 4096 || x_q < 16'h1000 || input_end > 32'h1400 ||

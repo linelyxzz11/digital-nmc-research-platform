@@ -1,6 +1,8 @@
 # 三台电脑的下一阶段分工
 
-当前单 Tile RTL 已与 Python 对齐，逐请求 SRAM/Bank/MAC 和有限 Root 队列/服务已接入执行循环。**最新目标（2026-10-28）：8×8、64 Tile 主实验。** 新入口复用上述组件，支持多 worker、二维分块和集中/分层归约，保留 2×2/原 RTL 校准。三台电脑各自拉取同一 GitHub commit 后运行固定清单的独立分片，操作见 [多机实验](distributed_experiments.zh-CN.md)。依据和指标见 [UniNDP 实验方案](unindp_evaluation.zh-CN.md)。
+当前 112 项 8×8/64 Tile 主扫描已经在本机完成，**无需把它拆成三份重新跑来计算实现进度**。旧三机分片说明保留作独立复现方法。v0.3 已新增同硬件 UniNDP 方法适配、通信感知搜索，以及真正的 64 Tile 集成 RTL；见 [搜索合同](spec/mapping_search_v0.3.md) 与 [RTL 验证](../src/rtl/nmc_mesh/README.md)。
+
+如果三位组员继续并行贡献，按接口分工：A 维护硬件合同、模型与 RTL 校准；B 维护 baseline/mapper，交付标准 GridPlan，不私改硬件；C 用公共 evaluator 独立复现实验、检查退化和瓶颈。通过 Git 分支/PR 交换代码和配置，通过带源码/计划哈希的 JSON/CSV 交换结果。每次模拟仍完整运行在一台电脑上，电脑之间不传逐周期 Flit。
 
 ## 阶段 A：Tile 时序接入（已在本机完成）
 

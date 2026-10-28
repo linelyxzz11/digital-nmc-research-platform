@@ -67,16 +67,16 @@ python tools/experiments/mapping_candidate_sweep.py \
   --shapes suite --k-splits sample --output-dir dump/mapping_candidates
 ```
 
-## 同硬件对比与交付顺序
+## 同硬件方法适配与自动映射（v0.3）
 
-统一使用一份可行候选目录和同一个 Tile/Root/NoC evaluator，比较固定 K、固定 ROW、现有 AUTO、忽略 Mesh 拥塞的资源/访问代价方法、拥塞感知方法及穷举参考。最后两种方法目前仍需实现；不能将两条自写公式直接命名为已复现的 UniNDP。
+已实现共同候选目录和同一个 Tile/Root/NoC evaluator 上的固定 K、固定 ROW、`unindp-adapted` 与 `noc`。后两者都先预测再精确模拟前 K 项；预算为 1/2/4/8。新增十二个 holdout 形状，保留容量不可行、误选和退化。规范与复现见 [v0.3 搜索合同](spec/mapping_search_v0.3.md)。
 
-要形成直接 UniNDP baseline，需要移植其分块、映射和候选筛选决策，适配本项目的容量、Lane、字节地址和任务接口，再把计划交给同一个 Mesh evaluator。作者原生树状 DRAM 配置与我们的 SRAM Mesh 不同，直接比较两边 raw cycles 无法隔离 mapper 收益。
+适配已保留作者的平坦 PU 分块、满利用剪枝、连续逻辑资源分配与 predictor→top-K→精确执行流程，并对固定提交的实际 Partition/Mapping 方法逐项核对；Lane、容量、字节地址与任务沿用本硬件合同。DRAM 后端、row miss 和其预测器没有移植，因此准确名称是 UniNDP **方法适配**，不能把两条自写公式叫作者完整工具的复现，也不能直接比较两个原生硬件的 raw cycles。
 
-下一轮集中交付三类结果：
+本轮保存三类结果：
 
 1. 同硬件映射延迟/加速比，以及所有退化和不可行项目；
 2. 相同候选/时间预算下的质量—搜索耗时曲线；
 3. 预测排序/Top-K 质量，以及能解释误选的 NoC、Bank、Root 计数。
 
-本机先跑候选目录和模型实验；一台空闲电脑复跑 UniNDP 原生工作负载，另一台复现同硬件候选评估和压力配置。不同配置分别汇总。只有时序敏感性改变候选排序或结论时，才优先补对应硬件校准；多 Tile RTL、完整归约 RTL 与更细器件实现随后推进。
+64 Tile/NI/Router/归约 RTL 也已完成默认合同下的九项集成验证，独立端点与 Python 每个服务边沿对齐。真实窄 SRAM 输入写、注册 NI 和任务接受阶段与旧模型不同，完整系统的数值/包协议一致，周期偏差分阶段记录；完整芯片 PPA 仍不属于本轮性能结论。
