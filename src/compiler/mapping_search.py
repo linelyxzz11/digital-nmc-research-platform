@@ -1,8 +1,8 @@
 """Result-independent ranking and budgeted exact search over common GridPlans.
 
-The predictor schedules packet paths and endpoint service analytically. It does
-not run the Mesh, inspect measured candidate cycles, or fit benchmark labels.
-Finite FIFO/wormhole timing is left to the exact shared evaluator of the top K.
+The predictor uses a bounded, timing-only packet surrogate. It never inspects
+measured candidate cycles or evaluates the workload's GEMV arithmetic. The
+original resource baseline and v0.3 predictor remain available unchanged.
 """
 from collections import defaultdict
 from dataclasses import dataclass
@@ -98,13 +98,20 @@ class Estimate:
     flit_hops: int
     peak_link_flits: int
     endpoint_service_cycles: int
+    model: str = 'reservation-v0.3'
+    source_stall_cycles: int = 0
+    network_blocked_cycles: int = 0
+    max_router_flits: int = 0
+    max_ni_flits: int = 0
+    max_rx_slots: int = 0
 
 
-def predict(plan, *, communication=True, tile_timing=TileComputeConfig(),
-            root_timing=RootTiming()):
-    """Pre-execution SRAM-command estimate, optionally with routed link sharing.
+def predict_v03(plan, *, communication=True, tile_timing=TileComputeConfig(),
+                root_timing=RootTiming()):
+    """Frozen v0.3 estimate, including its known input/backpressure errors.
 
-    Input uses the implemented stop-and-wait unicast protocol. Compute beats
+    The topology-blind branch remains an unchanged resource ordering score.
+    The communication branch overcounts input by two cycles/request. Beats
     come from isolated, zero-valued Tiles. Endpoint READ/ADD/UPDATE/WRITE work
     is serialized per physical node. Path reservations approximate contention;
     they deliberately do not claim finite-FIFO cycle accuracy.
@@ -188,7 +195,17 @@ def predict(plan, *, communication=True, tile_timing=TileComputeConfig(),
                  output_counts[destination] == total)
     kernel = complete + 3  # completion creation, held Done, network drain
     return Estimate(input_cycles+kernel,input_cycles,kernel,flit_hops,
-                    max(edge_load.values(),default=0),service_total)
+                    max(edge_load.values(),default=0),service_total,
+                    model='reservation-v0.3' if communication else 'resource-access-v0.3')
+
+
+def predict(plan, *, communication=True, tile_timing=TileComputeConfig(),
+            root_timing=RootTiming()):
+    if not communication:
+        return predict_v03(plan,communication=False,tile_timing=tile_timing,root_timing=root_timing)
+    from compiler.bounded_predictor import bounded_estimate
+    return Estimate(**bounded_estimate(plan,tile_timing,root_timing,
+                                      beats_for=_isolated_beats,path_for=xy_path))
 
 
 @dataclass

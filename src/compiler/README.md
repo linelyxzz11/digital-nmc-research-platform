@@ -89,3 +89,5 @@ plan = result.plan
 ```
 
 UniNDP 适配仅保留有依据的分块/资源利用剪枝/逻辑分配与两阶段搜索；SRAM 布局及预测器是本硬件适配。原方法核对、误差边界和评估口径见 [v0.3](../../docs/spec/mapping_search_v0.3.md)。
+
+默认 NoC 预测已升级为 [v0.4 有界包级模型](../../docs/spec/bounded_prediction_v0.4.md)，修正 ACK 固定开销并传播有限队列反压；保留 `predict_v03()` 和原强基线。包级推演的调用数和耗时需要计入搜索成本。
