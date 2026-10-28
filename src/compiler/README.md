@@ -77,3 +77,15 @@ k_local <= 1024
 Root 要保存 M 个最终输出，因此全局 M 也不超过 256。所有输出索引必须符合 16-bit 全局索引字段。默认本地基址为 W=0x0000、x=0x1000、y=0x2000。
 
 规则来源：[Compute v0.1](../../docs/spec/compute_architecture_v0.1.md)、[Communication v0.1](../../docs/spec/communication_architecture_v0.1.md)。验证记录见 [Mapper 验证](../../docs/validation.md#mapper)。
+
+## 多 worker 搜索入口
+
+`grid_mapper.py` 生成 64 Tile 物理预算下的二维分块/放置/归约图。`mapping_search.py` 在相同目录上提供 `unindp-adapted`、`noc`、`fixed-k`、`fixed-row`，以 `exact_budget` 限制精确模拟次数；排序先于实测标签。
+
+```python
+from compiler.mapping_search import search
+result = search(len(W), len(x), W, x, policy='noc', exact_budget=4)
+plan = result.plan
+```
+
+UniNDP 适配仅保留有依据的分块/资源利用剪枝/逻辑分配与两阶段搜索；SRAM 布局及预测器是本硬件适配。原方法核对、误差边界和评估口径见 [v0.3](../../docs/spec/mapping_search_v0.3.md)。

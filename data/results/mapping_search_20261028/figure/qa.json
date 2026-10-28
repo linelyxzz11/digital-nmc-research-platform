@@ -1,0 +1,10 @@
+{
+  "rendered_preview": "mapping_quality.png",
+  "editable_svg_text_nodes": 27,
+  "data_values_verified": true,
+  "overlaps": false,
+  "missing_glyphs": false,
+  "readability": "passed at declared 183 x 83 mm",
+  "uncertainty": "deterministic cases; no inferential error bars",
+  "limitations": "Budget 2 and full worst-case statistics are in README/quality.csv; figure shows 1 and 4 only."
+}

@@ -11,6 +11,8 @@
 - `results/mapping_candidates_20261028/`：扩大放置/采样 K 切分后 1,680 候选，1,188 次正确执行、492 次预期不可行；压缩完整记录、CSV、汇总和源码快照。
 - `results/unindp_native_20261028/`：固定作者版本/依赖的三个原生 AiM GEMV 对照，只表示 UniNDP 自身相对其 baseline 的结果，不表示本项目相对 UniNDP 的加速比。
 - `results/scalable64_20261028/`：8×8、64 Tile 的 112 项主实验，三分片合并及源码快照，含 56 组集中/树归约配对和单独的小任务边界探针。全部记录以 `records.json.gz` 发布；源码版本/模型范围和物理预算见 [v0.2 合同](../docs/spec/scalable_execution_v0.2.md)。
+- [results/mapping_search_20261028/](results/mapping_search_20261028/README.md)：同硬件方法适配与自动 mapper，16 形状、448 项尝试/440 项可行、四种精确评估预算，保留全部退化、预测排序、作者方法核对和图形数据。
+- [results/mesh_rtl_20261028/](results/mesh_rtl_20261028/README.md)：九项真实 64 Tile RTL 闭环与独立完整归约端点的逐边沿验证，真实包/SRAM/周期记录，输入/NI 模型差异明确列出。
 
 Root 压力与 Compute 时序的较大原始 JSON 以 `results.json.gz` 发布，内容不变，可用 `gzip -dk` 解压；对应 CSV、汇总和源码快照一并保留。仿真脚本仍生成普通 JSON。例如读取后直接分析：
 

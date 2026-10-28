@@ -21,6 +21,13 @@ jobs:
         run: python -m pytest -q -p no:cacheprovider --basetemp dump/ci_pytest
       - name: Check published links
         run: python tools/check_layout.py --tracked
+      - name: Verify UniNDP partition adaptation against pinned author methods
+        run: |
+          git init "$RUNNER_TEMP/unindp-author"
+          git -C "$RUNNER_TEMP/unindp-author" remote add origin https://github.com/godfather991/UniNDP.git
+          git -C "$RUNNER_TEMP/unindp-author" fetch --depth 1 origin c8b21684358441d29fc81fa0866d07cec20582ed
+          git -C "$RUNNER_TEMP/unindp-author" checkout --detach FETCH_HEAD
+          python tools/experiments/verify_unindp_port.py --author-root "$RUNNER_TEMP/unindp-author" --output dump/unindp_parity/results.json
       - name: Preserve RTL results, traces and waveforms
         if: always()
         uses: actions/upload-artifact@v4
@@ -36,3 +43,6 @@ jobs:
             dump/ci_pytest/**/memory.csv
             dump/ci_pytest/**/wave.vcd
             dump/ci_pytest/**/*.log
+            dump/ci_pytest/**/packets.csv
+            dump/ci_pytest/**/cycles.csv
+            dump/unindp_parity/results.json

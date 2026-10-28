@@ -1,6 +1,8 @@
 # 三台电脑的下一阶段分工
 
-当前单 Tile RTL 已与 Python 对齐，逐请求 SRAM/Bank/MAC 和有限 Root 队列/服务已接入执行循环。**最新目标（2026-10-28）：8×8、64 Tile 主实验。** 新入口复用上述组件，支持多 worker、二维分块和集中/分层归约，保留 2×2/原 RTL 校准。三台电脑各自拉取同一 GitHub commit 后运行固定清单的独立分片，操作见 [多机实验](distributed_experiments.zh-CN.md)。依据和指标见 [UniNDP 实验方案](unindp_evaluation.zh-CN.md)。
+当前 112 项 8×8/64 Tile 主扫描已经在本机完成，**无需把它拆成三份重新跑来计算实现进度**。旧三机分片说明保留作独立复现方法。v0.3 已新增同硬件 UniNDP 方法适配、通信感知搜索，以及真正的 64 Tile 集成 RTL；见 [搜索合同](spec/mapping_search_v0.3.md) 与 [RTL 验证](../src/rtl/nmc_mesh/README.md)。
+
+如果三位组员继续并行贡献，按接口分工：A 维护硬件合同、模型与 RTL 校准；B 维护 baseline/mapper，交付标准 GridPlan，不私改硬件；C 用公共 evaluator 独立复现实验、检查退化和瓶颈。通过 Git 分支/PR 交换代码和配置，通过带源码/计划哈希的 JSON/CSV 交换结果。每次模拟仍完整运行在一台电脑上，电脑之间不传逐周期 Flit。
 
 ## 阶段 A：Tile 时序接入（已在本机完成）
 
@@ -20,7 +22,7 @@
 
 ## 本机继续维护、复现与实验整合
 
-Root 四字写回已接入内部宽写路径并完成 [RTL 校准](spec/root_writeback_rtl_v0.1.md)：空闲时一周期写四字，Compute/Host 占用由 ready 反压处理，51 组 Python/RTL 时间线一致。输入写提交、Root 部分和 SRAM/加法器及完整端点 RTL 继续作为已知边界；先做同配置模型实验和时序敏感性，只在影响候选排序或结论时优先补校准。
+Root 四字写回已完成 [原 RTL 校准](spec/root_writeback_rtl_v0.1.md)：空闲时一周期写四字，Compute/Host 占用由 ready 反压处理，51 组 Python/RTL 时间线一致。v0.3 进一步实现默认归约端点和完整 64 Tile 连接；Python 功能输入提交与 RTL 真实窄写/注册 NI 的时序差异按阶段保存，不混成一次“完全对齐”的结论。
 
 主要比较指标为 **同一计时窗口内的模型任务完成周期**，主基线为固定 K；同时报告固定 ROW。辅助统计为 MAC 利用率、Bank 等待、NI 注入阻塞、Root 队列占用、NoC flit-hop 与映射可行性。权重预加载是否计时必须统一声明。不同 Bank/端点配置属于硬件敏感性实验，不能算成 mapper 在相同硬件下的收益。
 

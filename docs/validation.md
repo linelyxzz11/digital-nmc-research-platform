@@ -1,5 +1,7 @@
 # 验证指南与运行记录
 
+v0.3 新增 [自动映射与同硬件评价](spec/mapping_search_v0.3.md)、[九项 64 Tile 集成 RTL](../src/rtl/nmc_mesh/README.md) 和独立完整端点的逐边沿比较。数据见 [映射实验](../data/results/mapping_search_20261028/README.md)、[集成 RTL](../data/results/mesh_rtl_20261028/README.md)。以下分阶段指南保留原 Demo 合同与历史验证记录。
+
 [Demo 0 入门](#demo0) · [Demo 0B 周期 Trace](#trace) · [Comm 0A–0C](#comm) · [NMC Demo 1](#demo1) · [NMC Demo 2](#demo2)
 
 <a id="demo0"></a>

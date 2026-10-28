@@ -2734,10 +2734,10 @@
       }
     }
   ],
-  "prepared_from_commit": "c5d0ee87448d40d908e2ec031446000cc8995d92",
+  "prepared_from_commit": "8c0c6eeebdba6d81355d360698d679c61484bd20",
   "profile": "main",
   "schema_version": 1,
-  "sha256": "f7e98f5511f70a930340764452de229b0d4bfefe230e1483a94e5ccd73ca4dfd",
+  "sha256": "0a0c497eb1fd98daf1b0663ddad8dd8828d77d08f61193ca70c6d705d34d31dc",
   "shards": 3,
   "source_sha256": {
     "pyproject.toml": "e7f42fc55a826f32afd0ccf94819bc08b9715bab91602e28a2f8af399d08b642",
@@ -2745,6 +2745,8 @@
     "src/compiler/__init__.py": "e4aba99cc09fc3b939b16f9b4ada4104a7565230f8fa8120876ed56115c7d5f9",
     "src/compiler/auto_mapper_v0_1.py": "57dbfd936b135d9594d20af867f00c74e812d8009a4e42787b07f8cea8624f79",
     "src/compiler/grid_mapper.py": "c42845f5612add2cb364958937993a8fefc4e8740234bdd8821ebfe7830d7e2e",
+    "src/compiler/mapping_search.py": "ff96047153ef60169ec5d9152368e2c2076a8c1e0b3396a256abb064f3080fdb",
+    "src/compiler/unindp_adapter.py": "529b5ef6248dd3b4dd26e8212fd8a1a0e1552ca683e9d1c7b63ac46d288e4a13",
     "src/hardware.py": "583e43a8c1152c33d4ed60cfc356f0d05a77565810229c7c33bc403ffabcc8c8",
     "src/simulator/__init__.py": "c433defde033fc2f2e62da6c6e66c6bbc6d8b3cc75f6df61349f994be6181147",
     "src/simulator/communication/__init__.py": "7cb6d906a9bd63db2fc42d0547e96083574948a25fd920a939e2d88a3d74e6dc",
