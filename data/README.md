@@ -4,6 +4,7 @@
 - `results/`：精选可复现结果；`mapper_sweep_demo.*` 是 4×4 Demo 的放置对比，`mapper_sweep_suite.*` 是 24 个形状的 ROW/K 对比；`early_feasibility/` 仅是早期单次冒烟测量。
 - `results/tile_timing_20261028/`：单 Tile SRAM/Bank/MAC 逐请求验证，301 个用例；包括原始 JSON、5×3 手算 Trace 和源码快照。采用预加载 SRAM，属于 Python 时序模型验证。
 - `results/tile_rtl_20261028/`：单 Tile RTL 的 71 个用例/77 段执行、综合存储检查与手算/反压 CSV；完整波形保存在 `dump/rtl_tile_20261028/`，通过脚本重建。
+- `results/timed_tile_system_20261028/`：详细 Tile/2×2 系统接入，五组 480 条记录（430 次成功、50 次容量不可行），含 86 次可行基线的全部网络指标一致性检查；open/eighth 固定相位 0，Root 仍为功能归约。
 
 Root 压力与 Compute 时序的较大原始 JSON 以 `results.json.gz` 发布，内容不变，可用 `gzip -dk` 解压；对应 CSV、汇总和源码快照一并保留。仿真脚本仍生成普通 JSON。例如读取后直接分析：
 

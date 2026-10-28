@@ -689,3 +689,11 @@ cost_score               = estimated_compute_cycles + estimated_packets
 每个边沿与 Python 请求级模型核对请求、返回、累加器、写回和握手；外部端口读回全部 Result SRAM，覆盖复位保留和重启。Verilator lint 通过，Yosys `check -assert` 通过；检查六块存储、49,152 bit、每块一个同步读口和一个写口，Host/Compute 显式互斥复用。该检查使用通用存储结构，不提供具体 SRAM 宏时序、面积、功耗或 Fmax。
 
 完整说明及结果入口见 [Tile RTL](../src/rtl/nmc_tile/README.md)。项目回归现为 234 项；完整波形保存在上述 dump 目录，GitHub Actions 也保存回归 artifact。剩余系统工作与两台电脑的分工见 [并行计划](parallel_work.zh-CN.md)。
+
+## 2026-10-28：逐请求 Tile/NI/Mesh 同时钟集成
+
+`run_plan` 与 Demo 1/2 支持 `tile_timing=TileComputeConfig()`，CLI 为 `--compute-model tile`，可选 JSON 配置与 `--tile-trace`。共享执行循环直接使用已预加载 SRAM 和原 ResultNI，逐周期推进 Compute/NoC；可选 `TILE_CYCLE` 将局部周期映射到 `TASK_START + local_cycle`。完成后的 Tile 不再重复输出旧周期事件。
+
+全部 24 个形状、默认放置、ROW/K 的 43 个可行计划完整系统 Trace 与公式基线一致；另 5 个保持原不可行状态。强压力、Host 兼 Root、端口限制、参数冲突与 CLI 导出均通过。五组实验比较 open/eighth 的固定相位 0，共 480 条记录，430 次成功、50 次预期不可行；其中默认端口的 86 次执行全部网络指标与公式模型一致，10 次不可行状态一致。项目回归 **265 项通过**。
+
+详细配置、计数单位、例子与计时边界见 [实验记录](../tools/experiments/compute_timing.md#timed-tile-system)。当前输入写提交与端点归约仍为功能操作，权重预加载与命令/VALIDATE 不计时；下一阶段在本机继续补有限 Root 服务与缓冲。

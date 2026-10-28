@@ -1,7 +1,7 @@
 """Demo 1: resident weights, network input loading, row GEMV and FINAL gather.
 
-Compute is functional, while network transfers advance Mesh2x2 cycles. These
-cycles are a communication schedule, not an end-to-end performance prediction.
+Compute can be functional, formula-timed, or request-level. Detailed Compute
+and Mesh share a clock; input commits and endpoint reduction remain functional.
 """
 from __future__ import annotations
 
@@ -21,6 +21,8 @@ from simulator.communication import (
 from simulator.functional import Demo0Tile, ResultEmitter, TileTask, int32_wrap
 from simulator.functional.demo0_model import X_START, X_END, Y_START, Y_END, W_START, W_END
 from simulator.system.compute_timing import ComputeTiming, TimedCompute
+from simulator.system.tile_config import TileComputeConfig
+from simulator.system.tile_timing import PortScheduledCompute
 
 
 DEMO_W = [[1, 2, 3, 4], [-1, 0, 2, -2], [3, -1, 0, 1], [2, 2, -1, 0]]
@@ -203,6 +205,7 @@ class NMCRun:
     y: list[int]
     compute_stats: dict | None = None
     compute_timing: dict | None = None
+    tile_timing: dict | None = None
 
     def summary(self) -> dict:
         config = self.gather.config
@@ -221,6 +224,18 @@ class NMCRun:
             summary["timing_scope"] = "reference Compute/SRAM timing + cycle NoC; functional reduction; resident weights; not RTL-calibrated end-to-end latency"
             summary["compute_timing"] = self.compute_timing
             summary["compute_stats"] = self.compute_stats
+        if self.tile_timing is not None:
+            summary["modeled_schedule_cycles"] = summary.pop("network_schedule_cycles")
+            summary["compute_model"] = "request-level"
+            summary["tile_timing"] = self.tile_timing
+            summary["compute_stats"] = self.compute_stats
+            summary["timing_scope"] = (
+                "request-level Compute/SRAM + cycle NoC; functional input commit/reduction; "
+                "resident weights; command/VALIDATE excluded; not end-to-end RTL latency")
+            start = min(e["network_cycle"] for e in self.trace if e["event"] == "TASK_START")
+            gathered = next(e["network_cycle"] for e in self.trace if e["event"] == "TRANSACTION_DONE_CREATE")
+            summary["phase_cycles"] = dict(input_load=start, compute_and_gather=gathered-start,
+                                           completion_drain=self.mesh.cycle-gathered)
         return summary
 
 
@@ -234,11 +249,16 @@ def run_demo1(
     workers: tuple[int, int] = (1, 2), root_tile: int = 3,
     sink_ready: Callable[[int, int, str], bool] | None = None,
     max_cycles: int = 10000,
+    compute_timing: ComputeTiming | None = None,
+    tile_timing: TileComputeConfig | None = None,
+    capture_tile_trace: bool = False,
 ) -> Demo1Run:
     """Host-driven two-way contiguous row partition with actual mesh delivery."""
     return _run_partitioned(matrix, vector, tid=tid, global_row_base=global_row_base,
                             workers=workers, root_tile=root_tile, sink_ready=sink_ready,
-                            max_cycles=max_cycles, partition="ROW", endpoint_factory=FinalGather)
+                            max_cycles=max_cycles, partition="ROW", endpoint_factory=FinalGather,
+                            compute_timing=compute_timing, tile_timing=tile_timing,
+                            capture_tile_trace=capture_tile_trace)
 
 
 def _weight_image(tile_id: int, matrix: list[list[int]]) -> WeightImage:
@@ -571,8 +591,16 @@ def _execute_plan(
     endpoint_factory: Callable[[GatherConfig, Demo0Tile], ResultEndpoint],
     *, sink_ready: Callable[[int, int, str], bool] | None, max_cycles: int,
     compute_timing: ComputeTiming | None = None,
+    tile_timing: TileComputeConfig | None = None,
+    capture_tile_trace: bool = False,
 ) -> NMCRun:
     """Shared Host/Compute/NI/Mesh loop for every validated ExecutionPlan."""
+    if compute_timing is not None and tile_timing is not None:
+        raise PlanError("choose either formula compute_timing or request-level tile_timing")
+    if tile_timing is not None and not isinstance(tile_timing, TileComputeConfig):
+        raise PlanError("tile_timing must be TileComputeConfig")
+    if capture_tile_trace and tile_timing is None:
+        raise PlanError("capture_tile_trace requires request-level tile_timing")
     tiles = [Demo0Tile(t) for t in range(4)]
     mesh = Mesh2x2()
     nis = [ResultNI(t) for t in range(4)]
@@ -609,7 +637,7 @@ def _execute_plan(
     # Pending Host commands/events are software queues, not hardware FIFO claims.
     pending = [deque() for _ in range(4)]
     seen = [0] * 4
-    emitters: dict[int, ResultEmitter | TimedCompute] = {}
+    emitters: dict[int, ResultEmitter | TimedCompute | PortScheduledCompute] = {}
     local_done: set[int] = set()
     host_done: list[TransactionDonePacket] = []
     phase = "LOAD"
@@ -625,7 +653,11 @@ def _execute_plan(
             phase = "COMPUTE_AND_GATHER"
             for task in tasks:
                 record("TASK_START", **asdict(task))
-                if compute_timing is not None:
+                if tile_timing is not None:
+                    emitters[task.tile_id] = PortScheduledCompute(
+                        tiles[task.tile_id], task, tile_timing.memory,
+                        operand_slots=tile_timing.operand_slots, mac_interval=tile_timing.mac_interval)
+                elif compute_timing is not None:
                     emitters[task.tile_id] = TimedCompute(tiles[task.tile_id], task, compute_timing)
                 else:
                     beats, done = tiles[task.tile_id].execute(task)
@@ -645,7 +677,12 @@ def _execute_plan(
             if signals.local_done_valid:
                 local_done.add(tile)
                 record("LOCAL_DONE", tile=tile, **asdict(signals.local_done_payload))
+            active_tile = isinstance(emitter, PortScheduledCompute) and not emitter.finished
             emitter.step(result_ready=ready)
+            if capture_tile_trace and active_tile:
+                detail = _trace_json(emitter.last_event)
+                local_cycle = detail.pop("cycle")
+                record("TILE_CYCLE", tile=tile, local_cycle=local_cycle, **detail)
         for tile in range(4):
             if pending[tile] and mesh.can_inject(tile, len(pack_packet(pending[tile][0]))):
                 packet = pending[tile].popleft()
@@ -694,10 +731,11 @@ def _execute_plan(
         if host_done and local_done == set(workers) and mesh.idle() and not any(pending):
             y = [tiles[root_tile].read_result(row) for row in range(m)]
             stats = ({tile: emitter.stats() for tile, emitter in emitters.items()}
-                     if compute_timing is not None else None)
+                     if compute_timing is not None or tile_timing is not None else None)
             return NMCRun(tiles, mesh, gather, tasks, trace, host_done, ack_keys, y,
                           compute_stats=stats,
-                          compute_timing=asdict(compute_timing) if compute_timing is not None else None)
+                          compute_timing=asdict(compute_timing) if compute_timing is not None else None,
+                          tile_timing=asdict(tile_timing) if tile_timing is not None else None)
     raise TimeoutError(f"NMC {mode} did not complete in {max_cycles} network schedule cycles")
 
 
@@ -707,12 +745,17 @@ def _run_partitioned(
     sink_ready: Callable[[int, int, str], bool] | None, max_cycles: int,
     partition: str, endpoint_factory: Callable[[GatherConfig, Demo0Tile], ResultEndpoint],
     k_split: int | None = None,
+    compute_timing: ComputeTiming | None = None,
+    tile_timing: TileComputeConfig | None = None,
+    capture_tile_trace: bool = False,
 ) -> NMCRun:
     """Build the Demo plan, then execute it through the shared plan loop."""
     plan = _build_demo_plan(
         matrix, vector, tid=tid, global_row_base=global_row_base, workers=workers,
         root_tile=root_tile, partition=partition, k_split=k_split)
-    return _execute_plan(plan, endpoint_factory, sink_ready=sink_ready, max_cycles=max_cycles)
+    return _execute_plan(plan, endpoint_factory, sink_ready=sink_ready, max_cycles=max_cycles,
+                         compute_timing=compute_timing, tile_timing=tile_timing,
+                         capture_tile_trace=capture_tile_trace)
 
 
 def run_plan(
@@ -722,6 +765,8 @@ def run_plan(
     sink_ready: Callable[[int, int, str], bool] | None = None,
     max_cycles: int = 10000,
     compute_timing: ComputeTiming | None = None,
+    tile_timing: TileComputeConfig | None = None,
+    capture_tile_trace: bool = False,
 ) -> NMCRun:
     """Execute a validated Mapper plan without access to the original matrix."""
     if not isinstance(plan, ExecutionPlan):
@@ -730,7 +775,43 @@ def run_plan(
         raise PlanError(f"plan uses {plan.partition} partitioning; "
                         f"this runner requires {expected_partition}")
     return _execute_plan(plan, endpoint_factory, sink_ready=sink_ready, max_cycles=max_cycles,
-                         compute_timing=compute_timing)
+                         compute_timing=compute_timing, tile_timing=tile_timing,
+                         capture_tile_trace=capture_tile_trace)
+
+
+def _trace_json(value):
+    """Bytes in SRAM requests/responses use hex; arithmetic stays signed ints."""
+    if isinstance(value, bytes):
+        return value.hex()
+    if isinstance(value, dict):
+        return {key: _trace_json(item) for key, item in value.items()}
+    if isinstance(value, (list, tuple)):
+        return [_trace_json(item) for item in value]
+    return value
+
+
+def add_compute_arguments(parser):
+    parser.add_argument("--compute-model", choices=("functional", "reference", "weight-ii2", "tile"),
+                        default="functional")
+    parser.add_argument("--tile-config", type=Path, help="partial JSON overrides for --compute-model tile")
+    parser.add_argument("--tile-trace", action="store_true", help="include request-level per-Tile cycle events")
+    parser.add_argument("--max-cycles", type=int, default=10000)
+
+
+def compute_arguments(args):
+    if args.max_cycles < 1:
+        raise PlanError("max-cycles must be positive")
+    if (args.tile_config is not None or args.tile_trace) and args.compute_model != "tile":
+        raise PlanError("--tile-config/--tile-trace require --compute-model tile")
+    timing = (ComputeTiming(weight_read_interval=2 if args.compute_model == "weight-ii2" else 1)
+              if args.compute_model in ("reference", "weight-ii2") else None)
+    try:
+        tile = ((TileComputeConfig.load(args.tile_config) if args.tile_config else TileComputeConfig())
+                if args.compute_model == "tile" else None)
+    except ValueError as error:
+        raise PlanError(str(error)) from error
+    return dict(compute_timing=timing, tile_timing=tile,
+                capture_tile_trace=args.tile_trace, max_cycles=args.max_cycles)
 
 
 def load_workload(path: Path) -> tuple[list[list[int]], list[int]]:
@@ -787,11 +868,13 @@ def main() -> None:
     parser.add_argument("--trace", type=Path, help="optional JSON trace output")
     parser.add_argument("--plan", type=Path, help="execute a Mapper JSON plan instead of the built-in GEMV")
     parser.add_argument("--workload", type=Path, help='optional {"W","x"} JSON for the golden check')
+    add_compute_arguments(parser)
     args = parser.parse_args()
     try:
+        compute = compute_arguments(args)
         if args.plan is not None:
             plan = load_plan(args.plan)
-            run = run_plan(plan, endpoint_factory=FinalGather, expected_partition="ROW")
+            run = run_plan(plan, endpoint_factory=FinalGather, expected_partition="ROW", **compute)
             workload = None
             if args.workload is not None:
                 workload = load_workload(args.workload)
@@ -800,7 +883,7 @@ def main() -> None:
         else:
             if args.workload is not None:
                 raise PlanError("--workload requires --plan")
-            run = run_demo1()
+            run = run_demo1(**compute)
             workload = (DEMO_W, DEMO_X)
     except PlanError as error:
         print(f"demo1: {error}", file=sys.stderr)

@@ -137,3 +137,42 @@ PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -B tools/experiments/tile_timing.py \
 这轮明确了一个可实现的内部端口合同及其 Python 时序验证；尚未完成 SRAM 宏选择、外部加载控制器或 Tile RTL 等价。上述共享 Bank 对照属于不同端口组织，不能作为同一硬件下 ROW/K 的策略收益。后续应先让 Tile RTL 重现基线手算 Trace，再接入系统并补归约端点的真实服务时间。
 
 同日后续：[单 Tile RTL](../../src/rtl/nmc_tile/README.md) 已实现固定端口基线、外部加载和错误/复位控制，并通过 71 个用例/77 段执行的逐周期对照；源码、精简结果和复现命令随该说明发布。具体 SRAM 宏选择和完整系统服务时间仍待验证。
+
+<a id="timed-tile-system"></a>
+
+## 2026-10-28：详细 Tile 接入 2×2 系统
+
+`run_plan`、`run_demo1`、`run_demo2` 现在可通过 `tile_timing=TileComputeConfig()` 选择逐请求 Compute。它直接读取执行计划预加载的同一块 Weight/Input SRAM，通过原有 ResultNI 注入 FIFO 进入 Mesh；Compute、NI、Mesh 共用一个时钟。功能入口和 `compute_timing=ComputeTiming()` 公式入口继续支持；两种时序参数互斥。
+
+CLI 示例：
+
+```bash
+PYTHONPATH=src python -m simulator.system.demo1 --compute-model tile \
+  --tile-config ini/tile_system/baseline.json --tile-trace --trace dump/tile_row.json
+PYTHONPATH=src python -m simulator.system.demo2 --compute-model tile \
+  --tile-config ini/tile_system/result_1bank.json --tile-trace --trace dump/tile_k.json
+python tools/experiments/timed_tile_system.py --output-dir dump/timed_tile_system_20261028
+```
+
+配置文件允许只写覆盖项；默认值按每块 SRAM 的组织分别补齐，输出记录完整配置。示例 `{"memory":{"weight":{"issue_interval":2}}}` 只改变 Weight 端口启动间隔。`baseline.json`、`weight_ii2.json`、`result_1bank.json`、`shared_wx_1bank.json` 位于 `ini/tile_system/`。未知字段、非法时序、不能承载现有 4-byte 布局的 Word 宽度会被拒绝。
+
+Trace 默认保持原有系统事件；`--tile-trace` 添加每个活动 Tile 的 `TILE_CYCLE`，包含请求/返回/Bank/写回/累加器。其 `network_cycle = TASK_START + local_cycle`，LocalDone 接收后不重复记录旧 Tile 状态。SRAM byte 串用十六进制字符串表示，累加器保持 signed INT32。统计分别记录 Bank 竞争与端口忙的请求·周期、MAC 活跃 Tile·周期、Result 反压 Tile·周期和利用率，不能把这些累计量直接加到全局任务周期。
+
+聚合 `tile_lane_slot_utilization = Σ useful_mac_ops / (4 × Σ local_elapsed_cycles)`，只包含参与计算的 Tile 从 TASK_START 到 LocalDone 的窗口；它不是整片四个 Tile 从输入加载到全局完成的平均利用率。
+
+统一窗口为 `input_load + compute_and_gather + completion_drain = modeled_schedule_cycles`。输入经实际 NoC 分发并等待 ACK，但接收端输入写提交仍是功能操作；权重预加载、命令/VALIDATE 不计时，Root 收集/归约仍是功能操作。因此当前系统结果是模型调度周期，尚不是包含 RTL 加载器与真实归约服务的端到端延迟。
+
+固定 workers=(1,2)、Root=3，全部 24 个形状、ROW/K、open/eighth 两种接收条件，**只使用相位 0**。五个模型/配置各 96 条记录：86 次通过、10 次不可行，0 超时、0 数值/完成验证错误；合计 **480 条记录、430 次成功执行、50 次预期不可行**。相位不作为额外工作负载。默认逐请求 Tile 与公式参考的全部 96 个可行性状态一致；86 次可行执行的所有原有网络指标、链路计数均一致。单元测试还逐项比较完整 Trace，并验证强反压和 Host 兼 Root 的情况。
+
+32×64、open、相位 0 的硬件敏感性对照：
+
+| 配置 | ROW 模型周期 | K 模型周期 | 两 Tile 累计等待（ROW/K） |
+|---|---:|---:|---|
+| 公式参考 / 逐请求默认端口 | 505 | 409 | 默认端口无 Bank/端口等待 |
+| Weight 每两周期接受一次请求 | 757 | 657 | 端口忙 504/496 请求·周期 |
+| Result 单个 32-bit Bank | 517 | 433 | Bank 竞争 48/96 请求·周期 |
+| Weight/Input 共享单 Bank | 761 | 665 | Bank 竞争 1016/1008 请求·周期 |
+
+输入加载周期、flit-hop、结果包数、ACK/Done 数量在同一形状/切分的五组对照中保持一致，性能差异能追溯到详细 Tile 服务与后续网络反压。不同配置是不同硬件假设，不代表 mapper 的同硬件收益。
+
+[汇总](../../data/results/timed_tile_system_20261028/summary.json) 包含全部形状的胜出/平局计数与代表性指标；同目录保留五组 CSV、压缩原始 JSON、配置/源码哈希和源码快照。项目回归 **265 项通过**，新增系统接入测试 31 项。下一步是有限 Root 服务时间与缓冲，见 [当前推进计划](../../docs/parallel_work.zh-CN.md)。
