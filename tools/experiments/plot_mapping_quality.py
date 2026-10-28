@@ -43,7 +43,10 @@ def main():
               loc='lower left',bbox_to_anchor=(0,1.02),borderaxespad=0,fontsize=7,ncol=3)
     args.output_dir.mkdir(parents=True,exist_ok=True)
     for suffix in ('svg','pdf','png'):
-        fig.savefig(args.output_dir/f'{args.stem}.{suffix}',dpi=240)
+        path=args.output_dir/f'{args.stem}.{suffix}'
+        fig.savefig(path,dpi=240)
+        if suffix=='svg':
+            path.write_text('\n'.join(line.rstrip() for line in path.read_text().splitlines())+'\n')
     # A machine-readable figure argument/trace, not a significance claim.
     packet=dict(claim_anchor='mapping-budget-sensitivity',
         main_claim='Communication-aware ranking changes the limited-budget choice; compare all wins and regressions, and observe whether extra exact evaluations close the gap.',
