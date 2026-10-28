@@ -46,3 +46,5 @@ python tools/experiments/prediction_validation.py merge --inputs dump/prediction
 `run` 支持 `--shards N --shard-index i`，每个形状完整地由一台电脑执行。源码或协议变化须使用新目录，不把不同版本的结果混合。
 
 报告的周期误差以同配置完整 Python evaluator 为参照；不等同于芯片或 RTL 准确度。绝对周期误差只比较两种 NoC 时间模型，不给未经周期标定的资源得分计算 MAPE。
+
+冻结后的结果见 [验证数据与成本](../../data/results/prediction_v04_20261028/README.md)：新八形状首选命中从旧 NoC 的 6/8 改为 8/8，任务周期 MAPE 从 10.04% 降至 0.366%，kernel MAPE 为 2.07%。排序约 1.055 秒/形状，较旧版增加；不能把更少的数值评估次数当作整体搜索加速。

@@ -13,6 +13,7 @@
 - `results/scalable64_20261028/`：8×8、64 Tile 的 112 项主实验，三分片合并及源码快照，含 56 组集中/树归约配对和单独的小任务边界探针。全部记录以 `records.json.gz` 发布；源码版本/模型范围和物理预算见 [v0.2 合同](../docs/spec/scalable_execution_v0.2.md)。
 - [results/mapping_search_20261028/](results/mapping_search_20261028/README.md)：同硬件方法适配与自动 mapper，16 形状、448 项尝试/440 项可行、四种精确评估预算，保留全部退化、预测排序、作者方法核对和图形数据。
 - [results/mesh_rtl_20261028/](results/mesh_rtl_20261028/README.md)：九项真实 64 Tile RTL 闭环与独立完整归约端点的逐边沿验证，真实包/SRAM/周期记录，输入/NI 模型差异明确列出。
+- [results/prediction_v04_20261028/](results/prediction_v04_20261028/README.md)：输入 ACK/有限反压预测修复；十六旧形状开发回放、八个预先固定的新形状验证，记录首选质量、分阶段误差和包含包级推演的真实搜索成本。
 
 Root 压力与 Compute 时序的较大原始 JSON 以 `results.json.gz` 发布，内容不变，可用 `gzip -dk` 解压；对应 CSV、汇总和源码快照一并保留。仿真脚本仍生成普通 JSON。例如读取后直接分析：
 

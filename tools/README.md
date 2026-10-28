@@ -21,4 +21,5 @@
 - `experiments/plot_mapping_quality.py`：从汇总生成全部 holdout 形状的配对预算散点图，保留 SVG/PDF/PNG 和数据溯源。
 - `experiments/audit_compact_baseline.py`：在冻结候选测量上回放固定 compact 的更强适配基线，避免任意放置同分造成虚假收益；不是新增模拟或编译耗时比较。
 - `experiments/prediction_validation.py`：v0.4 的开发集回放和预先固定的新形状验证；检查协议加载周期、流量、有限队列、选解质量及包含包级推演的实际搜索成本。[修复合同](../docs/spec/bounded_prediction_v0.4.md)。
+- `experiments/export_prediction_results.py`：验证并导出 v0.4 的压缩完整记录、分阶段误差、源码快照和可编辑对照图。
 - `rtl/run_mesh_rtl.py`：完整 64 Tile RTL 的九例执行、线格式/数值/完成/反压检查与真实 SRAM 读回。
