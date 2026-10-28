@@ -202,7 +202,7 @@ def compare(item, tile, directory):
     return summaries
 
 
-def run_regression(output, seeds=8, *, synthesis=True):
+def run_regression(output, seeds=8, *, synthesis=True, case_list=None):
     output=Path(output).resolve()
     output.mkdir(parents=True,exist_ok=True)
     for tool in ('iverilog','vvp','verilator') + (('yosys',) if synthesis else ()):
@@ -224,7 +224,7 @@ def run_regression(output, seeds=8, *, synthesis=True):
         assert all(m['read_ports']==m['write_ports']==1 and m['synchronous_read'] for m in memories),memories
         synthesis_info=dict(check='pass',memory_bits=sum(m['width']*m['size'] for m in memories),memories=memories)
     rows=[]
-    for item in cases(seeds):
+    for item in cases(seeds) if case_list is None else case_list:
         directory=output/item['name']
         tile=prepare(item,directory)
         args=['vvp',executable,f'+CASE_DIR={directory}']

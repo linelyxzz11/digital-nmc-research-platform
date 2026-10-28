@@ -142,9 +142,9 @@ def _uint(name: str, value: int, bits: int) -> int:
     return value
 
 
-def _tile(name: str, value: int) -> int:
+def _tile(name: str, value: int, tile_count: int = TILE_COUNT) -> int:
     _uint(name, value, 8)
-    if value >= TILE_COUNT:
+    if value >= tile_count:
         raise ValueError(f"{name} is outside the 2x2 mesh")
     return value
 
@@ -173,9 +173,10 @@ def _common_header(
     dst_tile: int,
     tid: int,
     status: StatusCode,
+    tile_count: int = TILE_COUNT,
 ) -> int:
-    src_tile = _tile("src_tile", src_tile)
-    dst_tile = _tile("dst_tile", dst_tile)
+    src_tile = _tile("src_tile", src_tile, tile_count)
+    dst_tile = _tile("dst_tile", dst_tile, tile_count)
     tid = _uint("tid", tid, 16)
     status = _status(status)
     return (
@@ -187,7 +188,8 @@ def _common_header(
     )
 
 
-def pack_packet(packet: Packet) -> tuple[Flit, ...]:
+def pack_packet(packet: Packet, *, tile_count: int = TILE_COUNT,
+                source_mask_bits: int = 4) -> tuple[Flit, ...]:
     """Pack one typed packet into the exact v0.1 flit sequence."""
     if isinstance(packet, ResultPacket):
         if packet.status is not StatusCode.OK:
@@ -206,7 +208,7 @@ def pack_packet(packet: Packet) -> tuple[Flit, ...]:
             if not (mask & (1 << lane)) and value != 0:
                 raise ValueError("invalid RESULT lanes must contain zero")
         header = _common_header(
-            PacketType.RESULT, packet.src_tile, packet.dst_tile, packet.tid, packet.status
+            PacketType.RESULT, packet.src_tile, packet.dst_tile, packet.tid, packet.status, tile_count
         )
         header |= base << 44
         header |= mask << 60
@@ -219,7 +221,7 @@ def pack_packet(packet: Packet) -> tuple[Flit, ...]:
         if packet.status is not StatusCode.OK:
             raise ValueError("MEM_WRITE status must be OK")
         header = _common_header(
-            PacketType.MEM_WRITE, packet.src_tile, packet.dst_tile, packet.tid, packet.status
+            PacketType.MEM_WRITE, packet.src_tile, packet.dst_tile, packet.tid, packet.status, tile_count
         )
         header |= _uint("local_addr", packet.local_addr, 16) << 44
         header |= _uint("wstrb", packet.wstrb, 4) << 60
@@ -231,7 +233,7 @@ def pack_packet(packet: Packet) -> tuple[Flit, ...]:
 
     if isinstance(packet, MemAckPacket):
         header = _common_header(
-            PacketType.MEM_ACK, packet.src_tile, packet.dst_tile, packet.tid, packet.status
+            PacketType.MEM_ACK, packet.src_tile, packet.dst_tile, packet.tid, packet.status, tile_count
         )
         header |= _uint("sequence", packet.sequence, 16) << 44
         return (Flit(FlitType.HEADTAIL, header),)
@@ -245,9 +247,12 @@ def pack_packet(packet: Packet) -> tuple[Flit, ...]:
             packet.dst_tile,
             packet.tid,
             packet.status,
+            tile_count,
         )
         header |= _uint("completed_element_count", packet.completed_element_count, 16) << 44
-        header |= _uint("completed_source_mask", packet.completed_source_mask, 4) << 60
+        if not 1 <= source_mask_bits <= 68:
+            raise ValueError("completion mask must fit the 128-bit header")
+        header |= _uint("completed_source_mask", packet.completed_source_mask, source_mask_bits) << 60
         return (Flit(FlitType.HEADTAIL, header),)
 
     if isinstance(packet, ErrorPacket):
@@ -255,7 +260,7 @@ def pack_packet(packet: Packet) -> tuple[Flit, ...]:
         if status is StatusCode.OK:
             raise ValueError("ERROR status must be nonzero")
         header = _common_header(
-            PacketType.ERROR, packet.src_tile, packet.dst_tile, packet.tid, status
+            PacketType.ERROR, packet.src_tile, packet.dst_tile, packet.tid, status, tile_count
         )
         header |= _uint("error_detail", packet.error_detail, 16) << 44
         return (Flit(FlitType.HEADTAIL, header),)
@@ -263,7 +268,8 @@ def pack_packet(packet: Packet) -> tuple[Flit, ...]:
     raise TypeError(f"unsupported packet type: {type(packet).__name__}")
 
 
-def unpack_packet(flits: Iterable[Flit]) -> Packet:
+def unpack_packet(flits: Iterable[Flit], *, tile_count: int = TILE_COUNT,
+                  source_mask_bits: int = 4) -> Packet:
     """Validate and unpack one complete v0.1 packet."""
     seq = tuple(flits)
     if not seq:
@@ -277,7 +283,7 @@ def unpack_packet(flits: Iterable[Flit]) -> Packet:
     src = (header.data >> 4) & 0xFF
     dst = (header.data >> 12) & 0xFF
     tid = (header.data >> 20) & 0xFFFF
-    if src >= TILE_COUNT or dst >= TILE_COUNT:
+    if src >= tile_count or dst >= tile_count:
         raise PacketFormatError("source or destination is outside the 2x2 mesh")
 
     two_flit = packet_type in (PacketType.RESULT, PacketType.MEM_WRITE)
@@ -323,14 +329,16 @@ def unpack_packet(flits: Iterable[Flit]) -> Packet:
         return MemAckPacket(src, dst, tid, (header.data >> 44) & 0xFFFF, status)
 
     if packet_type is PacketType.TRANSACTION_DONE:
-        if status is not StatusCode.OK or header.data >> 64:
+        if not 1 <= source_mask_bits <= 68:
+            raise PacketFormatError("completion mask width is invalid")
+        if status is not StatusCode.OK or header.data >> (60 + source_mask_bits):
             raise PacketFormatError("TRANSACTION_DONE status/reserved bits are invalid")
         return TransactionDonePacket(
             src,
             dst,
             tid,
             (header.data >> 44) & 0xFFFF,
-            (header.data >> 60) & 0xF,
+            (header.data >> 60) & ((1 << source_mask_bits) - 1),
             status,
         )
 
@@ -422,8 +430,9 @@ def _neighbor(tile: int, output: str) -> tuple[int, str]:
 
 
 class _Router:
-    def __init__(self, tile_id: int) -> None:
+    def __init__(self, tile_id: int, route=_route) -> None:
         self.tile_id = tile_id
+        self.route = route
         self.inputs = {port: deque() for port in PORTS}
         self.output_locks: dict[str, str | None] = {port: None for port in PORTS}
         self.held_grants: dict[str, str | None] = {port: None for port in PORTS}
@@ -440,7 +449,7 @@ class _Router:
         if flit.type not in (FlitType.HEAD, FlitType.HEADTAIL):
             raise PacketFormatError("BODY/TAIL reached an unlocked router input")
         destination = (flit.data >> 12) & 0xFF
-        return _route(self.tile_id, destination)
+        return self.route(self.tile_id, destination)
 
     def select(self, output: str) -> str | None:
         held = self.held_grants[output]
@@ -463,27 +472,45 @@ class _Router:
 class Mesh2x2:
     """Cycle-stepped 2x2 mesh used by Comm 0A-0C."""
 
-    def __init__(self, fifo_depth: int = INPUT_FIFO_DEPTH, ni_depth: int = NI_FIFO_DEPTH) -> None:
+    def __init__(self, fifo_depth: int = INPUT_FIFO_DEPTH, ni_depth: int = NI_FIFO_DEPTH, *,
+                 mesh_x: int = MESH_X, mesh_y: int = MESH_Y, codec=None) -> None:
         if fifo_depth <= 0 or ni_depth <= 0:
             raise ValueError("FIFO depths must be positive")
         self.fifo_depth = fifo_depth
         self.ni_depth = ni_depth
-        self.routers = [_Router(tile) for tile in range(TILE_COUNT)]
-        self.ni_injection = [deque() for _ in range(TILE_COUNT)]
-        self.ejection_ready = [True] * TILE_COUNT
-        self._assembly = [[] for _ in range(TILE_COUNT)]
-        self.received_packets: list[list[Packet]] = [[] for _ in range(TILE_COUNT)]
-        self.received_flits: list[list[Flit]] = [[] for _ in range(TILE_COUNT)]
+        if any(type(v) is not int or v < 1 for v in (mesh_x,mesh_y)) or mesh_x*mesh_y>256:
+            raise ValueError("mesh dimensions must describe 1..256 Tiles")
+        self.mesh_x,self.mesh_y,self.tile_count = mesh_x,mesh_y,mesh_x*mesh_y
+        self.codec = codec
+        self.routers = [_Router(tile,self._route) for tile in range(self.tile_count)]
+        self.ni_injection = [deque() for _ in range(self.tile_count)]
+        self.ejection_ready = [True] * self.tile_count
+        self._assembly = [[] for _ in range(self.tile_count)]
+        self.received_packets: list[list[Packet]] = [[] for _ in range(self.tile_count)]
+        self.received_flits: list[list[Flit]] = [[] for _ in range(self.tile_count)]
         self.cycle = 0
         self.flit_hops = 0
         self.link_flit_count: dict[tuple[int, int], int] = {}
         self.fifo_full_cycles = 0
         self.max_occupancy = 0
-        self.inject_stall_cycles = [0] * TILE_COUNT
+        self.inject_stall_cycles = [0] * self.tile_count
         self.output_blocked_cycles = 0
 
+    def _route(self, tile: int, destination: int) -> str:
+        x,y = tile % self.mesh_x,tile // self.mesh_x
+        dx,dy = destination % self.mesh_x,destination // self.mesh_x
+        return 'EAST' if dx>x else 'WEST' if dx<x else 'SOUTH' if dy>y else 'NORTH' if dy<y else 'LOCAL'
+
+    def _neighbor(self, tile: int, output: str) -> tuple[int,str]:
+        x,y = tile % self.mesh_x,tile // self.mesh_x
+        x += int(output=='EAST')-int(output=='WEST')
+        y += int(output=='SOUTH')-int(output=='NORTH')
+        if not 0<=x<self.mesh_x or not 0<=y<self.mesh_y:
+            raise PacketFormatError("route leaves the mesh")
+        return y*self.mesh_x+x,_opposite(output)
+
     def can_inject(self, tile: int, count: int) -> bool:
-        _tile("tile", tile)
+        _tile("tile", tile, self.tile_count)
         return len(self.ni_injection[tile]) + count <= self.ni_depth
 
     def inject_flits(self, tile: int, flits: Iterable[Flit]) -> None:
@@ -493,7 +520,7 @@ class Mesh2x2:
         self.ni_injection[tile].extend(seq)
 
     def inject_packet(self, packet: Packet) -> None:
-        self.inject_flits(packet.src_tile, pack_packet(packet))
+        self.inject_flits(packet.src_tile, self.codec.pack(packet) if self.codec else pack_packet(packet))
 
     def visible_local_output(self, tile: int) -> Flit | None:
         router = self.routers[tile]
@@ -506,7 +533,7 @@ class Mesh2x2:
         if flit.type is FlitType.HEADTAIL:
             if assembly:
                 raise PacketFormatError("HEADTAIL arrived inside a packet")
-            self.received_packets[tile].append(unpack_packet((flit,)))
+            self.received_packets[tile].append(self.codec.unpack((flit,)) if self.codec else unpack_packet((flit,)))
         elif flit.type is FlitType.HEAD:
             if assembly:
                 raise PacketFormatError("nested packet head")
@@ -519,7 +546,7 @@ class Mesh2x2:
             if not assembly:
                 raise PacketFormatError("TAIL without HEAD")
             assembly.append(flit)
-            self.received_packets[tile].append(unpack_packet(tuple(assembly)))
+            self.received_packets[tile].append(self.codec.unpack(tuple(assembly)) if self.codec else unpack_packet(tuple(assembly)))
             assembly.clear()
 
     def step(self) -> None:
@@ -542,7 +569,7 @@ class Mesh2x2:
                 if output == "LOCAL":
                     ready = self.ejection_ready[tile]
                 else:
-                    neighbor, neighbor_input = _neighbor(tile, output)
+                    neighbor, neighbor_input = self._neighbor(tile, output)
                     ready = len(self.routers[neighbor].inputs[neighbor_input]) < self.fifo_depth
                 if ready:
                     transfers.append((tile, output, selected, flit))
@@ -569,7 +596,7 @@ class Mesh2x2:
             if output == "LOCAL":
                 self._accept_ejected(tile, flit)
             else:
-                neighbor, neighbor_input = _neighbor(tile, output)
+                neighbor, neighbor_input = self._neighbor(tile, output)
                 self.routers[neighbor].inputs[neighbor_input].append(flit)
                 self.flit_hops += 1
                 key = (tile, neighbor)

@@ -117,9 +117,12 @@ class LocalDone:
 class Demo0Tile:
     """Functional Tile with the three local SRAM address regions."""
 
-    def __init__(self, physical_tile_id: int = 0) -> None:
-        if not 0 <= physical_tile_id < TILE_COUNT:
-            raise ValueError("physical_tile_id is outside the 2x2 Tile array")
+    def __init__(self, physical_tile_id: int = 0, *, tile_count: int = TILE_COUNT) -> None:
+        if type(tile_count) is not int or not 1 <= tile_count <= 256:
+            raise ValueError("tile_count must be in [1, 256]")
+        if type(physical_tile_id) is not int or not 0 <= physical_tile_id < tile_count:
+            raise ValueError("physical_tile_id is outside the Tile array")
+        self.tile_count = tile_count
         self.physical_tile_id = physical_tile_id
         self.weight_sram = bytearray(W_END - W_START)
         self.input_sram = bytearray(X_END - X_START)
@@ -167,9 +170,9 @@ class Demo0Tile:
         if not (1 <= task.m_local <= MAX_LOCAL_M and 1 <= task.k_local <= MAX_LOCAL_K):
             return "BAD_SHAPE"
         if (
-            task.tile_id >= TILE_COUNT
+            task.tile_id >= self.tile_count
             or task.tile_id != self.physical_tile_id
-            or task.result_dst_tile >= TILE_COUNT
+            or task.result_dst_tile >= self.tile_count
         ):
             return "BAD_TILE"
         if task.global_row_base + task.m_local - 1 > UINT16_MAX:

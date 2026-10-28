@@ -88,6 +88,10 @@ class TimedRoot:
         if status == StatusCode.DUPLICATE_RESULT: self.duplicate_errors += 1
         raise TransactionError(status,detail)
 
+    def _expected_mask(self,index):
+        method=getattr(self.config,'source_mask_for',None)
+        return method(index) if method else self.config.source_mask
+
     def _validate(self,p):
         c=self.config
         if self.error is not None: raise TransactionError(self.error,"transaction already terminated")
@@ -97,7 +101,7 @@ class TimedRoot:
         if p.status!=StatusCode.OK: self._fail(StatusCode.PROTOCOL_ERROR,"RESULT has error status")
         kind='PSUM' if c.mode=='REDUCE_PSUM' else 'FINAL'
         if p.kind!=kind: self._fail(StatusCode.KIND_MISMATCH,"RESULT kind does not match transaction")
-        if type(p.src_tile) is not int or not 0<=p.src_tile<4 or not c.source_mask & (1<<p.src_tile):
+        if type(p.src_tile) is not int or not 0<=p.src_tile<getattr(c,'tile_count',4) or not c.source_mask & (1<<p.src_tile):
             self._fail(StatusCode.BAD_TILE,"unexpected source")
         if type(p.lane_mask) is not int or not 0<p.lane_mask<16 or len(p.data)!=4:
             self._fail(StatusCode.BAD_FIELD,"invalid lane mask or payload")
@@ -105,6 +109,8 @@ class TimedRoot:
         for index,value in elements:
             if not c.output_base<=index<c.output_base+c.output_count:
                 self._fail(StatusCode.BAD_FIELD,"output index outside transaction")
+            if not self._expected_mask(index)&(1<<p.src_tile):
+                self._fail(StatusCode.BAD_TILE,"source does not own this output index")
             mask=self.accepted_source_masks.get(index,0)
             if (mask & (1<<p.src_tile)) or (kind=='FINAL' and mask):
                 self._fail(StatusCode.DUPLICATE_RESULT,"duplicate accepted output/source")
@@ -149,7 +155,7 @@ class TimedRoot:
         if self.error is not None or self.stage!='WRITE_RESULT' or self.remaining!=1:
             return None
         values=[(i,v) for i,v,mask in self.updated
-                if self.config.mode=='GATHER_FINAL' or mask==self.config.source_mask]
+                if self.config.mode=='GATHER_FINAL' or mask==self._expected_mask(i)]
         if not values: return None
         base=min(i for i,_ in values)
         data=[0]*4
@@ -206,13 +212,13 @@ class TimedRoot:
                         self.received_source_masks[index]=mask
                     self.psum_elements+=len(self.chunk)
                     self.counters['partial_update_elements']+=len(self.chunk)
-                    if any(mask==self.config.source_mask for _,_,mask in self.updated):
+                    if any(mask==self._expected_mask(index) for index,_,mask in self.updated):
                         self.stage,self.remaining='WRITE_RESULT',self.timing.write_cycles
                     else: self._next_chunk()
                 else:
                     written=[]
                     for index,value,mask in self.updated:
-                        if self.config.mode=='GATHER_FINAL' or mask==self.config.source_mask:
+                        if self.config.mode=='GATHER_FINAL' or mask==self._expected_mask(index):
                             offset=4*(index-self.config.output_base)
                             self.root.result_sram[offset:offset+4]=value.to_bytes(4,'little',signed=True)
                             self.values[index]=value

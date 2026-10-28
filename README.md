@@ -13,6 +13,7 @@
 - 硬件验证：[单 Tile RTL](src/rtl/nmc_tile/README.md)，包含 SRAM/控制/MAC 和 Python 逐周期对照；另两台电脑的分工见 [并行推进计划](docs/parallel_work.zh-CN.md)。
 - Root 时序：[有限接收/部分和/Done 资源与服务合同](docs/spec/root_service_v0.1.md)，含独立手算 Trace 和同配置 ROW/K 实验；[宽写回 RTL 校准](docs/spec/root_writeback_rtl_v0.1.md) 包含 ready/valid、Bank 仲裁、错误原子性和 51 组逐周期对照。
 - 当前实验方向：[UniNDP 对照指标与收益空间审计](docs/unindp_evaluation.zh-CN.md)。已复跑三个作者原生 GEMV，并完成 1,680 个本项目候选；下一阶段优先扩大 Python 映射/拓扑空间，保留既有 RTL 作小规模校准。
+- 64 Tile 主实验：[v0.2 执行合同](docs/spec/scalable_execution_v0.2.md) 复用原 Tile/Root/NoC，提供 ROW/K/二维分块、集中/分层归约；[三台电脑运行说明](docs/distributed_experiments.zh-CN.md) 使用固定 112 项清单、续跑和严格合并。
 - 阅读计划：[团队路线](docs/project_plan.zh-CN.md)、[Proposal](docs/proposal.md)。文献调研保存在本地 `docs/papers/`，不随 GitHub 仓库发布。
 - 使用 VS Code：直接打开仓库根目录。本地的 `Digital-NMC.code-workspace` 与论文工作区为可选配置，不是运行依赖。
 

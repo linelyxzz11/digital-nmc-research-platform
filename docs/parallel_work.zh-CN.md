@@ -1,6 +1,6 @@
 # 三台电脑的下一阶段分工
 
-当前单 Tile RTL 已与 Python 对齐，逐请求 SRAM/Bank/MAC 和有限 Root 队列/服务都已在本机接入 2×2 调度循环。**最新优先级（2026-10-28）：实验与 UniNDP 对照优先。** 1,680 个候选表明现有 2×2/两计算 Tile 的剩余映射空间很小，下一阶段先扩大 Python 拓扑/候选空间及建立同硬件比较，保留现有 RTL 为校准集。依据和指标见 [UniNDP 实验方案](unindp_evaluation.zh-CN.md)。
+当前单 Tile RTL 已与 Python 对齐，逐请求 SRAM/Bank/MAC 和有限 Root 队列/服务已接入执行循环。**最新目标（2026-10-28）：8×8、64 Tile 主实验。** 新入口复用上述组件，支持多 worker、二维分块和集中/分层归约，保留 2×2/原 RTL 校准。三台电脑各自拉取同一 GitHub commit 后运行固定清单的独立分片，操作见 [多机实验](distributed_experiments.zh-CN.md)。依据和指标见 [UniNDP 实验方案](unindp_evaluation.zh-CN.md)。
 
 ## 阶段 A：Tile 时序接入（已在本机完成）
 
