@@ -10,6 +10,7 @@ from dataclasses import dataclass, replace
 
 from simulator.communication import ResultPacket, StatusCode, TransactionDonePacket
 from simulator.functional import Demo0Tile, int32_wrap
+from simulator.functional.demo0_model import Y_START
 from simulator.system.endpoint_common import GatherConfig, TransactionError
 from simulator.system.root_config import RootCapacityError, RootTiming
 
@@ -20,6 +21,18 @@ class RootCycle:
     packet_committed: ResultPacket | None = None
     done_created: TransactionDonePacket | None = None
     done_accepted: TransactionDonePacket | None = None
+
+
+@dataclass(frozen=True)
+class RootWriteRequest:
+    """One atomic Result SRAM vector; data lane i maps to address + 4*i."""
+    address: int
+    lane_mask: int
+    data: tuple[int, int, int, int]
+
+    @property
+    def packed_data(self):
+        return sum((value & 0xffffffff) << (32*lane) for lane,value in enumerate(self.data))
 
 
 class TimedRoot:
@@ -46,7 +59,7 @@ class TimedRoot:
             add_elements=0,partial_update_elements=0,result_write_elements=0,
             max_rx_slots=0,max_reduction_entries=0,max_done_queue=0,
             rx_full_cycles=0,rx_blocked_flit_cycles=0,reduction_full_cycles=0,
-            done_stall_cycles=0,done_created_count=0,done_accepted_count=0)
+            done_stall_cycles=0,result_write_stall_cycles=0,done_created_count=0,done_accepted_count=0)
         self.stage_cycles = {s:0 for s in ('IDLE','DISPATCH','READ','ADD','UPDATE','WRITE_RESULT','PACKET_DONE','CREATE_DONE')}
 
     @property
@@ -131,16 +144,34 @@ class TimedRoot:
         if self.position<len(self.elements): self._start_chunk()
         else: self.stage='PACKET_DONE'
 
-    def step(self,*,done_ready=True):
+    def write_request(self):
+        """Valid on the final service edge; hold this vector until write_ready."""
+        if self.error is not None or self.stage!='WRITE_RESULT' or self.remaining!=1:
+            return None
+        values=[(i,v) for i,v,mask in self.updated
+                if self.config.mode=='GATHER_FINAL' or mask==self.config.source_mask]
+        if not values: return None
+        base=min(i for i,_ in values)
+        data=[0]*4
+        for index,value in values: data[index-base]=value
+        return RootWriteRequest(Y_START+4*(base-self.config.output_base),
+                                sum(1<<(i-base) for i,_ in values),tuple(data))
+
+    def step(self,*,done_ready=True,write_ready=True):
         if self.error is not None: raise TransactionError(self.error,"transaction already terminated")
         cycle=self.cycle
         stage='DISPATCH' if self.stage=='IDLE' and self.rx else self.stage
+        write_request=self.write_request()
+        write_blocked=write_request is not None and not write_ready
+        if write_blocked: self.counters['result_write_stall_cycles']+=1
         self.stage_cycles[stage]+=1
         observed_packet=self.rx[0] if stage=='DISPATCH' else self.active
         before=dict(cycle=cycle,stage=stage,rx_slots=self.rx_slots,queued_packets=len(self.rx),
             header_reserved=self.header_reserved,active=self.active is not None,
             reduction_entries=len(self.accumulators),done_valid=bool(self.done_fifo),
-            done_ready=bool(done_ready),indices=[i for i,_ in self.chunk] if self.active else [],
+            done_ready=bool(done_ready),write_valid=write_request is not None,
+            write_ready=bool(write_ready),write_accepted=write_request is not None and bool(write_ready),
+            indices=[i for i,_ in self.chunk] if self.active else [],
             source=observed_packet.src_tile if observed_packet is not None else None,
             packet_base_index=observed_packet.base_index if observed_packet is not None else None)
         if self.rx_slots==self.timing.rx_queue_packets: self.counters['rx_full_cycles']+=1
@@ -156,7 +187,7 @@ class TimedRoot:
             self.elements=[(self.active.base_index+i,self.active.data[i]) for i in range(4) if self.active.lane_mask&(1<<i)]
             self.position=0
             self._start_chunk()
-        elif stage in ('READ','ADD','UPDATE','WRITE_RESULT'):
+        elif stage in ('READ','ADD','UPDATE','WRITE_RESULT') and not write_blocked:
             self.remaining-=1
             if self.remaining==0:
                 if stage=='READ':

@@ -2,7 +2,7 @@
 
 面向 GEMV 的数字近存计算（NMC）研究平台，研究有限 Bank、MAC、NoC 带宽和 FIFO 条件下的切分、放置与端点归约。
 
-当前可运行：单 Tile GEMV、Packet/NI/2×2 XY Mesh，以及 Demo 1 行切分/FINAL 收集、Demo 2 K 切分/INT32 PSUM 归约的多 Tile 闭环。输入通过 NoC 写入并收齐 ACK 后启动计算，Root 完成收集或归约后向 Host 发送全局 DONE。系统支持功能、公式和逐请求 Tile 三种 Compute 入口，以及可选的有限 Root 接收队列、部分和读/加/更新/写回与 Done 队列；它们与 NI/Mesh 共享时钟。输入写提交仍为功能操作，完整系统延迟尚未校准。单 Tile Compute RTL 已实现，并与 Python 模型逐周期对照。Mapper v0.1 提供 ROW/K 切分、容量检查和一阶代价选择，Demo 1/2 CLI 可通过 `--plan` 执行 JSON 计划。Root 端点 RTL、多 Tile NMC RTL 与加载提交时序校准是后续工作。早期 RV32I CPU 示例仅作本地学习参考。
+当前可运行：单 Tile GEMV、Packet/NI/2×2 XY Mesh，以及 Demo 1 行切分/FINAL 收集、Demo 2 K 切分/INT32 PSUM 归约的多 Tile 闭环。输入通过 NoC 写入并收齐 ACK 后启动计算，Root 完成收集或归约后向 Host 发送全局 DONE。系统支持功能、公式和逐请求 Tile 三种 Compute 入口，以及可选的有限 Root 接收队列、部分和读/加/更新/写回与 Done 队列；它们与 NI/Mesh 共享时钟。输入写提交仍为功能操作，完整系统延迟尚未校准。单 Tile Compute RTL 已实现，并与 Python 模型逐周期对照；Root 最终宽写回也已接入 Tile，并校准空闲时每周期最多四个 INT32 的提交。Mapper v0.1 提供 ROW/K 切分、容量检查和一阶代价选择，Demo 1/2 CLI 可通过 `--plan` 执行 JSON 计划。Root 其余端点 RTL、多 Tile NMC RTL 与加载提交时序校准是后续工作。早期 RV32I CPU 示例仅作本地学习参考。
 
 ## 从这里开始
 
@@ -11,7 +11,7 @@
 - Mapper：[v0.1 使用说明与规则](src/compiler/README.md)。
 - 实验：[Root 接收压力](tools/experiments/pressure_sweep.md)、[Compute/SRAM 参考时序对照与单 Tile 逐请求验证](tools/experiments/compute_timing.md)。另见 [Tile 端口与 Bank 参考合同](docs/spec/compute_architecture_v0.1.md#92-单-tile-端口与-bank-参考组织2026-10-28-补充)；默认 Demo 行为不变，端点归约仍为功能操作。
 - 硬件验证：[单 Tile RTL](src/rtl/nmc_tile/README.md)，包含 SRAM/控制/MAC 和 Python 逐周期对照；另两台电脑的分工见 [并行推进计划](docs/parallel_work.zh-CN.md)。
-- Root 时序：[有限接收/部分和/Done 资源与服务合同](docs/spec/root_service_v0.1.md)，含独立手算 Trace 和同配置 ROW/K 实验。
+- Root 时序：[有限接收/部分和/Done 资源与服务合同](docs/spec/root_service_v0.1.md)，含独立手算 Trace 和同配置 ROW/K 实验；[宽写回 RTL 校准](docs/spec/root_writeback_rtl_v0.1.md) 包含 ready/valid、Bank 仲裁、错误原子性和 51 组逐周期对照。
 - 阅读计划：[团队路线](docs/project_plan.zh-CN.md)、[Proposal](docs/proposal.md)。文献调研保存在本地 `docs/papers/`，不随 GitHub 仓库发布。
 - 使用 VS Code：直接打开仓库根目录。本地的 `Digital-NMC.code-workspace` 与论文工作区为可选配置，不是运行依赖。
 

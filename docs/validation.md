@@ -705,3 +705,11 @@ cost_score               = estimated_compute_cycles + estimated_packets
 独立两来源/四输出例子：四通道共 13 周期，两通道 20，单通道 34；数值 `[5,3,-3,-11]`，首次最终写回分别在 9、12、18。新增 40 项测试覆盖阶段可见性、队列/输出反压、来源 mask、错误原子性、回绕/到达顺序和 Host 兼 Root；不均衡 K 切分填满部分和缓冲后仍能由匹配来源排空。全项目现为 **305 项通过**。
 
 全部 24 形状、固定放置、五组 Root 配置，无人工 ejection gate：240 条记录，215 次成功、25 次容量不可行；数值、ACK/Done、输入加载与网络流量检查通过。默认 Root 的 19 个双策略可行形状仍为 K 胜 14、ROW 胜 5。详细配置、阶段公式、实验表和数据入口见 [Root 服务规范](spec/root_service_v0.1.md)。当前输入写提交仍为功能操作；Root 复位/ERROR 传播和 RTL 尚待验证。
+
+## 2026-10-28：Root 宽写回接入和 RTL 校准
+
+Tile 顶层新增 128-bit `root_wr_*`，仲裁后复用四个 Result Bank。连续 16 周期接受 16 个全宽向量，确认空闲端口每周期最多四个 INT32，默认 `write_cycles=1` 与 RTL 一致。无额外响应气泡，非法地址/mask 整组拒绝；每项错误后立即读回完整 SRAM。Compute/Host 争用、Host 响应保持、任务优先级、复位取消与已提交数据保留通过。
+
+Python 新增写请求观察与 `write_ready` 反压；六项测试覆盖 1/2/4 通道、W=1/3 的请求保持和延迟完成。51 组 Python/RTL 对照覆盖 FINAL/PSUM、1/3/4/5/7/13/256 输出、混合来源完成及六组真实 Host 争用；请求、ready、提交周期及完整 1 KiB SRAM 均一致。
+
+原单 Tile 71 用例/77 段执行继续通过，5×3 无阻塞时序仍为结果 6/13、LocalDone 14。Yosys 保留六块单读/单写服务端口、同步读 SRAM，共 49,152 bit。全项目 **312 项 pytest** 的验收入口包含新的 Root RTL 回归。完整命令、精简结果和源码快照见 [写回合同](spec/root_writeback_rtl_v0.1.md)。这些证据覆盖最终写路径；Root 部分和 SRAM、ALU、协议控制和完整系统输入提交仍需继续实现/校准。

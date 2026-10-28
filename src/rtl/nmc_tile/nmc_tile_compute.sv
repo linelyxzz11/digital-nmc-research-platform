@@ -21,6 +21,13 @@ module nmc_tile_compute #(
     input logic mem_rsp_ready,
     output wire [31:0] mem_rsp_rdata,
     output wire mem_rsp_error,
+    input logic root_wr_valid,
+    output wire root_wr_ready,
+    input logic [15:0] root_wr_addr,
+    input logic [3:0] root_wr_mask,
+    input logic [127:0] root_wr_data,
+    output wire root_wr_error,
+    output wire trace_root_write,
     output logic result_valid,
     input logic result_ready,
     output logic [15:0] result_tid,
@@ -66,7 +73,7 @@ module nmc_tile_compute #(
     wire [15:0] y_address = y_q + (group_q << 4);
     wire final_group = ({16'b0, group_q} + 1) * 4 >= {16'b0, m_q};
 
-    assign task_ready = rst_n && state == IDLE && host_idle && !mem_req_valid;
+    assign task_ready = rst_n && state == IDLE && host_idle && !mem_req_valid && !root_wr_valid;
     assign local_done_valid = rst_n && state == LOCAL_DONE;
     assign local_done_tid = tid_q;
     assign trace_state = state;
@@ -115,6 +122,9 @@ module nmc_tile_compute #(
         .mem_req_wdata(mem_req_wdata), .mem_req_wstrb(mem_req_wstrb),
         .mem_rsp_valid(mem_rsp_valid), .mem_rsp_ready(mem_rsp_ready),
         .mem_rsp_rdata(mem_rsp_rdata), .mem_rsp_error(mem_rsp_error), .host_idle(host_idle),
+        .root_wr_valid(root_wr_valid), .root_wr_ready(root_wr_ready),
+        .root_wr_addr(root_wr_addr), .root_wr_mask(root_wr_mask), .root_wr_data(root_wr_data),
+        .root_wr_error(root_wr_error), .root_wr_commit(trace_root_write),
         .rd_enable(rd_enable), .w_address(w_address), .x_address(x_address),
         .rd_valid(rd_valid), .w_data(w_data), .x_data(x_data),
         .y_write(trace_y_write), .y_address(y_address), .y_mask(lane_mask), .y_data(accumulators)

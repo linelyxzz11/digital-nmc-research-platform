@@ -13,6 +13,13 @@ module nmc_tile_sram (
     input logic mem_rsp_ready,
     output logic mem_rsp_error,
     output wire host_idle,
+    input logic root_wr_valid,
+    output wire root_wr_ready,
+    input logic [15:0] root_wr_addr,
+    input logic [3:0] root_wr_mask,
+    input logic [127:0] root_wr_data,
+    output wire root_wr_error,
+    output wire root_wr_commit,
     input logic rd_enable,
     input logic [15:0] w_address, x_address,
     output logic rd_valid,
@@ -39,6 +46,20 @@ module nmc_tile_sram (
         (mem_req_addr >= 16'h2000 && mem_req_addr < 16'h2400);
     assign host_idle = !host_busy && !mem_rsp_valid;
     assign mem_req_ready = rst_n && compute_idle && host_idle;
+    // A Root transfer completes at its handshake edge, without a response bubble.
+    // A held host response owns the ports too: its read data must stay stable.
+    assign root_wr_ready = rst_n && compute_idle && host_idle && !mem_req_valid;
+    logic root_bad;
+    always @* begin
+        root_bad = |root_wr_addr[1:0] || root_wr_mask == 0 ||
+                   root_wr_addr < 16'h2000 || root_wr_addr >= 16'h2400;
+        for (integer lane=0;lane<4;lane=lane+1)
+            if (root_wr_mask[lane] &&
+                ({1'b0,root_wr_addr} + 17'(4*lane)) > 17'h023fc)
+                root_bad = 1;
+    end
+    assign root_wr_error = root_wr_valid && root_wr_ready && root_bad;
+    assign root_wr_commit = root_wr_valid && root_wr_ready && !root_bad;
 
     // Host and Compute explicitly share ONE read/write service port per Bank.
     // They are mutually exclusive: external loading is an IDLE-only phase.
@@ -107,7 +128,13 @@ module nmc_tile_sram (
         end
     end
 
-    wire [7:0] y_word = y_address[9:2];
+    // Compute owns a task through LocalDone; idle arbitration is Host > Root.
+    // One mux precedes each physical Bank port, preserving single-port SRAMs.
+    wire vector_write = y_write || root_wr_commit;
+    wire [15:0] vector_address = y_write ? y_address : root_wr_addr;
+    wire [3:0] vector_mask = y_write ? y_mask : root_wr_mask;
+    wire [127:0] vector_data = y_write ? y_data : root_wr_data;
+    wire [7:0] y_word = vector_address[9:2];
     wire [1:0] host_bank = host_addr[3:2];
     wire [5:0] host_row = host_addr[9:4];
     wire [31:0] host_y_data [0:3];
@@ -116,13 +143,13 @@ module nmc_tile_sram (
         logic [31:0] read_data;
         wire [1:0] lane = 2'(bank) - y_word[1:0];
         wire [7:0] word_index = y_word + {6'b0,lane};
-        wire compute_write = y_write && y_mask[lane];
+        wire vector_bank_write = vector_write && vector_mask[lane];
         wire host_enable = host_busy && !host_bad && host_y && host_bank==2'(bank);
-        wire port_enable = compute_write || host_enable;
-        wire port_write = compute_write || (host_enable && host_write);
-        wire [5:0] port_addr = compute_write ? word_index[7:2] : host_row;
-        wire [31:0] port_data = compute_write ? y_data[32*lane +: 32] : host_data;
-        wire [3:0] port_strb = compute_write ? 4'b1111 : host_strb;
+        wire port_enable = vector_bank_write || host_enable;
+        wire port_write = vector_bank_write || (host_enable && host_write);
+        wire [5:0] port_addr = vector_bank_write ? word_index[7:2] : host_row;
+        wire [31:0] port_data = vector_bank_write ? vector_data[32*lane +: 32] : host_data;
+        wire [3:0] port_strb = vector_bank_write ? 4'b1111 : host_strb;
         assign host_y_data[bank] = read_data;
         always_ff @(posedge clk) begin
             if (!rst_n) read_data <= 0;

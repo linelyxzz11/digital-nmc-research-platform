@@ -73,6 +73,29 @@ def test_long_service_cycles_do_not_commit_sram_or_done_early():
     assert r.cycle==23 and len(outputs)==1
 
 
+@pytest.mark.parametrize('lanes,baseline',[(1,34),(2,20),(4,13)])
+@pytest.mark.parametrize('write_cycles',[1,3])
+def test_write_port_backpressure_holds_vector_and_delays_completion(lanes,baseline,write_cycles):
+    r=endpoint(lanes_per_cycle=lanes,write_cycles=write_cycles)
+    r.accept(packet(1));r.accept(packet(2,(4,5,-6,-7)))
+    while r.write_request() is None: r.step(write_ready=False)
+    held=r.write_request()
+    assert held.address==0x2000 and held.lane_mask==(1<<lanes)-1
+    assert held.data[:lanes]==(5,3,-3,-11)[:lanes]
+    before=bytes(r.root.result_sram)
+    for _ in range(5):
+        r.step(write_ready=False)
+        assert r.write_request()==held and r.remaining==1
+        assert bytes(r.root.result_sram)==before and not r.values and r.done is None
+        assert r.last_event['write_valid'] and not r.last_event['write_accepted']
+    assert r.stats()['result_write_stall_cycles']==5
+    r.step(write_ready=True)
+    assert r.last_event['write_accepted'] and r.values[100]==5
+    drive(r)
+    assert r.cycle==baseline+5+(write_cycles-1)*(4//lanes)
+    assert r.values=={100:5,101:3,102:-3,103:-11}
+
+
 def test_one_packet_fifo_reserves_head_and_accepts_tail_without_an_extra_slot():
     r=endpoint(rx_queue_packets=1)
     r.reserve_header()
