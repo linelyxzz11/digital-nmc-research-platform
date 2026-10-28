@@ -198,6 +198,8 @@ mem_rsp_error
 
 `mem_req_addr` 必须 4-byte aligned，`wstrb` 指定该 32-bit word 中实际写入的 byte。v0.1 在 Tile 不处于 `IDLE` 时令 `mem_req_ready=0`，因此数据加载、计算和外部结果读取严格分阶段，不发生重叠。Input SRAM 中的 INT8 可以通过 `wstrb` 按 byte 写入；Result SRAM 通过 32-bit 读取。
 
+2026-10-28 参考 RTL 另外接出 Root 端点的内部 `root_wr_*` 128-bit 写口，复用四个 Result Bank；上述 Host 端口保持 32 bit。Root 在 IDLE 且没有 Host 请求/未完成响应时握手，任务执行期间暂停。完整地址、mask、错误和同边沿提交规则见 [Root 写回接口](root_writeback_rtl_v0.1.md)。这是参考实现的内部端点接口补充。
+
 ### 6.3 权重布局
 
 本地矩阵逻辑形状为：
@@ -398,7 +400,7 @@ T_local_no_stall = G * (K_local + 4) + 1
 
 每 Bank 采用一个读/写服务端口；Weight、Input、Result 的端口彼此独立。Weight 和 Input 因而可以同周期读，逻辑读取量最多为 `4+1=5 B/cycle`。Result 的四个 Bank 按 INT32 word 交错：`bank = floor(Y_addr/4) mod 4`。连续四个结果落入不同 Bank，即使 `Y_base` 只按 4 B 对齐、未按 16 B 对齐，仍可在一个周期内写完；无效 Lane 不发写请求。该组织满足 6.1 的对齐要求。
 
-上述为内部 Compute 端口。6.2 的外部加载/读回端口仍是 32 bit，且只在 IDLE 访问。尤其不能由内部每周期写 128 bit 推断外部端口同样有该带宽；窄 Input Bank 如何串行处理外部 32-bit 写、请求接收与提交的时序，仍属于待实现的加载控制器。
+上述为内部 Compute 端口。6.2 的外部加载/读回端口仍是 32 bit，且只在 IDLE 访问。尤其不能由内部每周期写 128 bit 推断外部端口同样有该带宽。后续单 Tile RTL 已实现 Input Bank 逐 byte 服务外部 32-bit 请求；系统输入写提交尚未按该控制器校准。Root 内部宽写口另见 6.2 的补充链接。
 
 精确的时钟约定如下：
 

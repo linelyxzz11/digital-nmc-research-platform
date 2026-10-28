@@ -18,6 +18,8 @@ SRAM 由可综合数组与同步读寄存器实现，尚未绑定具体 SRAM 宏
 
 外部端口一次接受一个 32-bit 请求；读、写都返回一次 `mem_rsp_valid/ready` 响应。仅在 IDLE 接受请求，响应握手前禁止接受任务或下一项请求；任务和存储请求同时出现时优先存储请求。Weight/Result 请求在接收后的下一个边沿服务；Input 写在随后四个边沿按 byte 服务，Input 读再用一个边沿组装最后一个返回 byte。byte-enable 控制实际写入，零 strobe 为合法空写。响应阻塞时字段稳定。复位取消未完成请求，但已提交的 SRAM byte/word 保留。
 
+Root 的内部 `root_wr_*` 128-bit 写口已接入相同 Result Bank。Compute 执行到 LocalDone 握手期间独占；IDLE 时 Host 请求/未完成响应优先，然后 Root，最后新任务。合法向量在 ready/valid 握手的同一边沿写入，支持非 16-byte 对齐和稀疏 mask；错误请求整组拒绝，握手边沿采样 `root_wr_error`。无额外响应气泡，未使用时把 `root_wr_valid` 接 0。完整合同见 [Root 宽写回](../../../docs/spec/root_writeback_rtl_v0.1.md)。
+
 逻辑描述符采用展开端口。`task_opcode=8'd1` 表示 GEMV_LOCAL，`task_result_kind=0/1` 表示 FINAL/PSUM，2/3 非法；它们是本模块端口约定，尚不是 ISA 二进制编码。状态码与通信 `StatusCode` 的 0–7 一致。非法描述符先按规范优先级检查，产生一次错误 Done，不执行 MAC 或修改 SRAM。`trace_*` 是验证观测口，供逐周期比较，不参与软件 ABI。
 
 ## 运行与检查
@@ -28,6 +30,8 @@ SRAM 由可综合数组与同步读寄存器实现，尚未绑定具体 SRAM 宏
 PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -B tools/rtl/run_tile_rtl.py \
   --seeds 32 --output-dir dump/rtl_tile_20261028
 python -m pytest -q -p no:cacheprovider src/tests/test_tile_rtl.py
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -B tools/rtl/run_root_writeback_rtl.py \
+  --seeds 32 --output-dir dump/rtl_root_writeback_20261028
 ```
 
 也可在本目录执行 `make test PYTHON=/absolute/path/to/python`。`--no-synthesis` 可单独运行编译/仿真/lint；完整验收必须包含综合资源检查。
@@ -41,7 +45,9 @@ python -m pytest -q -p no:cacheprovider src/tests/test_tile_rtl.py
 - 加载器逐 byte 写入中复位、三个区域的 byte-enable、非法存储请求；
 - 22 个非法描述符与多错误优先级例子。
 
-Yosys 执行 `check -assert`，并验证六块 SRAM 的几何参数、单读口/单写口和同步读；总存储量为 49,152 bit。Host/Compute 读写互斥，共用地址和服务控制，未增加同时访问端口。该检查不提供芯片面积、Fmax、功耗或宏时序结论。
+Yosys 执行 `check -assert`，并验证六块 SRAM 的几何参数、单读口/单写口和同步读；总存储量为 49,152 bit。Host/Compute/Root 复用地址和服务控制，未增加同时访问端口。该检查不提供芯片面积、Fmax、功耗或宏时序结论。
+
+Root 新回归确认 16 个全宽向量在连续 16 周期完成，空闲写口为 16 byte/cycle。51 组 Python/RTL 校准覆盖 FINAL/PSUM、1/2/4 通道、边界输出量、混合来源完成和真实 Host 争用；Root 请求阻塞时保持，Python 的 `write_ready` 同步推迟 SRAM 和全局完成。原 5×3 时序保持不变，Root 部分和/加法/DONE 控制仍待 RTL 实现。精选 [接口证据](../../../data/results/root_writeback_rtl_20261028/results.json) 与源码快照单独保存。
 
 [精选结果](../../../data/results/tile_rtl_20261028/results.json) 与 [5×3 逐周期对照](../../../data/results/tile_rtl_20261028/hand_5x3_trace.csv) 随仓库发布。完整 CSV、综合日志和 VCD 位于命令指定的输出目录；五份 VCD 对应手算、反压和三个复位阶段，用 Surfer 打开相应 `wave.vcd` 即可。GitHub Actions 对干净克隆运行全部回归，并保存波形/日志 artifact。
 

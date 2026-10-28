@@ -2,9 +2,12 @@ PYTHON ?= python3
 OUTPUT ?= ../../../dump/rtl_tile
 SEEDS ?= 8
 
-.PHONY: test lint
+.PHONY: test test-root lint
 test:
 	$(PYTHON) ../../../tools/rtl/run_tile_rtl.py --seeds $(SEEDS) --output-dir $(OUTPUT)
+
+test-root:
+	$(PYTHON) ../../../tools/rtl/run_root_writeback_rtl.py --seeds $(SEEDS) --output-dir $(OUTPUT)/root_writeback
 
 lint:
 	verilator --lint-only -Wall -Wno-UNUSEDSIGNAL --top-module nmc_tile_compute \

@@ -20,7 +20,7 @@
 
 ## 本机继续维护、复现与实验整合
 
-保持单 Tile RTL 与系统回归；后续先明确输入写提交及 Root 写端口的计时口径，与现有加载器/Result 接口对齐，再固定 Tile/Root 硬件配置，标定代价并比较 ROW、K 和后续 mapper。Root 的四字写回仍需接入内部宽写路径或按外部 32-bit 口重新标定；具体 SRAM/ALU 时序与 RTL 仍待实现证据。
+Root 四字写回已接入内部宽写路径并完成 [RTL 校准](spec/root_writeback_rtl_v0.1.md)：空闲时一周期写四字，Compute/Host 占用由 ready 反压处理，51 组 Python/RTL 时间线一致。下一步先将系统输入写提交对齐现有逐 byte 加载器，再固定 Tile/Root 配置标定代价、比较 ROW、K 和后续 mapper。Root 部分和 SRAM、加法器与完整端点控制仍需 RTL 实现及校准。
 
 主要比较指标为 **同一计时窗口内的模型任务完成周期**，主基线为固定 K；同时报告固定 ROW。辅助统计为 MAC 利用率、Bank 等待、NI 注入阻塞、Root 队列占用、NoC flit-hop 与映射可行性。权重预加载是否计时必须统一声明。不同 Bank/端点配置属于硬件敏感性实验，不能算成 mapper 在相同硬件下的收益。
 

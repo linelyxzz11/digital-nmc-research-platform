@@ -91,3 +91,11 @@ These are research extensions rather than v0.1 ambiguities:
 Until these checks pass, the specification remains `IMPLEMENTATION DRAFT v0.1` even though its encoding decisions are fixed for initial coding.
 
 2026-10-06 已有 Packet 与 Comm 0A–0C 的 10 项 Python 测试记录，见[验证指南](../validation.md#comm)。这不等于上述冻结条件全部满足；Demo 1/2、随机反压、错误恢复及 RTL 对照仍需相应证据。
+
+## 2026-10-28：Root 最终写回的内部宽接口
+
+Result SRAM 的四个 Bank 经显式向量复用器接受 Compute 或 Root 的一项最多四字写入，再与 Host 32-bit 口复用。Compute 在任务期间独占；IDLE 优先级为未完成/新 Host 请求、Root、新任务。固定优先级避免同时驱动 Bank，但不保证饥饿自由；现有分阶段调度不依赖争用公平性。
+
+合法 Root 请求在 ready/valid 握手的同一上升沿原子提交，错误通过同一边沿的 `root_wr_error` 返回，不增加响应缓冲或气泡。保留非 16-byte 对齐和稀疏 Lane，全部有效地址先校验，避免低位 Bank 寻址掩盖越界。连续全宽写验证每周期四字，支持默认 W=1；SRAM 仍为六块单端口、49,152 bit。
+
+Python `write_request()` 与 `step(write_ready=...)` 对接同一合同，端口停顿期间不提交输出或推进 Done。51 组对照包含真实 Host 占用造成的六周期写等待。此项选择仅校准最终写口；Root 归约存储、ALU、Packet/Done 控制及器件时序仍需后续实现。[详细合同和证据](root_writeback_rtl_v0.1.md)。

@@ -1,4 +1,4 @@
-name: Verify Python and Tile RTL
+name: Verify Python and Tile Root RTL
 on:
   push:
   pull_request:
@@ -25,10 +25,11 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: tile-rtl-verification
+          name: tile-root-rtl-verification
           path: |
             dump/ci_pytest/**/results.json
             dump/ci_pytest/**/trace.csv
+            dump/ci_pytest/**/interface_trace.csv
             dump/ci_pytest/**/memory.csv
             dump/ci_pytest/**/wave.vcd
             dump/ci_pytest/**/*.log

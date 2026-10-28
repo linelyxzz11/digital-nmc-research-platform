@@ -1,6 +1,6 @@
 # Finite Root Service v0.1
 
-状态：`IMPLEMENTATION DRAFT`，2026-10-28。实现入口为 [timed_endpoint.py](../../src/simulator/system/timed_endpoint.py)，配置为 [RootTiming](../../src/simulator/system/root_config.py)。沿用 [通信规范](communication_architecture_v0.1.md) 的 Packet、来源 mask、INT32 回绕、包级错误检查和全局完成条件；这是 Python 逐周期模型，Root RTL 与具体 SRAM/加法器时序尚未校准。
+状态：`IMPLEMENTATION DRAFT`，2026-10-28。实现入口为 [timed_endpoint.py](../../src/simulator/system/timed_endpoint.py)，配置为 [RootTiming](../../src/simulator/system/root_config.py)。沿用 [通信规范](communication_architecture_v0.1.md) 的 Packet、来源 mask、INT32 回绕、包级错误检查和全局完成条件。最终宽写回已接入 Tile RTL 并完成仿真校准，见 [接口合同](root_writeback_rtl_v0.1.md)；部分和存储、加法器和完整 Root 控制仍为 Python 模型。
 
 ## 资源与默认服务
 
@@ -18,7 +18,7 @@
 
 默认服务组相当于四个 INT32 加法通道和可处理四个索引的部分和读写端口。部分和存储及 mask 是端点的独立资源预算，不能把先前单 Tile RTL 的 6 KiB 存储统计直接当成包含本端点的总预算。结果写入复用架构中的 Root Result 区域，按 `4*(global_index-output_base)` 寻址；每个 Packet 的最多四个有效索引位于同一个连续四索引范围，可并行写入四个 Result Bank。面积、功耗和 Fmax 尚无实现证据。
 
-四字并行写回还假设后续 Root RTL 能通过仲裁复用内部 128-bit Result 写路径。现有 `nmc_tile_compute` 顶层只暴露 32-bit 外部存储口，尚未接出该端点写接口；因此四个 Bank 的组织不能直接证明现有顶层已有四字/周期的 Root 写带宽。若使用现有外部口，必须按其串行访问与响应握手重新标定服务周期。
+`nmc_tile_compute` 已增加独立的 `root_wr_*` 128-bit ready/valid 接口，经显式仲裁复用四个 Result Bank。空闲端口连续 16 周期接受 16 个全宽向量，确认默认 `write_cycles=1` 对应一次最多四字的同边沿提交。Host/Compute 占用时通过 ready 反压暂停；32-bit 外部端口仍保留原握手和服务周期。该写回校准不覆盖部分和读/加/更新的 SRAM/ALU 实现。
 
 当前一项 transaction 占用一个 Root。`values` 是 Result SRAM 的调试镜像，`received_source_masks` 和接收预留 mask 均限于已校验的 `output_count` 个索引；历史 Trace 与 Mesh 的 `received_*` 列表是观测记录，不参与缓存容量或服务决策。Done 一次 transaction 只产生一项，因此增大 Done 队列深度不会凭空提升本版吞吐。
 
@@ -82,6 +82,8 @@ PSUM final source  = 2 + C*(R+A+U+W)
 ## API、CLI 与观测
 
 `run_plan`、`run_demo1`、`run_demo2` 增加 `root_timing=RootTiming()`，按计划中的 GATHER_FINAL/REDUCE_PSUM 选择 TimedRoot；原 `endpoint_factory` 继续用于功能 Root 入口。`capture_root_trace=True` 记录每个 Root 周期的状态、源包、索引、读取/更新值、队列占用及写回。`root_done_ready` 是测试输出反压的可选回调，默认只按 NI 实际空位接收 Done。
+
+写端口对接使用 `TimedRoot.write_request()` 和 `step(write_ready=...)`：请求只在最终写服务边沿有效，被阻塞时 payload、部分和和完成状态保持。额外等待计入 `result_write_stall_cycles`，Trace 记录写请求及握手。当前系统 runner 分阶段执行，默认写端口可用；51 组独立 RTL 对照包含六组实际 Host 仲裁阻塞，详见上述接口合同。
 
 ```bash
 PYTHONPATH=src python -m simulator.system.demo2 --compute-model tile \
