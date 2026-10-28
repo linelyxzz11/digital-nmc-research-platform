@@ -7,6 +7,9 @@
 - `results/timed_tile_system_20261028/`：详细 Tile/2×2 系统接入，五组 480 条记录（430 次成功、50 次容量不可行），含 86 次可行基线的全部网络指标一致性检查；open/eighth 固定相位 0，Root 仍为功能归约。
 - `results/finite_root_system_20261028/`：有限 Root 的五组实际服务对照，240 条记录（215 次成功、25 次不可行），含标量/向量手算 Trace、CSV、压缩原始 JSON 和源码快照；无人工接收压力窗口。
 - `results/root_writeback_rtl_20261028/`：Root 128-bit 写回的连续吞吐、接口争用/复位及 51 组 Python/RTL 逐周期校准，含精简 Trace、单 Tile 存储综合结构与对应源码快照；Root 部分和和加法控制仍为 Python。
+- `results/mapping_headroom_20261028/`：现有固定放置/均衡 ROW/K 的收益上限重分析，19 项共同比较与全部 24 项可行覆盖。
+- `results/mapping_candidates_20261028/`：扩大放置/采样 K 切分后 1,680 候选，1,188 次正确执行、492 次预期不可行；压缩完整记录、CSV、汇总和源码快照。
+- `results/unindp_native_20261028/`：固定作者版本/依赖的三个原生 AiM GEMV 对照，只表示 UniNDP 自身相对其 baseline 的结果，不表示本项目相对 UniNDP 的加速比。
 
 Root 压力与 Compute 时序的较大原始 JSON 以 `results.json.gz` 发布，内容不变，可用 `gzip -dk` 解压；对应 CSV、汇总和源码快照一并保留。仿真脚本仍生成普通 JSON。例如读取后直接分析：
 

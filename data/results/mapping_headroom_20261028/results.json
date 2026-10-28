@@ -1,0 +1,351 @@
+{
+  "schema_version": 1,
+  "scope": "Reanalysis only: fixed placement, balanced ROW/K, identical finite Tile/Root hardware; restricted oracle, not UniNDP comparison",
+  "source": "data/results/finite_root_system_20261028/results.json.gz",
+  "input_sha256": "dda75e783bfef3d9d44ce6bfda0ebd56f759e8a6ec4ea653de5d1d99447acb29",
+  "result_provenance": {
+    "git_head": "92e2a6ec91a4ee529abebf1e8a710db101808fc0",
+    "git_status": "M README.md\n M data/README.md\n M docs/figures/fig1_nmc_tile_microarchitecture.png\n M docs/figures/fig1_nmc_tile_microarchitecture.svg\n M docs/parallel_work.zh-CN.md\n M docs/spec/communication_architecture_v0.1.md\n M docs/validation.md\n M src/README.md\n M src/simulator/system/demo1.py\n M src/simulator/system/demo2.py\n M src/tests/README.md\n M tools/README.md\n?? Digital-NMC.code-workspace\n?? data/results/compute_timing_20261027/functional/results.json\n?? data/results/compute_timing_20261027/reference/results.json\n?? data/results/compute_timing_20261027/weight-ii2/results.json\n?? data/results/early_feasibility/\n?? data/results/root_pressure_20261027/results.json\n?? docs/spec/root_service_v0.1.md\n?? docs/team_inputs/\n?? ini/early_feasibility/\n?? ini/root_service/\n?? src/rtl/legacy_cpu/\n?? src/simulator.zip\n?? src/simulator/system/endpoint_common.py\n?? src/simulator/system/root_config.py\n?? src/simulator/system/timed_endpoint.py\n?? src/tests/test_timed_root.py\n?? tools/experiments/early_feasibility/\n?? tools/experiments/finite_root_system.py",
+    "source_sha256": {
+      "src/compiler/__init__.py": "e4aba99cc09fc3b939b16f9b4ada4104a7565230f8fa8120876ed56115c7d5f9",
+      "src/compiler/auto_mapper_v0_1.py": "57dbfd936b135d9594d20af867f00c74e812d8009a4e42787b07f8cea8624f79",
+      "src/hardware.py": "583e43a8c1152c33d4ed60cfc356f0d05a77565810229c7c33bc403ffabcc8c8",
+      "src/simulator/__init__.py": "c433defde033fc2f2e62da6c6e66c6bbc6d8b3cc75f6df61349f994be6181147",
+      "src/simulator/communication/__init__.py": "7cb6d906a9bd63db2fc42d0547e96083574948a25fd920a939e2d88a3d74e6dc",
+      "src/simulator/communication/v0_1.py": "7f9643487aaa80ef7fc8a9a31a372c98ae27c942aa10dcee33b6f020b174c87f",
+      "src/simulator/functional/__init__.py": "cf6ad18c2d47b3492e59d3fcf4d1b5d5de6bf823fe5ae5c20949c0635598e274",
+      "src/simulator/functional/demo0_model.py": "81b859c0a275e0cfaad09c38f50c20c1fc53e6147ef36dec607b372533903036",
+      "src/simulator/system/__init__.py": "1172c8910c6d2a224c18b68c2063af9a2208de46b04593c74949c2d595b3c8ab",
+      "src/simulator/system/compute_timing.py": "e512f4eda89a0051486ab6fef2a522fe7fd02551796ac9c52133007b12b25e3e",
+      "src/simulator/system/demo1.py": "4185e7d93c50d5b8b45d6853fdca08e6c5aba3fa322a45eae409df75cf6a580b",
+      "src/simulator/system/demo2.py": "0169a581863f74f7de8f640bed9c46affeaaffa677246a0e190c1912f5bfc4b0",
+      "src/simulator/system/endpoint_common.py": "99de8a7fea103e14ce5ecdf5c2fd8011b07ac97c089580538fa6d1a0183116d9",
+      "src/simulator/system/root_config.py": "3dceeff1b8146bd9965c5deb64106d0c75a6a3270dc6b4f00218f8d1938599d8",
+      "src/simulator/system/tile_config.py": "2e8bdd2208acb274ca873e5f8c33f78b10ec86f32bcc7f781ea1f79c0bc286f0",
+      "src/simulator/system/tile_memory.py": "11822bfcfc7e1a9532b390be7af669916f02d85e90692eb39f271b13e5cc32b8",
+      "src/simulator/system/tile_timing.py": "05f69c24cb81836210a25907918dc380962c8df5f74bccc9afe2cc9736a8bf80",
+      "src/simulator/system/timed_endpoint.py": "24b5a92c66f4ccc943550cdda30d6b066f4d79595de49653a0f5036c841205d4",
+      "tools/experiments/mapper_sweep.py": "a599347901461f478aaf6b0961c5d68c637f72bf16d56f18914fef386caa0097",
+      "tools/experiments/pressure_sweep.py": "dae7fe4c4aaf835ac94e21100a91c6fbbc1b99ecf5907d90b074e8363d4c13d5",
+      "tools/experiments/finite_root_system.py": "a5d64b41bfe390322f7d19b0cefe6968941901eefa3f7f19dcac1cbf6e6f3610",
+      "ini/root_service/baseline.json": "c1b826aa71396a61b3f5e213f26f1c0e34f0b343fd5ff09359940fc8801cafd2",
+      "ini/root_service/scalar.json": "20c0907d34030714e7b727713f24ea4ec0ef0360dc8fbc911b53adb9d6e7fdb1",
+      "ini/root_service/queue1.json": "35557307d1a461a5a978820c107ea41090a97fc5ad045e5c3f5e51ed2b2e1c09",
+      "ini/root_service/slow_write.json": "cd6cc2263faadfc477904903fba06e4b7ddc2ab7c6c0e634d8b52b3cf7159716"
+    }
+  },
+  "placement": {
+    "workers": [
+      1,
+      2
+    ],
+    "root": 3
+  },
+  "tile_timing": {
+    "memory": {
+      "weight": {
+        "banks": 1,
+        "word_bytes": 4,
+        "ports_per_bank": 1,
+        "read_latency": 1,
+        "issue_interval": 1
+      },
+      "input": {
+        "banks": 1,
+        "word_bytes": 1,
+        "ports_per_bank": 1,
+        "read_latency": 1,
+        "issue_interval": 1
+      },
+      "result": {
+        "banks": 4,
+        "word_bytes": 4,
+        "ports_per_bank": 1,
+        "read_latency": 1,
+        "issue_interval": 1
+      },
+      "share_weight_input": false
+    },
+    "operand_slots": 2,
+    "mac_interval": 1
+  },
+  "root_timing": {
+    "rx_queue_packets": 2,
+    "reduction_entries": 256,
+    "done_queue_packets": 1,
+    "lanes_per_cycle": 4,
+    "read_cycles": 1,
+    "add_cycles": 1,
+    "update_cycles": 1,
+    "write_cycles": 1
+  },
+  "analysis_commit": "1ea8010fb130c673e45c3c78eae5abe199f12bbc",
+  "source_sha256": {
+    "src/compiler/auto_mapper_v0_1.py": "57dbfd936b135d9594d20af867f00c74e812d8009a4e42787b07f8cea8624f79",
+    "tools/experiments/mapping_headroom.py": "9f798f950d2477d3600e9cffd258bb7be361f6ab0e4f76be96924a4c7438db4d"
+  },
+  "policies": {
+    "ROW": {
+      "feasible_shapes": 20,
+      "total_shapes": 24,
+      "common_shapes": 19,
+      "geometric_mean_speedup_vs_K": 0.8391953668757154,
+      "mean_regret_fraction": 0.27452799336477235,
+      "worst_regret_fraction": 0.9879673399226472,
+      "optimal_hits": 5,
+      "wins_vs_K": 5,
+      "losses_vs_K": 14
+    },
+    "K": {
+      "feasible_shapes": 23,
+      "total_shapes": 24,
+      "common_shapes": 19,
+      "geometric_mean_speedup_vs_K": 1.0,
+      "mean_regret_fraction": 0.05551521756117755,
+      "worst_regret_fraction": 0.7230046948356808,
+      "optimal_hits": 14,
+      "wins_vs_K": 0,
+      "losses_vs_K": 0
+    },
+    "AUTO": {
+      "feasible_shapes": 24,
+      "total_shapes": 24,
+      "common_shapes": 19,
+      "geometric_mean_speedup_vs_K": 1.041844560289077,
+      "mean_regret_fraction": 0.004295603398721452,
+      "worst_regret_fraction": 0.048101265822784844,
+      "optimal_hits": 17,
+      "wins_vs_K": 5,
+      "losses_vs_K": 2
+    },
+    "ORACLE": {
+      "feasible_shapes": 24,
+      "total_shapes": 24,
+      "common_shapes": 19,
+      "geometric_mean_speedup_vs_K": 1.0462375496971967,
+      "mean_regret_fraction": 0.0,
+      "worst_regret_fraction": 0.0,
+      "optimal_hits": 19,
+      "wins_vs_K": 5,
+      "losses_vs_K": 0
+    }
+  },
+  "results": [
+    {
+      "m": 4,
+      "k": 2048,
+      "ROW": null,
+      "K": 4631,
+      "AUTO": 4631,
+      "AUTO_partition": "K",
+      "ORACLE": 4631
+    },
+    {
+      "m": 8,
+      "k": 1024,
+      "ROW": 4626,
+      "K": 2843,
+      "AUTO": 2843,
+      "AUTO_partition": "K",
+      "ORACLE": 2843
+    },
+    {
+      "m": 16,
+      "k": 512,
+      "ROW": 2838,
+      "K": 1955,
+      "AUTO": 1955,
+      "AUTO_partition": "K",
+      "ORACLE": 1955
+    },
+    {
+      "m": 32,
+      "k": 256,
+      "ROW": 1950,
+      "K": 1523,
+      "AUTO": 1523,
+      "AUTO_partition": "K",
+      "ORACLE": 1523
+    },
+    {
+      "m": 64,
+      "k": 128,
+      "ROW": 1518,
+      "K": 1331,
+      "AUTO": 1331,
+      "AUTO_partition": "K",
+      "ORACLE": 1331
+    },
+    {
+      "m": 128,
+      "k": 64,
+      "ROW": 1326,
+      "K": 1283,
+      "AUTO": 1326,
+      "AUTO_partition": "ROW",
+      "ORACLE": 1283
+    },
+    {
+      "m": 256,
+      "k": 32,
+      "ROW": 1278,
+      "K": 1355,
+      "AUTO": 1278,
+      "AUTO_partition": "ROW",
+      "ORACLE": 1278
+    },
+    {
+      "m": 4,
+      "k": 1024,
+      "ROW": 4626,
+      "K": 2327,
+      "AUTO": 2327,
+      "AUTO_partition": "K",
+      "ORACLE": 2327
+    },
+    {
+      "m": 8,
+      "k": 512,
+      "ROW": 2322,
+      "K": 1435,
+      "AUTO": 1435,
+      "AUTO_partition": "K",
+      "ORACLE": 1435
+    },
+    {
+      "m": 16,
+      "k": 256,
+      "ROW": 1430,
+      "K": 995,
+      "AUTO": 995,
+      "AUTO_partition": "K",
+      "ORACLE": 995
+    },
+    {
+      "m": 32,
+      "k": 128,
+      "ROW": 990,
+      "K": 787,
+      "AUTO": 787,
+      "AUTO_partition": "K",
+      "ORACLE": 787
+    },
+    {
+      "m": 64,
+      "k": 64,
+      "ROW": 782,
+      "K": 707,
+      "AUTO": 707,
+      "AUTO_partition": "K",
+      "ORACLE": 707
+    },
+    {
+      "m": 128,
+      "k": 32,
+      "ROW": 702,
+      "K": 715,
+      "AUTO": 702,
+      "AUTO_partition": "ROW",
+      "ORACLE": 702
+    },
+    {
+      "m": 256,
+      "k": 16,
+      "ROW": 710,
+      "K": 815,
+      "AUTO": 710,
+      "AUTO_partition": "ROW",
+      "ORACLE": 710
+    },
+    {
+      "m": 1,
+      "k": 2048,
+      "ROW": null,
+      "K": 4631,
+      "AUTO": 4631,
+      "AUTO_partition": "K",
+      "ORACLE": 4631
+    },
+    {
+      "m": 2,
+      "k": 2048,
+      "ROW": null,
+      "K": 4631,
+      "AUTO": 4631,
+      "AUTO_partition": "K",
+      "ORACLE": 4631
+    },
+    {
+      "m": 1,
+      "k": 1024,
+      "ROW": null,
+      "K": 2327,
+      "AUTO": 2327,
+      "AUTO_partition": "K",
+      "ORACLE": 2327
+    },
+    {
+      "m": 256,
+      "k": 1,
+      "ROW": 219,
+      "K": null,
+      "AUTO": 219,
+      "AUTO_partition": "ROW",
+      "ORACLE": 219
+    },
+    {
+      "m": 256,
+      "k": 8,
+      "ROW": 426,
+      "K": 734,
+      "AUTO": 426,
+      "AUTO_partition": "ROW",
+      "ORACLE": 426
+    },
+    {
+      "m": 8,
+      "k": 256,
+      "ROW": 1170,
+      "K": 731,
+      "AUTO": 731,
+      "AUTO_partition": "K",
+      "ORACLE": 731
+    },
+    {
+      "m": 16,
+      "k": 128,
+      "ROW": 726,
+      "K": 515,
+      "AUTO": 515,
+      "AUTO_partition": "K",
+      "ORACLE": 515
+    },
+    {
+      "m": 128,
+      "k": 16,
+      "ROW": 390,
+      "K": 431,
+      "AUTO": 390,
+      "AUTO_partition": "ROW",
+      "ORACLE": 390
+    },
+    {
+      "m": 32,
+      "k": 64,
+      "ROW": 510,
+      "K": 419,
+      "AUTO": 419,
+      "AUTO_partition": "K",
+      "ORACLE": 419
+    },
+    {
+      "m": 64,
+      "k": 32,
+      "ROW": 414,
+      "K": 395,
+      "AUTO": 414,
+      "AUTO_partition": "ROW",
+      "ORACLE": 395
+    }
+  ]
+}
