@@ -57,3 +57,18 @@ def test_changed_policy_source_and_corruption_cannot_resume(api,tmp_path,monkeyp
     path.write_text(path.read_text().replace('"golden_ok": true','"golden_ok": false'))
     with pytest.raises(ValueError,match='integrity'):
         api['one_case'](5,19,'calibration',directory)
+
+
+def test_stronger_compact_baseline_replays_only_frozen_candidates(api,tmp_path):
+    record=api['one_case'](5,19,'calibration',tmp_path/'cases')
+    root=Path(__file__).resolve().parents[2]
+    audit=runpy.run_path(str(root/'tools/experiments/audit_compact_baseline.py'))
+    rows=audit['audit_record'](record)
+    compact=[r for r in rows if r['policy']=='unindp-compact']
+    assert len(compact)==2
+    assert all(record['plans'][r['plan_sha256']]['placement']=='compact' for r in compact)
+    assert all(r['cycles']==record['measured'][r['plan_sha256']]['metrics']['cycles'] for r in compact)
+    baseline_ids={r['plan_sha256'] for r in compact}
+    record['measured'].pop(next(iter(baseline_ids)))
+    with pytest.raises(ValueError,match='differs from the frozen'):
+        audit['audit_record'](record)

@@ -9,6 +9,8 @@
 
 合法配置由 `GridPlan` 生成，Descriptor、来源配置和权重通过侧带 setup 加载；输入经 NoC MEM_WRITE 写入真正的 X SRAM，收齐 ACK 后统一发任务，结果全程经 NoC。Root/Host 固定为 Tile 0，单次事务、至多 256 输出；算术为 INT8 乘法与 INT32 回绕。每次新事务复位控制与来源表，SRAM 内容不靠复位清零。
 
+本集成入口的 tid 固定为 1。每端点另有 1 KiB 部分和及三张 256×64-bit 的 expected/accepted/received 来源表（合计 6 KiB 元数据），加上 FIFO/活动/输出寄存器；这些 RTL 寄存器阵列独立于 Compute 的 6 KiB SRAM，未宣称已推断成工艺 SRAM 宏。两种映射/归约策略在同一物理预算中使用同一端点能力。非法包令 error 保持，停止后续服务和输出，直到复位。
+
 运行：
 
 ```bash

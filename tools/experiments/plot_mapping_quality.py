@@ -10,6 +10,8 @@ def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--summary',type=Path,required=True)
     parser.add_argument('--output-dir',type=Path,required=True)
+    parser.add_argument('--baseline',default='unindp-adapted')
+    parser.add_argument('--stem',default='mapping_quality')
     args=parser.parse_args()
     report=json.loads(args.summary.read_text())
     rows=[row for row in report['results'] if row['split']=='holdout']
@@ -17,7 +19,7 @@ def main():
     if not shapes:
         raise ValueError('no holdout data')
     lookup={(row['m'],row['k'],row['policy'],row['budget']):row['cycles'] for row in rows}
-    values={budget:[lookup[(m,k,'unindp-adapted',budget)]/lookup[(m,k,'noc',budget)]
+    values={budget:[lookup[(m,k,args.baseline,budget)]/lookup[(m,k,'noc',budget)]
                     for m,k in shapes] for budget in (1,4)}
     if any(value<=0 for series in values.values() for value in series):
         raise ValueError('nonpositive cycles')
@@ -34,22 +36,24 @@ def main():
                    c=color,marker=marker,s=27,label=f'{budget} exact evaluation'+('s' if budget>1 else ''))
     ax.set_xticks(range(len(shapes)),[f'{m}×{k}' for m,k in shapes],rotation=45,ha='right')
     ax.set_xlabel('Held-out GEMV shape (output rows × reduction dimension)')
-    ax.set_ylabel('Task cycle ratio\n(UniNDP-adapted / communication-aware)')
+    label='UniNDP-adapted' if args.baseline=='unindp-adapted' else 'UniNDP-adapted + compact'
+    ax.set_ylabel('Task cycle ratio\n(baseline / communication-aware)')
     ax.set_ylim(0,max(1.15,max(values[1])*1.12))
-    ax.legend(frameon=False,loc='upper left',fontsize=7,ncol=3)
+    ax.legend(title=label+' baseline',title_fontsize=7,frameon=False,
+              loc='lower left',bbox_to_anchor=(0,1.02),borderaxespad=0,fontsize=7,ncol=3)
     args.output_dir.mkdir(parents=True,exist_ok=True)
     for suffix in ('svg','pdf','png'):
-        fig.savefig(args.output_dir/f'mapping_quality.{suffix}',dpi=240)
+        fig.savefig(args.output_dir/f'{args.stem}.{suffix}',dpi=240)
     # A machine-readable figure argument/trace, not a significance claim.
     packet=dict(claim_anchor='mapping-budget-sensitivity',
         main_claim='Communication-aware ranking changes the limited-budget choice; compare all wins and regressions, and observe whether extra exact evaluations close the gap.',
         material_passport=dict(path=str(args.summary),sha256=hashlib.sha256(args.summary.read_bytes()).hexdigest()),
-        n_shapes=len(shapes),shapes=shapes,ratios=values,
+        n_shapes=len(shapes),shapes=shapes,ratios=values,baseline=args.baseline,
         units='dimensionless paired task-cycle ratios; higher is faster for communication-aware',
         statistics='deterministic one-seed model runs, no uncertainty bars or significance tests',
         source_data='quality.csv and summary.json; each dot is one held-out shape',
         figure_size_mm=[183,83],palette_roles={'budget1':'blue circle','budget4':'orange square'},
-        exports=['mapping_quality.svg','mapping_quality.pdf','mapping_quality.png'],
+        exports=[f'{args.stem}.{suffix}' for suffix in ('svg','pdf','png')],
         limitations='UniNDP search-method SRAM adaptation; not the author DRAM backend; finite declared catalogue only')
     (args.output_dir/'figure_evidence.json').write_text(json.dumps(packet,indent=2)+'\n')
     print(f'{len(shapes)} holdout shapes plotted with paired budgets and editable text')

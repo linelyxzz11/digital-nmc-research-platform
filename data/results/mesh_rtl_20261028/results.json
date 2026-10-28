@@ -1,0 +1,376 @@
+{
+  "cases": 9,
+  "passed": 9,
+  "results": [
+    {
+      "name": "hand_5x3_central",
+      "plan_sha256": "c18d5a4b9e85823e4fefae08e3fb3ef09739f749ef73970cdbbd23a9061e8c3d",
+      "m": 5,
+      "k": 3,
+      "grid": [
+        1,
+        2
+      ],
+      "active_compute": 2,
+      "reducers": 0,
+      "physical_tiles": 64,
+      "numeric_match": true,
+      "wire_packets_match": true,
+      "packets": 9,
+      "input_acks": 2,
+      "transaction_done": 1,
+      "reset_replayed": false,
+      "rtl_phase_cycles": [
+        {
+          "phase": 0,
+          "input_cycles": 59,
+          "kernel_cycles": 41,
+          "acks": 2,
+          "dones": 1,
+          "aborted": 0
+        }
+      ],
+      "model_cycles": 77,
+      "model_kernel_cycles": 37,
+      "matched_endpoint_stall_cycles": 0,
+      "kernel_difference_cycles": 4,
+      "kernel_relative_difference": 0.10810810810810811,
+      "scope": "integrated default-hardware RTL; real SRAM input writes and registered NI; no whole-system cycle-equivalence claim",
+      "recorded_verification_wall_seconds": 1.3377038330072537
+    },
+    {
+      "name": "tail_tree",
+      "plan_sha256": "3a5c9372954d129ff8d2d72d6aac434dc22bb756d63f7837568b17307eb38dc6",
+      "m": 13,
+      "k": 37,
+      "grid": [
+        3,
+        4
+      ],
+      "active_compute": 12,
+      "reducers": 3,
+      "physical_tiles": 64,
+      "numeric_match": true,
+      "wire_packets_match": true,
+      "packets": 93,
+      "input_acks": 36,
+      "transaction_done": 1,
+      "reset_replayed": false,
+      "rtl_phase_cycles": [
+        {
+          "phase": 0,
+          "input_cycles": 1015,
+          "kernel_cycles": 75,
+          "acks": 36,
+          "dones": 1,
+          "aborted": 0
+        }
+      ],
+      "model_cycles": 760,
+      "model_kernel_cycles": 70,
+      "matched_endpoint_stall_cycles": 0,
+      "kernel_difference_cycles": 5,
+      "kernel_relative_difference": 0.0714285714285714,
+      "scope": "integrated default-hardware RTL; real SRAM input writes and registered NI; no whole-system cycle-equivalence claim",
+      "recorded_verification_wall_seconds": 4.602763375034556
+    },
+    {
+      "name": "row32",
+      "plan_sha256": "85323aa55bd6e7ecb03b2ac5d3a47c69096001ceef22f4d97bedb7aecf4db462",
+      "m": 128,
+      "k": 32,
+      "grid": [
+        32,
+        1
+      ],
+      "active_compute": 32,
+      "reducers": 0,
+      "physical_tiles": 64,
+      "numeric_match": true,
+      "wire_packets_match": true,
+      "packets": 545,
+      "input_acks": 256,
+      "transaction_done": 1,
+      "reset_replayed": false,
+      "rtl_phase_cycles": [
+        {
+          "phase": 0,
+          "input_cycles": 5937,
+          "kernel_cycles": 142,
+          "acks": 256,
+          "dones": 1,
+          "aborted": 0
+        }
+      ],
+      "model_cycles": 3770,
+      "model_kernel_cycles": 138,
+      "matched_endpoint_stall_cycles": 0,
+      "kernel_difference_cycles": 4,
+      "kernel_relative_difference": 0.02898550724637672,
+      "scope": "integrated default-hardware RTL; real SRAM input writes and registered NI; no whole-system cycle-equivalence claim",
+      "recorded_verification_wall_seconds": 22.619893125025555
+    },
+    {
+      "name": "grid16_central",
+      "plan_sha256": "1224de5cde6809d10ee857ecf4c3ffe16823db045ca6b2224036de355c658fb3",
+      "m": 32,
+      "k": 128,
+      "grid": [
+        4,
+        4
+      ],
+      "active_compute": 16,
+      "reducers": 0,
+      "physical_tiles": 64,
+      "numeric_match": true,
+      "wire_packets_match": true,
+      "packets": 289,
+      "input_acks": 128,
+      "transaction_done": 1,
+      "reset_replayed": false,
+      "rtl_phase_cycles": [
+        {
+          "phase": 0,
+          "input_cycles": 2593,
+          "kernel_cycles": 214,
+          "acks": 128,
+          "dones": 1,
+          "aborted": 0
+        }
+      ],
+      "model_cycles": 1650,
+      "model_kernel_cycles": 210,
+      "matched_endpoint_stall_cycles": 0,
+      "kernel_difference_cycles": 4,
+      "kernel_relative_difference": 0.01904761904761898,
+      "scope": "integrated default-hardware RTL; real SRAM input writes and registered NI; no whole-system cycle-equivalence claim",
+      "recorded_verification_wall_seconds": 14.080122750019655
+    },
+    {
+      "name": "grid32_tree",
+      "plan_sha256": "9c52da5b6fa66af51dd73d42c3d43714e106d69246703b05ca90f7129ba5ff23",
+      "m": 32,
+      "k": 128,
+      "grid": [
+        4,
+        8
+      ],
+      "active_compute": 32,
+      "reducers": 12,
+      "physical_tiles": 64,
+      "numeric_match": true,
+      "wire_packets_match": true,
+      "packets": 345,
+      "input_acks": 128,
+      "transaction_done": 1,
+      "reset_replayed": false,
+      "rtl_phase_cycles": [
+        {
+          "phase": 0,
+          "input_cycles": 3417,
+          "kernel_cycles": 111,
+          "acks": 128,
+          "dones": 1,
+          "aborted": 0
+        }
+      ],
+      "model_cycles": 2369,
+      "model_kernel_cycles": 105,
+      "matched_endpoint_stall_cycles": 0,
+      "kernel_difference_cycles": 6,
+      "kernel_relative_difference": 0.05714285714285716,
+      "scope": "integrated default-hardware RTL; real SRAM input writes and registered NI; no whole-system cycle-equivalence claim",
+      "recorded_verification_wall_seconds": 15.972234082990326
+    },
+    {
+      "name": "k32_central",
+      "plan_sha256": "b3a056ab9ab2cf7fdb5dd13315d9267ed3e65bdea6e8aeb99d4094fd9d997c20",
+      "m": 256,
+      "k": 64,
+      "grid": [
+        1,
+        32
+      ],
+      "active_compute": 32,
+      "reducers": 0,
+      "physical_tiles": 64,
+      "numeric_match": true,
+      "wire_packets_match": true,
+      "packets": 2113,
+      "input_acks": 32,
+      "transaction_done": 1,
+      "reset_replayed": false,
+      "rtl_phase_cycles": [
+        {
+          "phase": 0,
+          "input_cycles": 855,
+          "kernel_cycles": 10320,
+          "acks": 32,
+          "dones": 1,
+          "aborted": 0
+        }
+      ],
+      "model_cycles": 10882,
+      "model_kernel_cycles": 10316,
+      "matched_endpoint_stall_cycles": 0,
+      "kernel_difference_cycles": 4,
+      "kernel_relative_difference": 0.0003877471888329431,
+      "scope": "integrated default-hardware RTL; real SRAM input writes and registered NI; no whole-system cycle-equivalence claim",
+      "recorded_verification_wall_seconds": 63.27157145901583
+    },
+    {
+      "name": "k32_tree",
+      "plan_sha256": "dfa6be7726b9ca97397c0e95a477cdd2d28a9d0125650a8bf7004e8a9ccd7d49",
+      "m": 256,
+      "k": 64,
+      "grid": [
+        1,
+        32
+      ],
+      "active_compute": 32,
+      "reducers": 11,
+      "physical_tiles": 64,
+      "numeric_match": true,
+      "wire_packets_match": true,
+      "packets": 2817,
+      "input_acks": 32,
+      "transaction_done": 1,
+      "reset_replayed": false,
+      "rtl_phase_cycles": [
+        {
+          "phase": 0,
+          "input_cycles": 855,
+          "kernel_cycles": 2166,
+          "acks": 32,
+          "dones": 1,
+          "aborted": 0
+        }
+      ],
+      "model_cycles": 2724,
+      "model_kernel_cycles": 2158,
+      "matched_endpoint_stall_cycles": 0,
+      "kernel_difference_cycles": 8,
+      "kernel_relative_difference": 0.003707136237256714,
+      "scope": "integrated default-hardware RTL; real SRAM input writes and registered NI; no whole-system cycle-equivalence claim",
+      "recorded_verification_wall_seconds": 47.64252458291594
+    },
+    {
+      "name": "backpressure",
+      "plan_sha256": "2da79ee58429c8ec174a6706739ba30d05e97161d0956dae5cff86aed35baf6b",
+      "m": 32,
+      "k": 32,
+      "grid": [
+        1,
+        16
+      ],
+      "active_compute": 16,
+      "reducers": 5,
+      "physical_tiles": 64,
+      "numeric_match": true,
+      "wire_packets_match": true,
+      "packets": 201,
+      "input_acks": 16,
+      "transaction_done": 1,
+      "reset_replayed": false,
+      "rtl_phase_cycles": [
+        {
+          "phase": 0,
+          "input_cycles": 433,
+          "kernel_cycles": 563,
+          "acks": 16,
+          "dones": 1,
+          "aborted": 0
+        }
+      ],
+      "model_cycles": 848,
+      "model_kernel_cycles": 560,
+      "matched_endpoint_stall_cycles": 300,
+      "kernel_difference_cycles": 3,
+      "kernel_relative_difference": 0.005357142857142838,
+      "scope": "integrated default-hardware RTL; real SRAM input writes and registered NI; no whole-system cycle-equivalence claim",
+      "recorded_verification_wall_seconds": 6.644316625082865
+    },
+    {
+      "name": "reset_in_flight",
+      "plan_sha256": "2da79ee58429c8ec174a6706739ba30d05e97161d0956dae5cff86aed35baf6b",
+      "m": 32,
+      "k": 32,
+      "grid": [
+        1,
+        16
+      ],
+      "active_compute": 16,
+      "reducers": 5,
+      "physical_tiles": 64,
+      "numeric_match": true,
+      "wire_packets_match": true,
+      "packets": 201,
+      "input_acks": 16,
+      "transaction_done": 1,
+      "reset_replayed": true,
+      "rtl_phase_cycles": [
+        {
+          "phase": 0,
+          "input_cycles": 433,
+          "kernel_cycles": 20,
+          "acks": 16,
+          "dones": 0,
+          "aborted": 1
+        },
+        {
+          "phase": 1,
+          "input_cycles": 433,
+          "kernel_cycles": 271,
+          "acks": 16,
+          "dones": 1,
+          "aborted": 0
+        }
+      ],
+      "model_cycles": 554,
+      "model_kernel_cycles": 266,
+      "matched_endpoint_stall_cycles": 0,
+      "kernel_difference_cycles": 5,
+      "kernel_relative_difference": 0.018796992481203034,
+      "scope": "integrated default-hardware RTL; real SRAM input writes and registered NI; no whole-system cycle-equivalence claim",
+      "recorded_verification_wall_seconds": 6.396786874975078
+    }
+  ],
+  "simulation_rtl_sha256": {
+    "src/rtl/nmc_tile/nmc_mac4.sv": "e0d9b48b1d1a527b586ef3d76cac5798b73bf4943eda9991df9088c5c7539699",
+    "src/rtl/nmc_tile/nmc_tile_sram.sv": "4e3c1b2213815aaad9c3a39d0d6f718d74fb9d21754c552f8bf99ccaa3062ff7",
+    "src/rtl/nmc_tile/nmc_tile_compute.sv": "a5cb341883127c1ba7387210472b5de7bf3eb5943209884b8c3bd2f5c63d0a75",
+    "src/rtl/nmc_mesh/nmc_router.sv": "f8752745ec13d31acfcd342380cdfbbce59d740b8b1e692c2ed4f2c171d8c404",
+    "src/rtl/nmc_mesh/nmc_mesh.sv": "8d22f7ca73f98ef90bc1f9eb21a8b0b8cafdf1ff6b82a561098e8bc79ac0465f",
+    "src/rtl/nmc_mesh/nmc_packet_tx.sv": "670b4bb171f5cbb49647431826292781b51657f459676831f11d87f265575457",
+    "src/rtl/nmc_mesh/nmc_reduce.sv": "208b3bef036c0dcc9d040902d2d0a92ec4172a62b90edf4b05f4d1eae958cb37",
+    "src/rtl/nmc_mesh/nmc_mesh_system.sv": "1713092211042456f59482ea162be533a8648055da578b6157efa182e8e650fc",
+    "src/rtl/nmc_mesh/tb_nmc_mesh_system.sv": "88075267f1aa1792a08635f7b9c485ce3e3cfdec2a558b5010bf8b876d7f6f45"
+  },
+  "analysis_source_sha256": {
+    "src/rtl/nmc_tile/nmc_mac4.sv": "e0d9b48b1d1a527b586ef3d76cac5798b73bf4943eda9991df9088c5c7539699",
+    "src/rtl/nmc_tile/nmc_tile_sram.sv": "4e3c1b2213815aaad9c3a39d0d6f718d74fb9d21754c552f8bf99ccaa3062ff7",
+    "src/rtl/nmc_tile/nmc_tile_compute.sv": "a5cb341883127c1ba7387210472b5de7bf3eb5943209884b8c3bd2f5c63d0a75",
+    "src/rtl/nmc_mesh/nmc_router.sv": "f8752745ec13d31acfcd342380cdfbbce59d740b8b1e692c2ed4f2c171d8c404",
+    "src/rtl/nmc_mesh/nmc_mesh.sv": "8d22f7ca73f98ef90bc1f9eb21a8b0b8cafdf1ff6b82a561098e8bc79ac0465f",
+    "src/rtl/nmc_mesh/nmc_packet_tx.sv": "670b4bb171f5cbb49647431826292781b51657f459676831f11d87f265575457",
+    "src/rtl/nmc_mesh/nmc_reduce.sv": "208b3bef036c0dcc9d040902d2d0a92ec4172a62b90edf4b05f4d1eae958cb37",
+    "src/rtl/nmc_mesh/nmc_mesh_system.sv": "1713092211042456f59482ea162be533a8648055da578b6157efa182e8e650fc",
+    "src/rtl/nmc_mesh/tb_nmc_mesh_system.sv": "88075267f1aa1792a08635f7b9c485ce3e3cfdec2a558b5010bf8b876d7f6f45",
+    "tools/rtl/run_mesh_rtl.py": "5ef063032f8bed76ce75df92567b0a3391aebcd61f29e49f879f218d1fcbbd9b"
+  },
+  "independent_endpoint": {
+    "cycle_match": true,
+    "malformed_cases_rejected": 5,
+    "source_ids": [
+      31,
+      63
+    ],
+    "test": "src/tests/test_reduce_rtl.py",
+    "trace": "reduce_cycle_trace.csv"
+  },
+  "notes": [
+    "RTL input writes use a physical narrow port; model commits functionally.",
+    "Backpressure comparison applies the same 300-cycle endpoint gate to the model.",
+    "All packet fields and SRAM numbers agree; cycle equality is not asserted."
+  ]
+}

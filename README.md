@@ -16,6 +16,7 @@
 - Root 时序：[有限接收/部分和/Done 资源与服务合同](docs/spec/root_service_v0.1.md)，含独立手算 Trace 和同配置 ROW/K 实验；[宽写回 RTL 校准](docs/spec/root_writeback_rtl_v0.1.md) 包含 ready/valid、Bank 仲裁、错误原子性和 51 组逐周期对照。
 - 同硬件自动映射：[v0.3 搜索合同](docs/spec/mapping_search_v0.3.md)，含 UniNDP 原方法核对、适配边界、通信感知选择和 1/2/4/8 次精确模拟预算；[对照指标](docs/unindp_evaluation.zh-CN.md)。
 - 集成硬件验证：[64 Tile RTL](src/rtl/nmc_mesh/README.md)，包含九项闭环用例和独立端点的逐周期对照。
+- 最新结果：[映射质量/预算实验与强基线核查](data/results/mapping_search_20261028/README.md)、[64 Tile RTL 数据](data/results/mesh_rtl_20261028/README.md)。更强默认放置基线下，NoC 低预算略慢；预算 4/8 双方命中当前目录最优。保留反证，不把任意同分放置造成的差距当作收益。
 - 64 Tile 主实验：[v0.2 执行合同](docs/spec/scalable_execution_v0.2.md) 复用原 Tile/Root/NoC，提供 ROW/K/二维分块、集中/分层归约；[三台电脑运行说明](docs/distributed_experiments.zh-CN.md) 使用固定 112 项清单、续跑和严格合并。
 - 阅读计划：[团队路线](docs/project_plan.zh-CN.md)、[Proposal](docs/proposal.md)。文献调研保存在本地 `docs/papers/`，不随 GitHub 仓库发布。
 - 使用 VS Code：直接打开仓库根目录。本地的 `Digital-NMC.code-workspace` 与论文工作区为可选配置，不是运行依赖。

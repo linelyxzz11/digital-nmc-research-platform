@@ -1,0 +1,10 @@
+{
+  "rendered_preview": "compact_baseline.png",
+  "editable_svg_text_nodes": 26,
+  "overlap": false,
+  "clipping": false,
+  "missing_glyphs": false,
+  "data_values_verified": true,
+  "observation": "legend outside data area; all 12 paired shapes visible; deterministic results without error bars",
+  "limitation": "post-hoc frozen-data baseline-strength audit, not a new independent benchmark"
+}

@@ -19,4 +19,5 @@
 - `experiments/verify_unindp_port.py`：直接核对固定作者提交的 Partition/Mapping 方法；不需要作者 Python 依赖。
 - `experiments/mapping_evaluation.py`：先执行各策略，再补完候选参考；16 个形状、相同硬件和目录、四种精确评估预算，支持按完整形状分片和续跑。
 - `experiments/plot_mapping_quality.py`：从汇总生成全部 holdout 形状的配对预算散点图，保留 SVG/PDF/PNG 和数据溯源。
+- `experiments/audit_compact_baseline.py`：在冻结候选测量上回放固定 compact 的更强适配基线，避免任意放置同分造成虚假收益；不是新增模拟或编译耗时比较。
 - `rtl/run_mesh_rtl.py`：完整 64 Tile RTL 的九例执行、线格式/数值/完成/反压检查与真实 SRAM 读回。

@@ -22,7 +22,7 @@
 
 ## 本机继续维护、复现与实验整合
 
-Root 四字写回已接入内部宽写路径并完成 [RTL 校准](spec/root_writeback_rtl_v0.1.md)：空闲时一周期写四字，Compute/Host 占用由 ready 反压处理，51 组 Python/RTL 时间线一致。输入写提交、Root 部分和 SRAM/加法器及完整端点 RTL 继续作为已知边界；先做同配置模型实验和时序敏感性，只在影响候选排序或结论时优先补校准。
+Root 四字写回已完成 [原 RTL 校准](spec/root_writeback_rtl_v0.1.md)：空闲时一周期写四字，Compute/Host 占用由 ready 反压处理，51 组 Python/RTL 时间线一致。v0.3 进一步实现默认归约端点和完整 64 Tile 连接；Python 功能输入提交与 RTL 真实窄写/注册 NI 的时序差异按阶段保存，不混成一次“完全对齐”的结论。
 
 主要比较指标为 **同一计时窗口内的模型任务完成周期**，主基线为固定 K；同时报告固定 ROW。辅助统计为 MAC 利用率、Bank 等待、NI 注入阻塞、Root 队列占用、NoC flit-hop 与映射可行性。权重预加载是否计时必须统一声明。不同 Bank/端点配置属于硬件敏感性实验，不能算成 mapper 在相同硬件下的收益。
 
