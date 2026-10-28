@@ -18,6 +18,8 @@
 
 默认服务组相当于四个 INT32 加法通道和可处理四个索引的部分和读写端口。部分和存储及 mask 是端点的独立资源预算，不能把先前单 Tile RTL 的 6 KiB 存储统计直接当成包含本端点的总预算。结果写入复用架构中的 Root Result 区域，按 `4*(global_index-output_base)` 寻址；每个 Packet 的最多四个有效索引位于同一个连续四索引范围，可并行写入四个 Result Bank。面积、功耗和 Fmax 尚无实现证据。
 
+四字并行写回还假设后续 Root RTL 能通过仲裁复用内部 128-bit Result 写路径。现有 `nmc_tile_compute` 顶层只暴露 32-bit 外部存储口，尚未接出该端点写接口；因此四个 Bank 的组织不能直接证明现有顶层已有四字/周期的 Root 写带宽。若使用现有外部口，必须按其串行访问与响应握手重新标定服务周期。
+
 当前一项 transaction 占用一个 Root。`values` 是 Result SRAM 的调试镜像，`received_source_masks` 和接收预留 mask 均限于已校验的 `output_count` 个索引；历史 Trace 与 Mesh 的 `received_*` 列表是观测记录，不参与缓存容量或服务决策。Done 一次 transaction 只产生一项，因此增大 Done 队列深度不会凭空提升本版吞吐。
 
 ## 有限接收与反压
