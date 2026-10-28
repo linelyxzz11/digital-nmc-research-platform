@@ -57,8 +57,8 @@ module nmc_reduce #(
     wire [15:0] next_completed=completed_words+16'($countones(write_mask));
 
     assign rx_ready=rst_n && enabled && count<2 && !error && !completed;
-    assign write_valid=rst_n && state==WRITE && complete_mask!=0 && output_space;
-    assign tx_valid=rst_n && output_valid && (!output_last || completed);
+    assign write_valid=rst_n && !error && state==WRITE && complete_mask!=0 && output_space;
+    assign tx_valid=rst_n && !error && output_valid && (!output_last || completed);
     assign tx_header=output_header;
     assign tx_payload=output_payload;
     assign idle=count==0 && state==IDLE && !output_valid && !done_valid;
@@ -109,7 +109,7 @@ module nmc_reduce #(
             for (integer lane=0;lane<4;lane=lane+1) begin
                 read_value[lane]<=0;added_value[lane]<=0;read_mask[lane]<=0;added_mask[lane]<=0;
             end
-        end else begin
+        end else if (!error) begin
             if (mask_cfg_valid) expected[mask_cfg_index]<=mask_cfg_sources;
             if (done_valid && done_ready) done_valid<=0;
             if (output_fire) output_valid<=0;

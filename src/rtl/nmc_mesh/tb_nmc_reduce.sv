@@ -87,6 +87,11 @@ module tb_nmc_reduce;
             endcase
             send(rx_header,rx_payload);
             if (!error || write_valid) $fatal(1,"malformed reduction packet accepted: %0d",bad);
+            repeat (10) begin
+                @(negedge clk);
+                if (!error || write_valid || tx_valid || done_valid)
+                    $fatal(1,"failed endpoint continued its transaction");
+            end
             negative_cases=negative_cases+1;
         end
         $display("REDUCE RTL PASS: %0d malformed cases",negative_cases);$finish;
