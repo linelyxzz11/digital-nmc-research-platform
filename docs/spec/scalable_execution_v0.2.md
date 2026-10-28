@@ -45,3 +45,13 @@ Host 发送输入 MEM_WRITE，逐项等待 ACK，收齐后同时启动各 leaf�
 主清单为 [main.json](../../ini/scalable/main.json)：四个长宽比 GEMV × 七种 16/32-worker 网格 × 两种放置 × 集中/树归约，共 112 项。冒烟清单 [smoke.json](../../ini/scalable/smoke.json) 为 12 项。固定清单、源码内容哈希、plan 哈希和 Git 版本后可拆到多台电脑；每台执行完整独立案例，仿真周期不跨机器同步。操作见 [多机运行](../distributed_experiments.zh-CN.md)。
 
 不把集中策略换成弱基线后只报有利形状，不把树归约占用的端点资源隐藏。主指标是同物理配置下的任务周期及加速比，辅助报告 kernel/加载窗口、流量、停顿和端点占用；Root 服务可与 Compute/NoC 重叠，不能直接相加为总时间。清单内事后最优只作为有限候选参考，不称为已实现的新 mapper 或 UniNDP 移植。
+
+## 首轮结果
+
+模型代码提交 `3d57272`，三分片在本机分别运行后严格合并：112/112 项成功，0 失败、0 不可行。另有 12 项冒烟在独立干净克隆、关闭 site-packages 的标准库环境完成三分片运行和合并，证明新入口不依赖本机作者仓库或未提交文件；这不等于已经远程启动三台电脑。
+
+在相同工作负载、网格和放置的 56 组集中/树配对中，树赢 40、平 16、集中赢 0，模型任务周期的几何平均加速比为 1.4851×。16 个平局都是无需部分和归约的纯 ROW 对照。32-worker K 切分、spread 放置的 256×64 例子为集中 10,882 周期、树 2,724 周期；这里比较的是同声明物理预算中的两种机制，不是相对 UniNDP 的加速比。
+
+额外的探索性边界例子为 1×4 GEMV、四 worker、compact 放置：集中 64、树 74 周期，树的额外跳转和端点服务使它更慢。此例不计入预先发布的 112 项均值；后续策略需要判断何时启用分层，不能假定树总赢。
+
+证据：[主汇总](../../data/results/scalable64_20261028/summary.json)、[CSV](../../data/results/scalable64_20261028/results.csv)、[全部配对](../../data/results/scalable64_20261028/paired_comparison.json)、[边界探针](../../data/results/scalable64_20261028/boundary_probe.json)、[完整压缩记录](../../data/results/scalable64_20261028/records.json.gz)、[源码快照](../../data/results/scalable64_20261028/source_snapshot.tar.gz)。当前是四个受控 GEMV 形状的一轮结果，完整系统输入提交、归约 RTL、器件时序和 UniNDP 同硬件方法移植仍需后续工作。

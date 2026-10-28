@@ -10,6 +10,7 @@
 - `results/mapping_headroom_20261028/`：现有固定放置/均衡 ROW/K 的收益上限重分析，19 项共同比较与全部 24 项可行覆盖。
 - `results/mapping_candidates_20261028/`：扩大放置/采样 K 切分后 1,680 候选，1,188 次正确执行、492 次预期不可行；压缩完整记录、CSV、汇总和源码快照。
 - `results/unindp_native_20261028/`：固定作者版本/依赖的三个原生 AiM GEMV 对照，只表示 UniNDP 自身相对其 baseline 的结果，不表示本项目相对 UniNDP 的加速比。
+- `results/scalable64_20261028/`：8×8、64 Tile 的 112 项主实验，三分片合并及源码快照，含 56 组集中/树归约配对和单独的小任务边界探针。全部记录以 `records.json.gz` 发布；源码版本/模型范围和物理预算见 [v0.2 合同](../docs/spec/scalable_execution_v0.2.md)。
 
 Root 压力与 Compute 时序的较大原始 JSON 以 `results.json.gz` 发布，内容不变，可用 `gzip -dk` 解压；对应 CSV、汇总和源码快照一并保留。仿真脚本仍生成普通 JSON。例如读取后直接分析：
 
