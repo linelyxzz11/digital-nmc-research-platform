@@ -1,7 +1,7 @@
 """Demo 1: resident weights, network input loading, row GEMV and FINAL gather.
 
-Compute can be functional, formula-timed, or request-level. Detailed Compute
-and Mesh share a clock; input commits and endpoint reduction remain functional.
+Compute can be functional, formula-timed, or request-level; Root service can
+be functional or clocked with finite queues. Input commits remain functional.
 """
 from __future__ import annotations
 
@@ -23,38 +23,14 @@ from simulator.functional.demo0_model import X_START, X_END, Y_START, Y_END, W_S
 from simulator.system.compute_timing import ComputeTiming, TimedCompute
 from simulator.system.tile_config import TileComputeConfig
 from simulator.system.tile_timing import PortScheduledCompute
+from simulator.system.endpoint_common import GatherConfig, TransactionError
+from simulator.system.root_config import RootCapacityError, RootTiming
+from simulator.system.timed_endpoint import TimedRoot
+from simulator.communication.v0_1 import FlitType, PacketType
 
 
 DEMO_W = [[1, 2, 3, 4], [-1, 0, 2, -2], [3, -1, 0, 1], [2, 2, -1, 0]]
 DEMO_X = [2, -1, 3, 1]
-
-
-class TransactionError(ValueError):
-    def __init__(self, status: StatusCode, detail: str):
-        super().__init__(f"{status.name}: {detail}")
-        self.status = status
-
-
-@dataclass(frozen=True)
-class GatherConfig:
-    tid: int
-    root_tile: int
-    host_tile: int
-    source_mask: int
-    output_base: int
-    output_count: int
-    mode: str = "GATHER_FINAL"
-
-    def __post_init__(self) -> None:
-        if not (0 <= self.tid <= 0xFFFF
-                and 0 <= self.root_tile < DEFAULT_HARDWARE.tile_count
-                and 0 <= self.host_tile < DEFAULT_HARDWARE.tile_count
-                and 0 < self.source_mask < (1 << DEFAULT_HARDWARE.tile_count)
-                and 0 <= self.output_base < DEFAULT_HARDWARE.global_index_limit
-                and 1 <= self.output_count <= DEFAULT_HARDWARE.max_local_rows
-                and self.output_base + self.output_count <= DEFAULT_HARDWARE.global_index_limit
-                and self.mode in ("GATHER_FINAL", "REDUCE_PSUM")):
-            raise ValueError("invalid TransactionConfig")
 
 
 PLAN_VERSION = "0.1"
@@ -206,6 +182,8 @@ class NMCRun:
     compute_stats: dict | None = None
     compute_timing: dict | None = None
     tile_timing: dict | None = None
+    root_timing: dict | None = None
+    root_stats: dict | None = None
 
     def summary(self) -> dict:
         config = self.gather.config
@@ -232,6 +210,15 @@ class NMCRun:
             summary["timing_scope"] = (
                 "request-level Compute/SRAM + cycle NoC; functional input commit/reduction; "
                 "resident weights; command/VALIDATE excluded; not end-to-end RTL latency")
+        if self.root_timing is not None:
+            summary["modeled_schedule_cycles"] = summary.pop("network_schedule_cycles", self.mesh.cycle)
+            summary["root_model"] = "finite-service"
+            summary["root_timing"] = self.root_timing
+            summary["root_stats"] = self.root_stats
+            compute = 'request-level' if self.tile_timing else 'formula-timed' if self.compute_timing else 'functional'
+            summary["timing_scope"] = (f"{compute} Compute + finite Root service + cycle NoC; "
+                "functional input commit; resident weights; command/VALIDATE excluded; not end-to-end RTL latency")
+        if self.tile_timing is not None or self.root_timing is not None:
             start = min(e["network_cycle"] for e in self.trace if e["event"] == "TASK_START")
             gathered = next(e["network_cycle"] for e in self.trace if e["event"] == "TRANSACTION_DONE_CREATE")
             summary["phase_cycles"] = dict(input_load=start, compute_and_gather=gathered-start,
@@ -252,13 +239,17 @@ def run_demo1(
     compute_timing: ComputeTiming | None = None,
     tile_timing: TileComputeConfig | None = None,
     capture_tile_trace: bool = False,
+    root_timing: RootTiming | None = None,
+    capture_root_trace: bool = False,
+    root_done_ready: Callable[[int], bool] | None = None,
 ) -> Demo1Run:
     """Host-driven two-way contiguous row partition with actual mesh delivery."""
     return _run_partitioned(matrix, vector, tid=tid, global_row_base=global_row_base,
                             workers=workers, root_tile=root_tile, sink_ready=sink_ready,
                             max_cycles=max_cycles, partition="ROW", endpoint_factory=FinalGather,
                             compute_timing=compute_timing, tile_timing=tile_timing,
-                            capture_tile_trace=capture_tile_trace)
+                            capture_tile_trace=capture_tile_trace, root_timing=root_timing,
+                            capture_root_trace=capture_root_trace, root_done_ready=root_done_ready)
 
 
 def _weight_image(tile_id: int, matrix: list[list[int]]) -> WeightImage:
@@ -593,6 +584,9 @@ def _execute_plan(
     compute_timing: ComputeTiming | None = None,
     tile_timing: TileComputeConfig | None = None,
     capture_tile_trace: bool = False,
+    root_timing: RootTiming | None = None,
+    capture_root_trace: bool = False,
+    root_done_ready: Callable[[int], bool] | None = None,
 ) -> NMCRun:
     """Shared Host/Compute/NI/Mesh loop for every validated ExecutionPlan."""
     if compute_timing is not None and tile_timing is not None:
@@ -601,6 +595,10 @@ def _execute_plan(
         raise PlanError("tile_timing must be TileComputeConfig")
     if capture_tile_trace and tile_timing is None:
         raise PlanError("capture_tile_trace requires request-level tile_timing")
+    if root_timing is not None and not isinstance(root_timing, RootTiming):
+        raise PlanError("root_timing must be RootTiming")
+    if root_timing is None and (capture_root_trace or root_done_ready is not None):
+        raise PlanError("Root trace/completion gating requires root_timing")
     tiles = [Demo0Tile(t) for t in range(4)]
     mesh = Mesh2x2()
     nis = [ResultNI(t) for t in range(4)]
@@ -626,7 +624,8 @@ def _execute_plan(
     tasks = list(plan.tasks)
     writes: deque[MemWritePacket] = deque(plan.input_writes)
     expected_acks = {(p.dst_tile, p.tid, p.sequence) for p in plan.input_writes}
-    gather = endpoint_factory(plan.config, tiles[plan.root_tile])
+    gather = (TimedRoot(plan.config,tiles[plan.root_tile],root_timing) if root_timing is not None
+              else endpoint_factory(plan.config, tiles[plan.root_tile]))
     partition = plan.partition
     root_tile = plan.root_tile
     workers = plan.workers
@@ -637,10 +636,19 @@ def _execute_plan(
     # Pending Host commands/events are software queues, not hardware FIFO claims.
     pending = [deque() for _ in range(4)]
     seen = [0] * 4
+    seen_root_flits = 0
     emitters: dict[int, ResultEmitter | TimedCompute | PortScheduledCompute] = {}
     local_done: set[int] = set()
     host_done: list[TransactionDonePacket] = []
     phase = "LOAD"
+
+    def record_gather(packet):
+        record("FINAL_GATHER" if partition == "ROW" else "PSUM_REDUCE",
+               source=packet.src_tile, base_index=packet.base_index,
+               data=packet.data, lane_mask=packet.lane_mask,
+               collected=len(gather.values), last_mask=gather.last_mask)
+        if partition == "K":
+            trace[-1]["reduction_state"] = gather.snapshot(packet)  # type: ignore[attr-defined]
 
 
     for _ in range(max_cycles):
@@ -689,7 +697,39 @@ def _execute_plan(
                 mesh.inject_packet(packet)
                 record("CONTROL_SEND", packet_type=type(packet).__name__, **asdict(packet))
             mesh.ejection_ready[tile] = True if sink_ready is None else sink_ready(mesh.cycle, tile, phase)
+        if isinstance(gather,TimedRoot):
+            # Inspect pre-edge Local output. Reserve a whole packet slot for HEAD;
+            # its TAIL can finish even when that reservation fills the RX FIFO.
+            visible=mesh.visible_local_output(root_tile)
+            if (visible is not None and visible.type is FlitType.HEAD
+                    and visible.data & 0xf == int(PacketType.RESULT) and not gather.can_accept()):
+                if mesh.ejection_ready[root_tile]:
+                    gather.counters['rx_blocked_flit_cycles']+=1
+                mesh.ejection_ready[root_tile]=False
+            assert gather.cycle==mesh.cycle
+            completion_ready=(mesh.can_inject(root_tile,1) and
+                              (root_done_ready is None or root_done_ready(mesh.cycle)))
+            root_event=gather.step(done_ready=completion_ready)
+            if capture_root_trace:
+                detail=dict(gather.last_event)
+                local_cycle=detail.pop('cycle')
+                record('ROOT_CYCLE',tile=root_tile,local_cycle=local_cycle,**detail)
+            if root_event.packet_committed is not None:
+                record_gather(root_event.packet_committed)
+            if root_event.done_created is not None:
+                record('TRANSACTION_DONE_CREATE',**asdict(root_event.done_created))
+            if root_event.done_accepted is not None:
+                mesh.inject_packet(root_event.done_accepted)
+                record('CONTROL_SEND',packet_type='TransactionDonePacket',**asdict(root_event.done_accepted))
         mesh.step()
+        if isinstance(gather,TimedRoot):
+            for flit in mesh.received_flits[root_tile][seen_root_flits:]:
+                if flit.type is FlitType.HEAD and flit.data & 0xf == int(PacketType.RESULT):
+                    gather.reserve_header()
+                    record('ROOT_HEADER_RESERVED',tile=root_tile,rx_slots=gather.rx_slots)
+                elif flit.type is FlitType.BODY and gather.header_reserved:
+                    raise RuntimeError('v0.1 RESULT must have exactly HEAD and TAIL')
+            seen_root_flits=len(mesh.received_flits[root_tile])
         for tile in range(4):
             for packet in mesh.received_packets[tile][seen[tile]:]:
                 record("PACKET_RECEIVE", tile=tile, packet_type=type(packet).__name__, **asdict(packet))
@@ -709,17 +749,16 @@ def _execute_plan(
                     outstanding = None
                     record("HOST_ACK", tile=packet.src_tile, sequence=packet.sequence)
                 elif isinstance(packet, ResultPacket):
-                    done = gather.accept(packet)
-                    record("FINAL_GATHER" if partition == "ROW" else "PSUM_REDUCE",
-                           source=packet.src_tile, base_index=packet.base_index,
-                           data=packet.data, lane_mask=packet.lane_mask,
-                           collected=len(gather.values), last_mask=gather.last_mask)
-                    if partition == "K":
-                        # Endpoint exposes a per-index snapshot for learning/debugging.
-                        trace[-1]["reduction_state"] = gather.snapshot(packet)  # type: ignore[attr-defined]
-                    if done is not None:
-                        pending[root_tile].append(done)
-                        record("TRANSACTION_DONE_CREATE", **asdict(done))
+                    if isinstance(gather,TimedRoot):
+                        gather.accept(packet,reserved=True)
+                        record('ROOT_PACKET_ENQUEUE',source=packet.src_tile,
+                               base_index=packet.base_index,rx_slots=gather.rx_slots)
+                    else:
+                        done = gather.accept(packet)
+                        record_gather(packet)
+                        if done is not None:
+                            pending[root_tile].append(done)
+                            record("TRANSACTION_DONE_CREATE", **asdict(done))
                 elif isinstance(packet, TransactionDonePacket):
                     if tile != 0 or packet != gather.done or host_done:
                         raise RuntimeError("invalid or repeated TRANSACTION_DONE")
@@ -728,14 +767,17 @@ def _execute_plan(
                 else:
                     raise RuntimeError("unexpected packet in NMC demo")
             seen[tile] = len(mesh.received_packets[tile])
-        if host_done and local_done == set(workers) and mesh.idle() and not any(pending):
+        if (host_done and local_done == set(workers) and mesh.idle() and not any(pending)
+                and (not isinstance(gather,TimedRoot) or gather.idle())):
             y = [tiles[root_tile].read_result(row) for row in range(m)]
             stats = ({tile: emitter.stats() for tile, emitter in emitters.items()}
                      if compute_timing is not None or tile_timing is not None else None)
             return NMCRun(tiles, mesh, gather, tasks, trace, host_done, ack_keys, y,
                           compute_stats=stats,
                           compute_timing=asdict(compute_timing) if compute_timing is not None else None,
-                          tile_timing=asdict(tile_timing) if tile_timing is not None else None)
+                          tile_timing=asdict(tile_timing) if tile_timing is not None else None,
+                          root_timing=asdict(root_timing) if root_timing is not None else None,
+                          root_stats=gather.stats() if isinstance(gather,TimedRoot) else None)
     raise TimeoutError(f"NMC {mode} did not complete in {max_cycles} network schedule cycles")
 
 
@@ -748,6 +790,9 @@ def _run_partitioned(
     compute_timing: ComputeTiming | None = None,
     tile_timing: TileComputeConfig | None = None,
     capture_tile_trace: bool = False,
+    root_timing: RootTiming | None = None,
+    capture_root_trace: bool = False,
+    root_done_ready: Callable[[int], bool] | None = None,
 ) -> NMCRun:
     """Build the Demo plan, then execute it through the shared plan loop."""
     plan = _build_demo_plan(
@@ -755,7 +800,8 @@ def _run_partitioned(
         root_tile=root_tile, partition=partition, k_split=k_split)
     return _execute_plan(plan, endpoint_factory, sink_ready=sink_ready, max_cycles=max_cycles,
                          compute_timing=compute_timing, tile_timing=tile_timing,
-                         capture_tile_trace=capture_tile_trace)
+                         capture_tile_trace=capture_tile_trace,root_timing=root_timing,
+                         capture_root_trace=capture_root_trace,root_done_ready=root_done_ready)
 
 
 def run_plan(
@@ -767,6 +813,9 @@ def run_plan(
     compute_timing: ComputeTiming | None = None,
     tile_timing: TileComputeConfig | None = None,
     capture_tile_trace: bool = False,
+    root_timing: RootTiming | None = None,
+    capture_root_trace: bool = False,
+    root_done_ready: Callable[[int], bool] | None = None,
 ) -> NMCRun:
     """Execute a validated Mapper plan without access to the original matrix."""
     if not isinstance(plan, ExecutionPlan):
@@ -776,7 +825,8 @@ def run_plan(
                         f"this runner requires {expected_partition}")
     return _execute_plan(plan, endpoint_factory, sink_ready=sink_ready, max_cycles=max_cycles,
                          compute_timing=compute_timing, tile_timing=tile_timing,
-                         capture_tile_trace=capture_tile_trace)
+                         capture_tile_trace=capture_tile_trace,root_timing=root_timing,
+                         capture_root_trace=capture_root_trace,root_done_ready=root_done_ready)
 
 
 def _trace_json(value):
@@ -796,6 +846,9 @@ def add_compute_arguments(parser):
     parser.add_argument("--tile-config", type=Path, help="partial JSON overrides for --compute-model tile")
     parser.add_argument("--tile-trace", action="store_true", help="include request-level per-Tile cycle events")
     parser.add_argument("--max-cycles", type=int, default=10000)
+    parser.add_argument("--root-model",choices=('functional','timed'),default='functional')
+    parser.add_argument("--root-config",type=Path,help='partial JSON overrides for --root-model timed')
+    parser.add_argument("--root-trace",action='store_true')
 
 
 def compute_arguments(args):
@@ -803,15 +856,20 @@ def compute_arguments(args):
         raise PlanError("max-cycles must be positive")
     if (args.tile_config is not None or args.tile_trace) and args.compute_model != "tile":
         raise PlanError("--tile-config/--tile-trace require --compute-model tile")
+    if (args.root_config is not None or args.root_trace) and args.root_model!='timed':
+        raise PlanError('--root-config/--root-trace require --root-model timed')
     timing = (ComputeTiming(weight_read_interval=2 if args.compute_model == "weight-ii2" else 1)
               if args.compute_model in ("reference", "weight-ii2") else None)
     try:
         tile = ((TileComputeConfig.load(args.tile_config) if args.tile_config else TileComputeConfig())
                 if args.compute_model == "tile" else None)
+        root=((RootTiming.load(args.root_config) if args.root_config else RootTiming())
+              if args.root_model=='timed' else None)
     except ValueError as error:
         raise PlanError(str(error)) from error
     return dict(compute_timing=timing, tile_timing=tile,
-                capture_tile_trace=args.tile_trace, max_cycles=args.max_cycles)
+                capture_tile_trace=args.tile_trace,max_cycles=args.max_cycles,
+                root_timing=root,capture_root_trace=args.root_trace)
 
 
 def load_workload(path: Path) -> tuple[list[list[int]], list[int]]:
@@ -885,7 +943,7 @@ def main() -> None:
                 raise PlanError("--workload requires --plan")
             run = run_demo1(**compute)
             workload = (DEMO_W, DEMO_X)
-    except PlanError as error:
+    except (PlanError,RootCapacityError) as error:
         print(f"demo1: {error}", file=sys.stderr)
         raise SystemExit(2)
     emit_run(run, workload=workload, trace=args.trace)

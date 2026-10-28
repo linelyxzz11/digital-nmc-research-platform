@@ -1,7 +1,7 @@
 """Demo 2: K partition, network-scattered inputs and endpoint INT32 PSUM reduction.
 
-Uses the same configurable Host/Compute/NI/Mesh loop as Demo 1. Input commits
-and endpoint reduction remain functional in every Compute mode.
+Uses the shared Host/Compute/NI/Mesh loop, with optional finite Root service.
+Input commits remain functional in every Compute/Root mode.
 """
 from __future__ import annotations
 
@@ -19,6 +19,7 @@ from simulator.system.demo1 import (
 )
 from simulator.system.compute_timing import ComputeTiming
 from simulator.system.tile_config import TileComputeConfig
+from simulator.system.root_config import RootCapacityError, RootTiming
 
 
 class PSumReduce(FinalGather):
@@ -100,13 +101,18 @@ def run_demo2(
     compute_timing: ComputeTiming | None = None,
     tile_timing: TileComputeConfig | None = None,
     capture_tile_trace: bool = False,
+    root_timing: RootTiming | None = None,
+    capture_root_trace: bool = False,
+    root_done_ready: Callable[[int], bool] | None = None,
 ) -> NMCRun:
     """Split W columns and x into two nonempty contiguous K partitions."""
     return _run_partitioned(matrix, vector, tid=tid, global_row_base=global_row_base,
                             workers=workers, root_tile=root_tile, sink_ready=sink_ready,
                             max_cycles=max_cycles, partition="K", endpoint_factory=PSumReduce,
                             k_split=k_split, compute_timing=compute_timing,
-                            tile_timing=tile_timing, capture_tile_trace=capture_tile_trace)
+                            tile_timing=tile_timing,capture_tile_trace=capture_tile_trace,
+                            root_timing=root_timing,capture_root_trace=capture_root_trace,
+                            root_done_ready=root_done_ready)
 
 
 def main() -> None:
@@ -132,7 +138,7 @@ def main() -> None:
                 raise PlanError("--workload requires --plan")
             run = run_demo2(k_split=args.k_split, **compute)
             workload = (DEMO_W, DEMO_X)
-    except PlanError as error:
+    except (PlanError,RootCapacityError) as error:
         print(f"demo2: {error}", file=sys.stderr)
         raise SystemExit(2)
     emit_run(run, workload=workload, trace=args.trace)
