@@ -1,5 +1,6 @@
 # Python csv.writer emits RFC 4180 CRLF; keep raw experiment bytes intact.
-*.csv whitespace=cr-at-eol
+.gitattributes text eol=lf
+*.csv -text whitespace=cr-at-eol
 *.py text eol=lf
 *.sv text eol=lf
 *.md text eol=lf
@@ -7,3 +8,7 @@
 *.toml text eol=lf
 requirements.txt text eol=lf
 *.yml text eol=lf
+*.ps1 text eol=lf
+*.cs text eol=lf
+*.svg text eol=lf
+docs/gemv_8x8_validation/*.txt text eol=lf

@@ -241,7 +241,7 @@ def provenance():
                ROOT / "tools/experiments/mapper_sweep.py"]
     for folder in ("src/compiler", "src/simulator"):
         sources.extend((ROOT / folder).rglob("*.py"))
-    hashes = {str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+    hashes = {path.relative_to(ROOT).as_posix(): hashlib.sha256(path.read_bytes()).hexdigest()
               for path in sorted(set(sources))}
     def git(*args):
         result = subprocess.run(["git", "-C", str(ROOT), *args], text=True, capture_output=True)

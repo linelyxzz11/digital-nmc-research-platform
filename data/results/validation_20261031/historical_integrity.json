@@ -1,0 +1,44 @@
+[
+  {
+    "dataset": "scalable64_20261028",
+    "records": 112,
+    "sealed_records_verified": true,
+    "source_files_verified": 25,
+    "records_sha256": "7e1d498c40606240d3ddb0344ecc7339695a0e96d7c51b3ad22ee4bb1e46ea75",
+    "source_archive_sha256": "b7d6fb3021d7044fbcee8fd4a292669553237e13c0d50dbdf571f15ca6f83f31",
+    "commits": [
+      "3d57272fe0989dcbf68bb26cba9c0246e836480e"
+    ],
+    "pairs": 56,
+    "tree_wins": 40,
+    "ties": 16,
+    "tree_losses": 0,
+    "geomean": 1.485106091023615
+  },
+  {
+    "dataset": "mapping_search_20261028",
+    "records": 16,
+    "sealed_records_verified": true,
+    "source_files_verified": 28,
+    "records_sha256": "04b178fd428fadaec56bc879ef03cb3a741be0a6f2f0498ce63a216c67db267d",
+    "source_archive_sha256": "55b8566aa3dee2cf5f7484ecf9a77fa24ef62aa0cc9bd51e86330b486654a73d",
+    "commits": [
+      "8c0c6eeebdba6d81355d360698d679c61484bd20"
+    ],
+    "attempted": 448,
+    "feasible": 440
+  },
+  {
+    "dataset": "prediction_v04_20261028",
+    "records": 8,
+    "sealed_records_verified": true,
+    "source_files_verified": 30,
+    "records_sha256": "502ee815d27e52a9965be61514db450ba75c89421f439831fe71bbd2b91ce8f7",
+    "source_archive_sha256": "8b2e24bb48cfc72997c961ae0ec7dc2c6d9893eea1dd712148c152336c86a4f6",
+    "commits": [
+      "9aaf78037f155ad5249451dfe0950ad29a8c15a4"
+    ],
+    "attempted": 224,
+    "feasible": 220
+  }
+]
