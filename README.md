@@ -1,5 +1,7 @@
 # Digital NMC Research Platform
 
+GEMV 仿真成果独立分支：[团队阅读入口（Python＋真实 64 Tile RTL）](docs/gemv_8x8_validation/README.md)，含两轮报告、数据、十组图及仓库相对复现命令。
+
 面向 GEMV 的数字近存计算（NMC）研究平台，研究有限 Bank、MAC、NoC 带宽和 FIFO 条件下的切分、放置与端点归约。
 
 当前提供 8×8/64 物理 Tile 的 GEMV 周期模型，支持 ROW/K/二维分块、compact/spread 放置、有限队列及集中/树归约；保留原 2×2 Demo 与接口。输入经 MEM_WRITE/ACK 后启动计算，Root 发送唯一全局 Done。新增自动映射搜索在共同候选目录内比较 UniNDP 方法适配与通信感知排序，再用同一个有限资源 evaluator 验证前 K 项。

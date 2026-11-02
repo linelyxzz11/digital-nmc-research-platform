@@ -2,6 +2,8 @@
 
 状态：`IMPLEMENTATION DRAFT`。主配置为 8×8 Mesh、64 个物理 Tile；v0.1 的 2×2 入口和线格式默认值保留。新入口为 [Grid Mapper](../../src/compiler/grid_mapper.py)、[实例化 Mesh/Codec](../../src/simulator/communication/scalable.py)、[执行循环](../../src/simulator/system/scalable.py)。
 
+版本注（2026-10-31）：本页关于“未实现 64 Tile 系统 RTL”和后续工作的小节保留 v0.2 历史状态。后续开发分支已包含九场景集成 RTL，当前覆盖与 Python/RTL 周期差异见 [Mesh RTL](../../src/rtl/nmc_mesh/README.md)。这些能力尚未合入 main；本机缺少 RTL 工具时只能标为未验证。
+
 ## 复用与扩展边界
 
 | 层 | 继续复用 | 本版扩展 |

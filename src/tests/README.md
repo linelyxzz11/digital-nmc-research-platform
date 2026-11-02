@@ -1,5 +1,11 @@
 # 测试
 
+2026-11-02 独立上传分支整合复核：安装并启用 RTL 工具后，完整回归 **389 passed、0 skipped**；包括原五项 RTL 入口、九个集成 Mesh 案例及两轮新增测试。另重跑四个核心 GEMV RTL 映射，全部通过且周期与历史一致。详见[本次整合验证](../../docs/gemv_8x8_validation/integration_validation.zh-CN.md)。下段 381/5 为第一轮历史环境记录。
+
+2026-10-31 Windows 11 本机复核：新增独立 golden 和篡改拒绝测试后共收集 386 项，381 passed、5 skipped；跳过项为 Mapper→Tile、Tile、Root 写回、独立归约和集成 Mesh RTL，原因是本机缺少 Icarus/Verilator 等工具。此结果不代表 RTL 本机通过。首次运行发现 pressure_sweep 来源路径使用 Windows 反斜杠，改为 POSIX 路径后完整回归通过。
+
+下文 312/349 项计数和 RTL 待实现说明是早期阶段记录。当前分支已包含独立归约与 64 Tile 集成 RTL，覆盖范围见 [Mesh RTL](../rtl/nmc_mesh/README.md)；仍不代表任意 Root、多事务或全部硬件参数均已验证。
+
 在仓库根目录运行：
 
 ```bash
