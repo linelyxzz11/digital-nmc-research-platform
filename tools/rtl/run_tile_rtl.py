@@ -213,7 +213,7 @@ def run_regression(output, seeds=8, *, synthesis=True, case_list=None):
     synthesis_info=None
     if synthesis:
         netlist=output/'synthesis.json'
-        text='read_verilog -sv '+' '.join(SOURCES)+'; hierarchy -check -top nmc_tile_compute; proc; opt; memory_dff; memory_share; memory_collect; opt_clean; check -assert; stat; write_json "'+str(netlist)+'"'
+        text='read_verilog -sv '+' '.join(SOURCES)+'; hierarchy -check -top nmc_tile_compute; proc; opt; memory_dff; memory_share; memory_collect; opt_clean; check -assert; stat; write_json "'+netlist.as_posix()+'"'
         command(['yosys','-p',text],RTL_DIR,output,'synthesis')
         modules=json.loads(netlist.read_text())['modules']
         memories=[dict(module=name,cell=cell, width=int(body['parameters']['WIDTH'],2),size=int(body['parameters']['SIZE'],2),

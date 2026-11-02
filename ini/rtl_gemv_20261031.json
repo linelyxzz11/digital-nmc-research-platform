@@ -1,0 +1,216 @@
+{
+  "base_commit": "f128f237a5393dbc1fadb8e47278e10d82d81f86",
+  "physical_tiles": 64,
+  "default_hardware": true,
+  "cases": [
+    {
+      "name": "gemv_161x97_unindp-compact_s20261031",
+      "m": 161,
+      "k": 97,
+      "grid": [
+        4,
+        8
+      ],
+      "placement": "compact",
+      "reduction": "tree",
+      "workload_seed": 20261031,
+      "workload_formula": "random(seed + M*65537 + K), signed INT8",
+      "family": "core",
+      "policy": "unindp-compact",
+      "expected_plan_sha256": "fc186d375b7c42af33ff4a8fa95fa59fb92bc178aaed725d3088f249d27d338e",
+      "historical_model_cycles": 1704,
+      "historical_workload_sha256": "060d143e75839849e4633151af076cf6ee035cc851896a8974e045cf884f82ba"
+    },
+    {
+      "name": "gemv_161x97_unindp-compact_s20261101",
+      "m": 161,
+      "k": 97,
+      "grid": [
+        4,
+        8
+      ],
+      "placement": "compact",
+      "reduction": "tree",
+      "workload_seed": 20261101,
+      "workload_formula": "random(seed + M*65537 + K), signed INT8",
+      "family": "core",
+      "policy": "unindp-compact",
+      "expected_plan_sha256": "fc186d375b7c42af33ff4a8fa95fa59fb92bc178aaed725d3088f249d27d338e",
+      "historical_model_cycles": 1704,
+      "historical_workload_sha256": null
+    },
+    {
+      "name": "gemv_161x97_noc-v04_s20261031",
+      "m": 161,
+      "k": 97,
+      "grid": [
+        4,
+        4
+      ],
+      "placement": "compact",
+      "reduction": "tree",
+      "workload_seed": 20261031,
+      "workload_formula": "random(seed + M*65537 + K), signed INT8",
+      "family": "core",
+      "policy": "noc-v04",
+      "expected_plan_sha256": "b634468eca18a1e832d1d48a99affe59b6f5b90458498b3b51c53e415eef7ac1",
+      "historical_model_cycles": 1469,
+      "historical_workload_sha256": "060d143e75839849e4633151af076cf6ee035cc851896a8974e045cf884f82ba"
+    },
+    {
+      "name": "gemv_161x97_noc-v04_s20261101",
+      "m": 161,
+      "k": 97,
+      "grid": [
+        4,
+        4
+      ],
+      "placement": "compact",
+      "reduction": "tree",
+      "workload_seed": 20261101,
+      "workload_formula": "random(seed + M*65537 + K), signed INT8",
+      "family": "core",
+      "policy": "noc-v04",
+      "expected_plan_sha256": "b634468eca18a1e832d1d48a99affe59b6f5b90458498b3b51c53e415eef7ac1",
+      "historical_model_cycles": 1469,
+      "historical_workload_sha256": null
+    },
+    {
+      "name": "gemv_251x127_unindp-compact_s20261031",
+      "m": 251,
+      "k": 127,
+      "grid": [
+        4,
+        8
+      ],
+      "placement": "compact",
+      "reduction": "tree",
+      "workload_seed": 20261031,
+      "workload_formula": "random(seed + M*65537 + K), signed INT8",
+      "family": "core",
+      "policy": "unindp-compact",
+      "expected_plan_sha256": "19a07bb14c27963e84b66b31856621d8751141e8f6b0ed974208344f9c268a16",
+      "historical_model_cycles": 2221,
+      "historical_workload_sha256": "9321decd0bc3ff39d046460b3c27305d73b18469b8c746576bca20120ec142a4"
+    },
+    {
+      "name": "gemv_251x127_unindp-compact_s20261101",
+      "m": 251,
+      "k": 127,
+      "grid": [
+        4,
+        8
+      ],
+      "placement": "compact",
+      "reduction": "tree",
+      "workload_seed": 20261101,
+      "workload_formula": "random(seed + M*65537 + K), signed INT8",
+      "family": "core",
+      "policy": "unindp-compact",
+      "expected_plan_sha256": "19a07bb14c27963e84b66b31856621d8751141e8f6b0ed974208344f9c268a16",
+      "historical_model_cycles": 2221,
+      "historical_workload_sha256": null
+    },
+    {
+      "name": "gemv_251x127_noc-v04_s20261031",
+      "m": 251,
+      "k": 127,
+      "grid": [
+        4,
+        4
+      ],
+      "placement": "compact",
+      "reduction": "tree",
+      "workload_seed": 20261031,
+      "workload_formula": "random(seed + M*65537 + K), signed INT8",
+      "family": "core",
+      "policy": "noc-v04",
+      "expected_plan_sha256": "25dc7bd8f647bff5ec1cc9f568c7431666847e91d292adc4fe749ec8924b4c00",
+      "historical_model_cycles": 2060,
+      "historical_workload_sha256": "9321decd0bc3ff39d046460b3c27305d73b18469b8c746576bca20120ec142a4"
+    },
+    {
+      "name": "gemv_251x127_noc-v04_s20261101",
+      "m": 251,
+      "k": 127,
+      "grid": [
+        4,
+        4
+      ],
+      "placement": "compact",
+      "reduction": "tree",
+      "workload_seed": 20261101,
+      "workload_formula": "random(seed + M*65537 + K), signed INT8",
+      "family": "core",
+      "policy": "noc-v04",
+      "expected_plan_sha256": "25dc7bd8f647bff5ec1cc9f568c7431666847e91d292adc4fe749ec8924b4c00",
+      "historical_model_cycles": 2060,
+      "historical_workload_sha256": null
+    },
+    {
+      "name": "signed_tail_k_high_id",
+      "m": 5,
+      "k": 19,
+      "grid": [
+        1,
+        4
+      ],
+      "placement": "spread",
+      "reduction": "central",
+      "pattern": "signed_edges",
+      "family": "boundary"
+    },
+    {
+      "name": "signed_tail_row_high_id",
+      "m": 13,
+      "k": 7,
+      "grid": [
+        4,
+        1
+      ],
+      "placement": "spread",
+      "reduction": "central",
+      "pattern": "signed_edges",
+      "family": "boundary"
+    }
+  ],
+  "selected_history": [
+    {
+      "m": 161,
+      "k": 97,
+      "policy": "unindp-compact",
+      "plan_sha256": "fc186d375b7c42af33ff4a8fa95fa59fb92bc178aaed725d3088f249d27d338e",
+      "model_cycles": 1704,
+      "source_record": "data/results/validation_20261031/records.json.gz#default-161x97",
+      "source_sha256": "a6b00da0933efd8b682fbeb078caa3c2187cde9c0ac1e2401bb3b4e765ce2bb7"
+    },
+    {
+      "m": 161,
+      "k": 97,
+      "policy": "noc-v04",
+      "plan_sha256": "b634468eca18a1e832d1d48a99affe59b6f5b90458498b3b51c53e415eef7ac1",
+      "model_cycles": 1469,
+      "source_record": "data/results/validation_20261031/records.json.gz#default-161x97",
+      "source_sha256": "a6b00da0933efd8b682fbeb078caa3c2187cde9c0ac1e2401bb3b4e765ce2bb7"
+    },
+    {
+      "m": 251,
+      "k": 127,
+      "policy": "unindp-compact",
+      "plan_sha256": "19a07bb14c27963e84b66b31856621d8751141e8f6b0ed974208344f9c268a16",
+      "model_cycles": 2221,
+      "source_record": "data/results/validation_20261031/records.json.gz#default-251x127",
+      "source_sha256": "b5d941c5fd11e8f96fe1cf11716135117647e22d42f0c426f32e2a84c7a110b8"
+    },
+    {
+      "m": 251,
+      "k": 127,
+      "policy": "noc-v04",
+      "plan_sha256": "25dc7bd8f647bff5ec1cc9f568c7431666847e91d292adc4fe749ec8924b4c00",
+      "model_cycles": 2060,
+      "source_record": "data/results/validation_20261031/records.json.gz#default-251x127",
+      "source_sha256": "b5d941c5fd11e8f96fe1cf11716135117647e22d42f0c426f32e2a84c7a110b8"
+    }
+  ],
+  "timing": "weight/config setup excluded; input through real SRAM MEM_WRITE/ACK; kernel through final Done/localDone/idle; no invented drain split"
+}

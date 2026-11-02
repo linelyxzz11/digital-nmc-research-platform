@@ -20,13 +20,23 @@ from compiler.grid_mapper import map_grid
 from simulator.communication import MemWritePacket,MemAckPacket,ResultPacket,TransactionDonePacket
 from simulator.communication.v0_1 import Flit,FlitType
 from simulator.communication.scalable import PacketCodec
-from simulator.functional import Demo0Tile,int32_wrap
+from simulator.functional import Demo0Tile
 from simulator.system.scalable import run_grid
 
 RTL = ROOT/'src/rtl'
 SOURCES = [RTL/'nmc_tile'/name for name in ('nmc_mac4.sv','nmc_tile_sram.sv','nmc_tile_compute.sv')]
 SOURCES += [RTL/'nmc_mesh'/name for name in ('nmc_router.sv','nmc_mesh.sv','nmc_packet_tx.sv','nmc_reduce.sv','nmc_mesh_system.sv')]
 TB = RTL/'nmc_mesh/tb_nmc_mesh_system.sv'
+
+def int32_wrap(value):
+    return ((int(value)+(1<<31))%(1<<32))-(1<<31)
+
+def golden_gemv(matrix,vector):
+    """Independent wide Python products followed by explicit two's-complement wrap."""
+    return [int32_wrap(sum(int(a)*int(b) for a,b in zip(row,vector))) for row in matrix]
+
+def json_hash(value):
+    return hashlib.sha256(json.dumps(value,sort_keys=True,separators=(',',':')).encode()).hexdigest()
 
 
 def command(args,directory,name,*,timeout=240):
@@ -69,12 +79,24 @@ def inputs_for(plan,vector):
 def prepare(item,directory):
     directory.mkdir(parents=True,exist_ok=True)
     plan = map_grid(**{key:item[key] for key in ('m','k','grid','reduction','placement')})
-    rng = random.Random(20261028+item['m']+item['k'])
+    if item.get('expected_plan_sha256') and plan.digest!=item['expected_plan_sha256']:
+        raise ValueError('plan differs from the historical selection')
+    rng = random.Random(item['workload_seed']+item['m']*65537+item['k'] if 'workload_seed' in item else 20261028+item['m']+item['k'])
     matrix = [[rng.randint(-128,127) for _ in range(item['k'])] for _ in range(item['m'])]
     vector = [rng.randint(-128,127) for _ in range(item['k'])]
     if item['name'].startswith('hand_'):
         matrix = [[1,2,3],[-1,2,0],[4,-2,1],[0,0,-3],[7,1,-1]]
         vector = [2,-1,3]
+    if item.get('pattern')=='signed_edges':
+        values=(-128,127,0,-1)
+        matrix=[[values[(r+c)%4] for c in range(item['k'])] for r in range(item['m'])]
+        vector=[values[c%4] for c in range(item['k'])]
+    workload=dict(W=matrix,x=vector)
+    workload_hash=json_hash(workload)
+    if item.get('historical_workload_sha256') and workload_hash!=item['historical_workload_sha256']:
+        raise ValueError('workload differs from historical W/x')
+    (directory/'workload.json').write_text(json.dumps(dict(**workload,golden=golden_gemv(matrix,vector),sha256=workload_hash),indent=2)+'\n')
+    (directory/'case.json').write_text(json.dumps(item,indent=2)+'\n')
     weights = []
     nodes = {}
     masks = []
@@ -134,7 +156,7 @@ def expected_results(plan,matrix,vector):
 def compare(item,plan,matrix,vector,inputs,directory):
     codec = PacketCodec(64)
     phase = 1 if item.get('abort_cycle',-1)>=0 else 0
-    partial = defaultdict(list);received = []
+    partial = defaultdict(list);received = [];events=[]
     with (directory/'packets.csv').open() as stream:
         for row in csv.DictReader(stream):
             if int(row['phase'])!=phase:
@@ -143,7 +165,9 @@ def compare(item,plan,matrix,vector,inputs,directory):
             flit = Flit(FlitType(int(row['type'])),int(row['data'],16))
             partial[node].append(flit)
             if flit.type in (FlitType.TAIL,FlitType.HEADTAIL):
-                received.append(codec.unpack(partial[node]));partial[node]=[]
+                packet=codec.unpack(partial[node]);partial[node]=[]
+                assert packet.dst_tile==node,'packet ejected at the wrong physical node'
+                received.append(packet);events.append((int(row['cycle']),packet))
     if any(partial.values()):
         raise AssertionError('completion left an unfinished packet')
     expected = list(inputs)+[MemAckPacket(p.dst_tile,0,1,p.sequence) for p in inputs]
@@ -157,8 +181,10 @@ def compare(item,plan,matrix,vector,inputs,directory):
         actual,wanted = Counter(map(normalize,received)),Counter(map(normalize,expected))
         raise AssertionError(f'wire packets differ: missing={wanted-actual}, extra={actual-wanted}')
     with (directory/'memory.csv').open() as stream:
-        actual_y = [int32_wrap(int(row['data'],16)) for row in csv.DictReader(stream)]
-    golden = [int32_wrap(sum(a*b for a,b in zip(row,vector))) for row in matrix]
+        memory=list(csv.DictReader(stream))
+    assert [int(row['index']) for row in memory]==list(range(plan.m)),'duplicate/missing SRAM output indices'
+    actual_y = [int32_wrap(int(row['data'],16)) for row in memory]
+    golden = golden_gemv(matrix,vector)
     if actual_y!=golden:
         raise AssertionError(f'Root SRAM readback disagrees with GEMV: {actual_y[:16]} vs {golden[:16]}')
     with (directory/'cycles.csv').open() as stream:
@@ -177,18 +203,50 @@ def compare(item,plan,matrix,vector,inputs,directory):
     # Input commit is physically serialized through the one-byte X port in RTL.
     # The old model commits it functionally. Compare kernel separately too.
     model_kernel = model.phases['compute_and_gather']+model.phases['completion_drain']
+    if item.get('historical_model_cycles') and model.cycles!=item['historical_model_cycles']:
+        raise AssertionError('same-plan Python cycle count changed; preserve discrepancy')
+    counts=Counter(type(p).__name__ for p in received)
+    done_cycle=next(c for c,p in events if isinstance(p,TransactionDonePacket))
+    assert all(c<=done_cycle for c,p in events if isinstance(p,ResultPacket))
+    observed=None;writes_checked=False
+    if (directory/'observations.csv').exists():
+        with (directory/'observations.csv').open() as f:
+            observed=[{key:int(value) for key,value in row.items()} for row in csv.DictReader(f) if int(row['phase'])==phase]
+        assert len(observed)==64 and {r['node'] for r in observed}==set(range(64))
+        assert all(r['max_router']<=4 and r['max_ni']<=4 and r['max_rx']<=2 for r in observed)
+    if (directory/'root_writes.csv').exists():
+        covered={};last_write=-1
+        with (directory/'root_writes.csv').open() as f:
+            for row in csv.DictReader(f):
+                if int(row['phase'])!=phase or int(row['node'])!=0:continue
+                last_write=max(last_write,int(row['cycle']))
+                base=(int(row['address'],16)-0x2000)//4;mask=int(row['mask'],16);value=int(row['data'],16)
+                for lane in range(4):
+                    if not mask&(1<<lane):continue
+                    index=base+lane
+                    assert index not in covered,'duplicate Root output commit'
+                    covered[index]=int32_wrap((value>>(32*lane))&0xffffffff)
+        assert covered==dict(enumerate(golden)) and last_write<done_cycle
+        writes_checked=True
+    (directory/'python_model.json').write_text(json.dumps(model.summary(),indent=2)+'\n')
+    (directory/'golden_check.json').write_text(json.dumps(dict(all_outputs_match=True,outputs=plan.m,
+        output_indices_exact=True,root_commits_exact=writes_checked,golden=golden,actual=actual_y),indent=2)+'\n')
     return dict(name=item['name'],plan_sha256=plan.digest,m=plan.m,k=plan.k,grid=plan.grid,
+        policy=item.get('policy'),family=item.get('family','legacy'),workload_seed=item.get('workload_seed'),
+        workload_sha256=json_hash(dict(W=matrix,x=vector)),evidence_level='integrated_rtl',
         active_compute=len(plan.workers),reducers=len(plan.reducers),physical_tiles=64,
         numeric_match=True,wire_packets_match=True,packets=len(received),input_acks=final['acks'],
         transaction_done=final['dones'],reset_replayed=len(phases)==2,
         rtl_phase_cycles=phases,model_cycles=model.cycles,model_kernel_cycles=model_kernel,
+        rtl_total_cycles=final['input_cycles']+final['kernel_cycles'],model_input_cycles=model.phases['input_load'],
+        packet_counts=dict(counts),done_cycle=done_cycle,observations=observed,root_commits_exact=writes_checked,
         matched_endpoint_stall_cycles=item.get('stall_until',0),
         kernel_difference_cycles=final['kernel_cycles']-model_kernel,
         kernel_relative_difference=final['kernel_cycles']/model_kernel-1,
         scope='integrated default-hardware RTL; real SRAM input writes and registered NI; no whole-system cycle-equivalence claim')
 
 
-def run_regression(output,*,case_names=None,wave=False):
+def run_regression(output,*,case_names=None,wave=False,case_specs=None,simulation_timeout=240):
     output = Path(output).resolve();output.mkdir(parents=True,exist_ok=True)
     for tool in ('iverilog','vvp','verilator'):
         if not shutil.which(tool):
@@ -198,7 +256,8 @@ def run_regression(output,*,case_names=None,wave=False):
     command(['verilator','--lint-only','-Wall','-Wno-UNUSEDSIGNAL','-Wno-PINCONNECTEMPTY',
              '--top-module','nmc_mesh_system',*SOURCES],output,'lint')
     reports = []
-    selected = [item for item in cases() if case_names is None or item['name'] in case_names]
+    selected = [item for item in (cases() if case_specs is None else case_specs) if case_names is None or item['name'] in case_names]
+    if len({item['name'] for item in selected})!=len(selected):raise ValueError('duplicate case names')
     if not selected or case_names is not None and set(case_names)!={item['name'] for item in selected}:
         raise ValueError('unknown/empty RTL case selection')
     for item in selected:
@@ -208,7 +267,7 @@ def run_regression(output,*,case_names=None,wave=False):
         if wave and item['name']=='backpressure':
             args.append(f'+VCD={directory}/wave.vcd')
         started = time.perf_counter()
-        log = command(args,directory,'simulation')
+        log = command(args,directory,'simulation',timeout=simulation_timeout)
         if 'MESH RTL PASS' not in log:
             raise AssertionError('no integrated pass marker')
         report = compare(item,plan,W,x,inputs,directory)
@@ -227,8 +286,11 @@ def main():
     parser.add_argument('--output-dir',type=Path,default=ROOT/'dump/mesh_rtl')
     parser.add_argument('--cases',nargs='+')
     parser.add_argument('--wave',action='store_true')
+    parser.add_argument('--case-manifest',type=Path,help='Explicit additional case suite; default remains the original nine')
+    parser.add_argument('--simulation-timeout',type=int,default=240,help='Wall seconds per vvp call; no change to RTL cycle limits')
     args = parser.parse_args()
-    report = run_regression(args.output_dir,case_names=args.cases,wave=args.wave)
+    specs=json.loads(args.case_manifest.read_text(encoding='utf-8'))['cases'] if args.case_manifest else None
+    report = run_regression(args.output_dir,case_names=args.cases,wave=args.wave,case_specs=specs,simulation_timeout=args.simulation_timeout)
     print(f"{report['passed']}/{report['cases']} integrated RTL cases passed")
 
 

@@ -37,6 +37,10 @@ module tb_nmc_mesh_system;
     integer config_words[0:3],stall_until=0,abort_cycle=-1;
     integer acks=0,dones=0,phase_done_count=0;
     logic recording=0;
+    logic kernel_recording=0;
+    integer observations_fd,writes_fd;
+    // Testbench-only counters; production hardware and ready/valid are unchanged.
+    integer observed[0:N-1][0:12];
     logic [63:0] mask;
     logic [15:0] address;
     logic [31:0] data,returned;
@@ -52,6 +56,33 @@ module tb_nmc_mesh_system;
         logic out_held=0;
         logic [129:0] out_snapshot;
         always @(posedge clk) begin
+            if (!rst_n || !recording) begin
+                for(integer s=0;s<13;s=s+1) observed[t][s]<=0;
+            end else begin
+                observed[t][0]<=observed[t][0]+1;
+                if(kernel_recording) observed[t][1]<=observed[t][1]+1;
+                if(dut.nodes[t].compute.mac_enable) observed[t][2]<=observed[t][2]+1;
+                if(dut.tx_valid[t] && !dut.tx_ready[t]) observed[t][3]<=observed[t][3]+1;
+                if(dut.nodes[t].endpoint_rx_valid && dut.nodes[t].endpoint_rx_ready) observed[t][6]<=observed[t][6]+1;
+                if(dut.nodes[t].endpoint.state!=0) observed[t][7]<=observed[t][7]+1;
+                if(dut.nodes[t].root_write && !dut.nodes[t].root_ready) observed[t][8]<=observed[t][8]+1;
+                if(dut.nodes[t].ni.count>observed[t][11]) observed[t][11]<=dut.nodes[t].ni.count;
+                if(dut.nodes[t].endpoint.count>observed[t][12]) observed[t][12]<=int'(dut.nodes[t].endpoint.count);
+                if(dut.nodes[t].root_write && dut.nodes[t].root_ready) begin
+                    observed[t][9]<=observed[t][9]+$countones(dut.nodes[t].root_mask);
+                    $fdisplay(writes_fd,"%0d,%0d,%0d,%04h,%h,%032h",phase,cycle,t,
+                        dut.nodes[t].root_addr,dut.nodes[t].root_mask,dut.nodes[t].root_data);
+                end
+                // Blocking additions are confined to testbench diagnostic sums.
+                for(integer p=0;p<5;p=p+1) begin
+                    if(dut.mesh.routers[t].router.out_valid[p] && !dut.mesh.routers[t].router.out_ready[p])
+                        observed[t][4]=observed[t][4]+1;
+                    if(p<4 && dut.mesh.routers[t].router.out_valid[p] && dut.mesh.routers[t].router.out_ready[p])
+                        observed[t][5]=observed[t][5]+1;
+                    if(dut.mesh.routers[t].router.count[p]>observed[t][10])
+                        observed[t][10]=dut.mesh.routers[t].router.count[p];
+                end
+            end
             if (!rst_n) begin held<=0;out_held<=0;end
             else begin
                 if (held && (!trace_result_valid[t] || bundle!==snapshot))
@@ -68,6 +99,20 @@ module tb_nmc_mesh_system;
                 if (dut.nodes[t].endpoint.count>2) $fatal(1,"endpoint queue bound violated");
             end
         end
+        for(genvar p=0;p<5;p=p+1) begin: router_stability
+            logic blocked=0;
+            logic [129:0] previous_flit;
+            always @(posedge clk) begin
+                if(!rst_n) blocked<=0;
+                else begin
+                    if(blocked && (!dut.mesh.routers[t].router.out_valid[p] ||
+                        dut.mesh.routers[t].router.out_flit[p]!==previous_flit))
+                        $fatal(1,"router %0d port %0d changed blocked payload",t,p);
+                    blocked<=dut.mesh.routers[t].router.out_valid[p] && !dut.mesh.routers[t].router.out_ready[p];
+                    previous_flit<=dut.mesh.routers[t].router.out_flit[p];
+                end
+            end
+        end
     end
     always @(posedge clk) if (rst_n && recording) begin
         if (error) $fatal(1,"integrated protocol error at cycle %0d",cycle);
@@ -75,7 +120,16 @@ module tb_nmc_mesh_system;
             $fdisplay(trace_fd,"%0d,%0d,%0d,%0d,%032h",phase,cycle,t,trace_rx_flit[t][129:128],trace_rx_flit[t][127:0]);
         if (host_response_valid && host_response_ready) begin
             if (host_response[3:0]==3) acks=acks+1;
-            else if (host_response[3:0]==4) begin dones=dones+1;phase_done_count=phase_done_count+1;end
+            else if (host_response[3:0]==4) begin
+                if(!dut.nodes[0].endpoint.completed ||
+                   dut.nodes[0].endpoint.completed_words!=endpoint_count[0] ||
+                   dut.nodes[0].endpoint.last_seen!=endpoint_sources[0])
+                    $fatal(1,"global Done precedes expected source completion");
+                for(integer i=0;i<outputs;i=i+1)
+                    if(dut.nodes[0].endpoint.accepted[i]!==dut.nodes[0].endpoint.expected[i])
+                        $fatal(1,"global Done precedes complete output source coverage");
+                dones=dones+1;phase_done_count=phase_done_count+1;
+            end
         end
         cycle=cycle+1;
         if (cycle>250000) $fatal(1,"integrated timeout");
@@ -141,6 +195,10 @@ module tb_nmc_mesh_system;
         $fdisplay(trace_fd,"phase,cycle,node,type,data");
         summary_fd=$fopen({case_dir,"/cycles.csv"},"w");
         $fdisplay(summary_fd,"phase,input_cycles,kernel_cycles,acks,dones,aborted");
+        observations_fd=$fopen({case_dir,"/observations.csv"},"w");
+        $fdisplay(observations_fd,"phase,node,cycles,kernel_cycles,mac_group_steps,ni_stall_cycles,router_blocked_port_cycles,link_flits,endpoint_packets,endpoint_service_cycles,root_write_stall_cycles,root_write_words,max_router,max_ni,max_rx");
+        writes_fd=$fopen({case_dir,"/root_writes.csv"},"w");
+        $fdisplay(writes_fd,"phase,cycle,node,address,mask,data");
         for (integer t=0;t<N;t=t+1) begin
             local_m[t]=0;local_k[t]=0;row_base[t]=0;result_dst[t]=0;endpoint_parent[t]=0;
             endpoint_base[t]=0;endpoint_count[t]=0;endpoint_sources[t]=0;
@@ -167,11 +225,11 @@ module tb_nmc_mesh_system;
         $fclose(weights_file);
         $display("MESH setup: weights loaded");
         for (phase=0;phase<(abort_cycle>=0?2:1);phase=phase+1) begin
-            configure_masks();acks=0;dones=0;phase_done_count=0;recording=1;
+            configure_masks();acks=0;dones=0;phase_done_count=0;recording=1;kernel_recording=0;
             $display("MESH setup: masks loaded, phase %0d",phase);
             load_inputs();
             $display("MESH setup: inputs loaded, %0d ACKs",acks);
-            @(negedge clk);task_valid=compute_mask;compute_start=cycle;
+            @(negedge clk);task_valid=compute_mask;compute_start=cycle;kernel_recording=1;
             if ((task_ready & compute_mask)!==compute_mask) $fatal(1,"Tile not ready for launch");
             @(posedge clk);@(negedge clk);task_valid=0;
             while (!(phase_done_count==1 && (local_done & compute_mask)==compute_mask && idle) && !abort_now) begin
@@ -180,6 +238,11 @@ module tb_nmc_mesh_system;
                 @(negedge clk);
             end
             finish_cycle=cycle;
+            for(integer t=0;t<N;t=t+1) begin
+                $fwrite(observations_fd,"%0d,%0d",phase,t);
+                for(integer s=0;s<13;s=s+1) $fwrite(observations_fd,",%0d",observed[t][s]);
+                $fwrite(observations_fd,"\n");
+            end
             if (abort_now) begin
                 $fdisplay(summary_fd,"%0d,%0d,%0d,%0d,%0d,1",phase,compute_start-load_start,finish_cycle-compute_start,acks,dones);
                 rst_n=0;recording=0;eject_enable='1;
@@ -199,6 +262,7 @@ module tb_nmc_mesh_system;
             end
         end
         $fclose(trace_fd);$fclose(summary_fd);
+        $fclose(observations_fd);$fclose(writes_fd);
         $display("MESH RTL PASS");$finish;
     end
 endmodule

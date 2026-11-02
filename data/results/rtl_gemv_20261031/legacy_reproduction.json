@@ -1,0 +1,234 @@
+[
+  {
+    "case": "hand_5x3_central",
+    "local_rtl_phases": [
+      {
+        "phase": 0,
+        "input_cycles": 59,
+        "kernel_cycles": 41,
+        "acks": 2,
+        "dones": 1,
+        "aborted": 0
+      }
+    ],
+    "historical_rtl_phases": [
+      {
+        "phase": 0,
+        "input_cycles": 59,
+        "kernel_cycles": 41,
+        "acks": 2,
+        "dones": 1,
+        "aborted": 0
+      }
+    ],
+    "same_cycles": true
+  },
+  {
+    "case": "tail_tree",
+    "local_rtl_phases": [
+      {
+        "phase": 0,
+        "input_cycles": 1015,
+        "kernel_cycles": 75,
+        "acks": 36,
+        "dones": 1,
+        "aborted": 0
+      }
+    ],
+    "historical_rtl_phases": [
+      {
+        "phase": 0,
+        "input_cycles": 1015,
+        "kernel_cycles": 75,
+        "acks": 36,
+        "dones": 1,
+        "aborted": 0
+      }
+    ],
+    "same_cycles": true
+  },
+  {
+    "case": "row32",
+    "local_rtl_phases": [
+      {
+        "phase": 0,
+        "input_cycles": 5937,
+        "kernel_cycles": 142,
+        "acks": 256,
+        "dones": 1,
+        "aborted": 0
+      }
+    ],
+    "historical_rtl_phases": [
+      {
+        "phase": 0,
+        "input_cycles": 5937,
+        "kernel_cycles": 142,
+        "acks": 256,
+        "dones": 1,
+        "aborted": 0
+      }
+    ],
+    "same_cycles": true
+  },
+  {
+    "case": "grid16_central",
+    "local_rtl_phases": [
+      {
+        "phase": 0,
+        "input_cycles": 2593,
+        "kernel_cycles": 214,
+        "acks": 128,
+        "dones": 1,
+        "aborted": 0
+      }
+    ],
+    "historical_rtl_phases": [
+      {
+        "phase": 0,
+        "input_cycles": 2593,
+        "kernel_cycles": 214,
+        "acks": 128,
+        "dones": 1,
+        "aborted": 0
+      }
+    ],
+    "same_cycles": true
+  },
+  {
+    "case": "grid32_tree",
+    "local_rtl_phases": [
+      {
+        "phase": 0,
+        "input_cycles": 3417,
+        "kernel_cycles": 111,
+        "acks": 128,
+        "dones": 1,
+        "aborted": 0
+      }
+    ],
+    "historical_rtl_phases": [
+      {
+        "phase": 0,
+        "input_cycles": 3417,
+        "kernel_cycles": 111,
+        "acks": 128,
+        "dones": 1,
+        "aborted": 0
+      }
+    ],
+    "same_cycles": true
+  },
+  {
+    "case": "k32_central",
+    "local_rtl_phases": [
+      {
+        "phase": 0,
+        "input_cycles": 855,
+        "kernel_cycles": 10320,
+        "acks": 32,
+        "dones": 1,
+        "aborted": 0
+      }
+    ],
+    "historical_rtl_phases": [
+      {
+        "phase": 0,
+        "input_cycles": 855,
+        "kernel_cycles": 10320,
+        "acks": 32,
+        "dones": 1,
+        "aborted": 0
+      }
+    ],
+    "same_cycles": true
+  },
+  {
+    "case": "k32_tree",
+    "local_rtl_phases": [
+      {
+        "phase": 0,
+        "input_cycles": 855,
+        "kernel_cycles": 2166,
+        "acks": 32,
+        "dones": 1,
+        "aborted": 0
+      }
+    ],
+    "historical_rtl_phases": [
+      {
+        "phase": 0,
+        "input_cycles": 855,
+        "kernel_cycles": 2166,
+        "acks": 32,
+        "dones": 1,
+        "aborted": 0
+      }
+    ],
+    "same_cycles": true
+  },
+  {
+    "case": "backpressure",
+    "local_rtl_phases": [
+      {
+        "phase": 0,
+        "input_cycles": 433,
+        "kernel_cycles": 563,
+        "acks": 16,
+        "dones": 1,
+        "aborted": 0
+      }
+    ],
+    "historical_rtl_phases": [
+      {
+        "phase": 0,
+        "input_cycles": 433,
+        "kernel_cycles": 563,
+        "acks": 16,
+        "dones": 1,
+        "aborted": 0
+      }
+    ],
+    "same_cycles": true
+  },
+  {
+    "case": "reset_in_flight",
+    "local_rtl_phases": [
+      {
+        "phase": 0,
+        "input_cycles": 433,
+        "kernel_cycles": 20,
+        "acks": 16,
+        "dones": 0,
+        "aborted": 1
+      },
+      {
+        "phase": 1,
+        "input_cycles": 433,
+        "kernel_cycles": 271,
+        "acks": 16,
+        "dones": 1,
+        "aborted": 0
+      }
+    ],
+    "historical_rtl_phases": [
+      {
+        "phase": 0,
+        "input_cycles": 433,
+        "kernel_cycles": 20,
+        "acks": 16,
+        "dones": 0,
+        "aborted": 1
+      },
+      {
+        "phase": 1,
+        "input_cycles": 433,
+        "kernel_cycles": 271,
+        "acks": 16,
+        "dones": 1,
+        "aborted": 0
+      }
+    ],
+    "same_cycles": true
+  }
+]
