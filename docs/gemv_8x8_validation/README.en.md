@@ -1,5 +1,7 @@
 # GEMV on an 8×8 mesh: reproducible validation
 
+Published on the [contributor fork branch](https://github.com/chengjunpeng18-cmd/digital-nmc-research-platform/tree/sim/gemv-8x8-validation). The team upstream is `linelyxzz11/digital-nmc-research-platform`; this delivery has not been merged into upstream and no pull request has been opened.
+
 This branch combines two measured campaigns based on `compiler/bounded-timing-predictor` at `f128f237a5393dbc1fadb8e47278e10d82d81f86`.
 
 - Python: historical reproduction and a frozen 12-shape set (336 attempted, 292 feasible). At exact budget 1, NoC v0.4 has 2 wins / 10 ties / 0 losses against UniNDP-adapted + compact; geometric mean speedup 1.018812×.

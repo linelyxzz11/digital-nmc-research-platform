@@ -1,5 +1,7 @@
 # GEMV 8×8 Mesh 仿真成果
 
+成果发布在 [chengjunpeng18-cmd 的 Fork 分支](https://github.com/chengjunpeng18-cmd/digital-nmc-research-platform/tree/sim/gemv-8x8-validation)。团队原仓库为 [linelyxzz11/digital-nmc-research-platform](https://github.com/linelyxzz11/digital-nmc-research-platform)；本次采用 Fork 交付，尚未向原仓库合入或发起 PR。
+
 本分支 `sim/gemv-8x8-validation` 汇总本人负责的 GEMV 数值/协议验证、映射比较、实验复现、参数敏感性、真实 RTL 周期对照和报告。共同基线为 `compiler/bounded-timing-predictor` 的 `f128f237a5393dbc1fadb8e47278e10d82d81f86`；团队共享分支未被修改。本分支不自动合入 main。
 
 ## 阅读顺序

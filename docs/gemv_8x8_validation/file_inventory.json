@@ -326,15 +326,15 @@
     {
       "path": "docs/gemv_8x8_validation/README.en.md",
       "status": "added",
-      "bytes": 1347,
-      "sha256": "955aec62001264ef99b285e2e6ff981b359add7790943dee38f717e85a358c0b",
+      "bytes": 1641,
+      "sha256": "c1f9645f0beaacc4f5879b87211684f51acc1801da653089f0f1919a679dd132",
       "purpose": "documentation, provenance and reproduction"
     },
     {
       "path": "docs/gemv_8x8_validation/README.md",
       "status": "added",
-      "bytes": 4484,
-      "sha256": "30dc82da7542cef6b7566da88c885fde813074b8d270da4413a2abd8b035e72f",
+      "bytes": 4832,
+      "sha256": "d7faf14be48fba427be8fac96ac5c44169c72bc569d06cd7df37a2eb752faf4b",
       "purpose": "documentation, provenance and reproduction"
     },
     {
@@ -389,8 +389,8 @@
     {
       "path": "docs/gemv_8x8_validation/reproduce.zh-CN.md",
       "status": "added",
-      "bytes": 5348,
-      "sha256": "13d5c8df331a8ac21b59d8b6e570434e7a4015cb7cdccb3e8bea2d7e03aca80d",
+      "bytes": 5464,
+      "sha256": "baa12b84e71d85c4f82005a409a6100f3e5e6e929e34f9ecc9dc4c08b7a681dd",
       "purpose": "documentation, provenance and reproduction"
     },
     {

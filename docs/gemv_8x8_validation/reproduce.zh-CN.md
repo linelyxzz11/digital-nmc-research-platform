@@ -1,7 +1,7 @@
 # 从独立克隆复现
 
 ```powershell
-git clone --branch sim/gemv-8x8-validation https://github.com/linelyxzz11/digital-nmc-research-platform.git
+git clone --branch sim/gemv-8x8-validation https://github.com/chengjunpeng18-cmd/digital-nmc-research-platform.git
 Set-Location digital-nmc-research-platform
 python -m venv .venv
 $py=(Resolve-Path .venv/Scripts/python.exe).Path
@@ -10,7 +10,7 @@ $env:PYTHONUTF8='1'
 $env:PYTHONIOENCODING='utf-8'
 ```
 
-所有命令在仓库根目录执行。Linux 使用对应的 `python` 和 `export PYTHONPATH=src`；不能原样复制 PowerShell 变量语法。
+本次实验分支发布于提交者的 Fork；团队原仓库及实验基点见 [阅读入口](README.md)。所有命令在仓库根目录执行。Linux 使用对应的 `python` 和 `export PYTHONPATH=src`；不能原样复制 PowerShell 变量语法。
 
 ## 无需 RTL 工具的发布记录复核与重绘
 
