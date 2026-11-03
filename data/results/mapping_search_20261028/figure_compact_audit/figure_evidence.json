@@ -1,0 +1,107 @@
+{
+  "claim_anchor": "mapping-budget-sensitivity",
+  "main_claim": "Communication-aware ranking changes the limited-budget choice; compare all wins and regressions, and observe whether extra exact evaluations close the gap.",
+  "material_passport": {
+    "path": "data/results/mapping_search_20261028/compact_audit.json",
+    "sha256": "ba12ffe4150be4d91de1f848ffd6c0d5dd514cc13ea4dd8f45cd7d94fe5469a9"
+  },
+  "n_shapes": 12,
+  "shapes": [
+    [
+      17,
+      257
+    ],
+    [
+      31,
+      127
+    ],
+    [
+      32,
+      1024
+    ],
+    [
+      33,
+      129
+    ],
+    [
+      63,
+      255
+    ],
+    [
+      65,
+      257
+    ],
+    [
+      96,
+      192
+    ],
+    [
+      127,
+      33
+    ],
+    [
+      128,
+      512
+    ],
+    [
+      129,
+      65
+    ],
+    [
+      192,
+      96
+    ],
+    [
+      255,
+      63
+    ]
+  ],
+  "ratios": {
+    "1": [
+      1.0,
+      1.0,
+      1.147766323024055,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      0.8061889250814332,
+      0.901981788966256,
+      1.0
+    ],
+    "4": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ]
+  },
+  "baseline": "unindp-compact",
+  "units": "dimensionless paired task-cycle ratios; higher is faster for communication-aware",
+  "statistics": "deterministic one-seed model runs, no uncertainty bars or significance tests",
+  "source_data": "quality.csv and summary.json; each dot is one held-out shape",
+  "figure_size_mm": [
+    183,
+    83
+  ],
+  "palette_roles": {
+    "budget1": "blue circle",
+    "budget4": "orange square"
+  },
+  "exports": [
+    "compact_baseline.svg",
+    "compact_baseline.pdf",
+    "compact_baseline.png"
+  ],
+  "limitations": "UniNDP search-method SRAM adaptation; not the author DRAM backend; finite declared catalogue only"
+}

@@ -1,0 +1,682 @@
+{
+  "central_wins": 0,
+  "geometric_mean_speedup": 1.485106091023615,
+  "pairs": 56,
+  "results": [
+    {
+      "central": 1026,
+      "grid": [
+        1,
+        16
+      ],
+      "k": 128,
+      "m": 32,
+      "placement": "compact",
+      "speedup": 1.6628849270664505,
+      "tree": 617
+    },
+    {
+      "central": 1242,
+      "grid": [
+        1,
+        16
+      ],
+      "k": 128,
+      "m": 32,
+      "placement": "spread",
+      "speedup": 1.4803337306317044,
+      "tree": 839
+    },
+    {
+      "central": 5946,
+      "grid": [
+        16,
+        1
+      ],
+      "k": 128,
+      "m": 32,
+      "placement": "compact",
+      "speedup": 1.0,
+      "tree": 5946
+    },
+    {
+      "central": 9402,
+      "grid": [
+        16,
+        1
+      ],
+      "k": 128,
+      "m": 32,
+      "placement": "spread",
+      "speedup": 1.0,
+      "tree": 9402
+    },
+    {
+      "central": 1650,
+      "grid": [
+        4,
+        4
+      ],
+      "k": 128,
+      "m": 32,
+      "placement": "compact",
+      "speedup": 1.057014734144779,
+      "tree": 1561
+    },
+    {
+      "central": 2514,
+      "grid": [
+        4,
+        4
+      ],
+      "k": 128,
+      "m": 32,
+      "placement": "spread",
+      "speedup": 1.0384138785625774,
+      "tree": 2421
+    },
+    {
+      "central": 1756,
+      "grid": [
+        1,
+        32
+      ],
+      "k": 128,
+      "m": 32,
+      "placement": "compact",
+      "speedup": 2.3697705802968962,
+      "tree": 741
+    },
+    {
+      "central": 1868,
+      "grid": [
+        1,
+        32
+      ],
+      "k": 128,
+      "m": 32,
+      "placement": "spread",
+      "speedup": 2.213270142180095,
+      "tree": 844
+    },
+    {
+      "central": 14762,
+      "grid": [
+        32,
+        1
+      ],
+      "k": 128,
+      "m": 32,
+      "placement": "compact",
+      "speedup": 1.0,
+      "tree": 14762
+    },
+    {
+      "central": 18346,
+      "grid": [
+        32,
+        1
+      ],
+      "k": 128,
+      "m": 32,
+      "placement": "spread",
+      "speedup": 1.0,
+      "tree": 18346
+    },
+    {
+      "central": 2170,
+      "grid": [
+        4,
+        8
+      ],
+      "k": 128,
+      "m": 32,
+      "placement": "compact",
+      "speedup": 1.1255186721991701,
+      "tree": 1928
+    },
+    {
+      "central": 2618,
+      "grid": [
+        4,
+        8
+      ],
+      "k": 128,
+      "m": 32,
+      "placement": "spread",
+      "speedup": 1.10510764035458,
+      "tree": 2369
+    },
+    {
+      "central": 3842,
+      "grid": [
+        8,
+        4
+      ],
+      "k": 128,
+      "m": 32,
+      "placement": "compact",
+      "speedup": 1.0300268096514746,
+      "tree": 3730
+    },
+    {
+      "central": 4738,
+      "grid": [
+        8,
+        4
+      ],
+      "k": 128,
+      "m": 32,
+      "placement": "spread",
+      "speedup": 1.0248756218905473,
+      "tree": 4623
+    },
+    {
+      "central": 2784,
+      "grid": [
+        1,
+        16
+      ],
+      "k": 32,
+      "m": 128,
+      "placement": "compact",
+      "speedup": 2.314214463840399,
+      "tree": 1203
+    },
+    {
+      "central": 2892,
+      "grid": [
+        1,
+        16
+      ],
+      "k": 32,
+      "m": 128,
+      "placement": "spread",
+      "speedup": 2.3782894736842106,
+      "tree": 1216
+    },
+    {
+      "central": 1578,
+      "grid": [
+        16,
+        1
+      ],
+      "k": 32,
+      "m": 128,
+      "placement": "compact",
+      "speedup": 1.0,
+      "tree": 1578
+    },
+    {
+      "central": 2442,
+      "grid": [
+        16,
+        1
+      ],
+      "k": 32,
+      "m": 128,
+      "placement": "spread",
+      "speedup": 1.0,
+      "tree": 2442
+    },
+    {
+      "central": 1050,
+      "grid": [
+        4,
+        4
+      ],
+      "k": 32,
+      "m": 128,
+      "placement": "compact",
+      "speedup": 1.7647058823529411,
+      "tree": 595
+    },
+    {
+      "central": 1266,
+      "grid": [
+        4,
+        4
+      ],
+      "k": 32,
+      "m": 128,
+      "placement": "spread",
+      "speedup": 1.623076923076923,
+      "tree": 780
+    },
+    {
+      "central": 5617,
+      "grid": [
+        1,
+        32
+      ],
+      "k": 32,
+      "m": 128,
+      "placement": "compact",
+      "speedup": 3.3654883163571,
+      "tree": 1669
+    },
+    {
+      "central": 5729,
+      "grid": [
+        1,
+        32
+      ],
+      "k": 32,
+      "m": 128,
+      "placement": "spread",
+      "speedup": 3.545173267326733,
+      "tree": 1616
+    },
+    {
+      "central": 3770,
+      "grid": [
+        32,
+        1
+      ],
+      "k": 32,
+      "m": 128,
+      "placement": "compact",
+      "speedup": 1.0,
+      "tree": 3770
+    },
+    {
+      "central": 4666,
+      "grid": [
+        32,
+        1
+      ],
+      "k": 32,
+      "m": 128,
+      "placement": "spread",
+      "speedup": 1.0,
+      "tree": 4666
+    },
+    {
+      "central": 1780,
+      "grid": [
+        4,
+        8
+      ],
+      "k": 32,
+      "m": 128,
+      "placement": "compact",
+      "speedup": 2.5722543352601157,
+      "tree": 692
+    },
+    {
+      "central": 1892,
+      "grid": [
+        4,
+        8
+      ],
+      "k": 32,
+      "m": 128,
+      "placement": "spread",
+      "speedup": 2.388888888888889,
+      "tree": 792
+    },
+    {
+      "central": 1598,
+      "grid": [
+        8,
+        4
+      ],
+      "k": 32,
+      "m": 128,
+      "placement": "compact",
+      "speedup": 1.5190114068441065,
+      "tree": 1052
+    },
+    {
+      "central": 1822,
+      "grid": [
+        8,
+        4
+      ],
+      "k": 32,
+      "m": 128,
+      "placement": "spread",
+      "speedup": 1.4312647289866458,
+      "tree": 1273
+    },
+    {
+      "central": 2042,
+      "grid": [
+        1,
+        16
+      ],
+      "k": 256,
+      "m": 64,
+      "placement": "compact",
+      "speedup": 1.8183437221727516,
+      "tree": 1123
+    },
+    {
+      "central": 2474,
+      "grid": [
+        1,
+        16
+      ],
+      "k": 256,
+      "m": 64,
+      "placement": "spread",
+      "speedup": 1.5961290322580646,
+      "tree": 1550
+    },
+    {
+      "central": 11834,
+      "grid": [
+        16,
+        1
+      ],
+      "k": 256,
+      "m": 64,
+      "placement": "compact",
+      "speedup": 1.0,
+      "tree": 11834
+    },
+    {
+      "central": 18746,
+      "grid": [
+        16,
+        1
+      ],
+      "k": 256,
+      "m": 64,
+      "placement": "spread",
+      "speedup": 1.0,
+      "tree": 18746
+    },
+    {
+      "central": 3290,
+      "grid": [
+        4,
+        4
+      ],
+      "k": 256,
+      "m": 64,
+      "placement": "compact",
+      "speedup": 1.027803811308966,
+      "tree": 3201
+    },
+    {
+      "central": 5018,
+      "grid": [
+        4,
+        4
+      ],
+      "k": 256,
+      "m": 64,
+      "placement": "spread",
+      "speedup": 1.0188832487309645,
+      "tree": 4925
+    },
+    {
+      "central": 3502,
+      "grid": [
+        1,
+        32
+      ],
+      "k": 256,
+      "m": 64,
+      "placement": "compact",
+      "speedup": 2.364618501012829,
+      "tree": 1481
+    },
+    {
+      "central": 3726,
+      "grid": [
+        1,
+        32
+      ],
+      "k": 256,
+      "m": 64,
+      "placement": "spread",
+      "speedup": 2.25,
+      "tree": 1656
+    },
+    {
+      "central": 29418,
+      "grid": [
+        32,
+        1
+      ],
+      "k": 256,
+      "m": 64,
+      "placement": "compact",
+      "speedup": 1.0,
+      "tree": 29418
+    },
+    {
+      "central": 36586,
+      "grid": [
+        32,
+        1
+      ],
+      "k": 256,
+      "m": 64,
+      "placement": "spread",
+      "speedup": 1.0,
+      "tree": 36586
+    },
+    {
+      "central": 4330,
+      "grid": [
+        4,
+        8
+      ],
+      "k": 256,
+      "m": 64,
+      "placement": "compact",
+      "speedup": 1.1255523784767352,
+      "tree": 3847
+    },
+    {
+      "central": 5226,
+      "grid": [
+        4,
+        8
+      ],
+      "k": 256,
+      "m": 64,
+      "placement": "spread",
+      "speedup": 1.103462837837838,
+      "tree": 4736
+    },
+    {
+      "central": 7674,
+      "grid": [
+        8,
+        4
+      ],
+      "k": 256,
+      "m": 64,
+      "placement": "compact",
+      "speedup": 1.0284106137764675,
+      "tree": 7462
+    },
+    {
+      "central": 9466,
+      "grid": [
+        8,
+        4
+      ],
+      "k": 256,
+      "m": 64,
+      "placement": "spread",
+      "speedup": 1.0232407307318128,
+      "tree": 9251
+    },
+    {
+      "central": 5378,
+      "grid": [
+        1,
+        16
+      ],
+      "k": 64,
+      "m": 256,
+      "placement": "compact",
+      "speedup": 2.455707762557078,
+      "tree": 2190
+    },
+    {
+      "central": 5486,
+      "grid": [
+        1,
+        16
+      ],
+      "k": 64,
+      "m": 256,
+      "placement": "spread",
+      "speedup": 2.502737226277372,
+      "tree": 2192
+    },
+    {
+      "central": 3206,
+      "grid": [
+        16,
+        1
+      ],
+      "k": 64,
+      "m": 256,
+      "placement": "compact",
+      "speedup": 1.0,
+      "tree": 3206
+    },
+    {
+      "central": 4934,
+      "grid": [
+        16,
+        1
+      ],
+      "k": 64,
+      "m": 256,
+      "placement": "spread",
+      "speedup": 1.0,
+      "tree": 4934
+    },
+    {
+      "central": 2090,
+      "grid": [
+        4,
+        4
+      ],
+      "k": 64,
+      "m": 256,
+      "placement": "compact",
+      "speedup": 1.8931159420289856,
+      "tree": 1104
+    },
+    {
+      "central": 2522,
+      "grid": [
+        4,
+        4
+      ],
+      "k": 64,
+      "m": 256,
+      "placement": "spread",
+      "speedup": 1.6462140992167102,
+      "tree": 1532
+    },
+    {
+      "central": 10770,
+      "grid": [
+        1,
+        32
+      ],
+      "k": 64,
+      "m": 256,
+      "placement": "compact",
+      "speedup": 3.800282286520819,
+      "tree": 2834
+    },
+    {
+      "central": 10882,
+      "grid": [
+        1,
+        32
+      ],
+      "k": 64,
+      "m": 256,
+      "placement": "spread",
+      "speedup": 3.9948604992657857,
+      "tree": 2724
+    },
+    {
+      "central": 7530,
+      "grid": [
+        32,
+        1
+      ],
+      "k": 64,
+      "m": 256,
+      "placement": "compact",
+      "speedup": 1.0,
+      "tree": 7530
+    },
+    {
+      "central": 9322,
+      "grid": [
+        32,
+        1
+      ],
+      "k": 64,
+      "m": 256,
+      "placement": "spread",
+      "speedup": 1.0,
+      "tree": 9322
+    },
+    {
+      "central": 3550,
+      "grid": [
+        4,
+        8
+      ],
+      "k": 64,
+      "m": 256,
+      "placement": "compact",
+      "speedup": 2.643335815338794,
+      "tree": 1343
+    },
+    {
+      "central": 3774,
+      "grid": [
+        4,
+        8
+      ],
+      "k": 64,
+      "m": 256,
+      "placement": "spread",
+      "speedup": 2.4458846403110823,
+      "tree": 1543
+    },
+    {
+      "central": 3186,
+      "grid": [
+        8,
+        4
+      ],
+      "k": 64,
+      "m": 256,
+      "placement": "compact",
+      "speedup": 1.5436046511627908,
+      "tree": 2064
+    },
+    {
+      "central": 3634,
+      "grid": [
+        8,
+        4
+      ],
+      "k": 64,
+      "m": 256,
+      "placement": "spread",
+      "speedup": 1.4483858110801116,
+      "tree": 2509
+    }
+  ],
+  "scope": "56 paired comparisons at identical shape/grid/placement and 64-Tile physical budget; model cycles, not UniNDP speedup",
+  "ties": 16,
+  "tree_wins": 40
+}

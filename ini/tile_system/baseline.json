@@ -1,0 +1,10 @@
+{
+  "memory": {
+    "weight": {"banks": 1, "word_bytes": 4, "ports_per_bank": 1, "read_latency": 1, "issue_interval": 1},
+    "input": {"banks": 1, "word_bytes": 1, "ports_per_bank": 1, "read_latency": 1, "issue_interval": 1},
+    "result": {"banks": 4, "word_bytes": 4, "ports_per_bank": 1, "read_latency": 1, "issue_interval": 1},
+    "share_weight_input": false
+  },
+  "operand_slots": 2,
+  "mac_interval": 1
+}

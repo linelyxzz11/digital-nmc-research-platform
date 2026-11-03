@@ -1,0 +1,788 @@
+{
+  "cases": [
+    {
+      "attempted": 28,
+      "feasible": 0,
+      "k": 513,
+      "m": 256,
+      "rejected": [
+        {
+          "grid": [
+            1,
+            16
+          ],
+          "placement": "compact",
+          "reason": "Tile 1 weight_bytes=8448 exceeds 4096",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            1,
+            16
+          ],
+          "placement": "compact",
+          "reason": "Tile 1 weight_bytes=8448 exceeds 4096",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            1,
+            16
+          ],
+          "placement": "spread",
+          "reason": "Tile 63 weight_bytes=8448 exceeds 4096",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            1,
+            16
+          ],
+          "placement": "spread",
+          "reason": "Tile 63 weight_bytes=8448 exceeds 4096",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            16,
+            1
+          ],
+          "placement": "compact",
+          "reason": "Tile 1 weight_bytes=8208 exceeds 4096",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            16,
+            1
+          ],
+          "placement": "compact",
+          "reason": "Tile 1 weight_bytes=8208 exceeds 4096",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            16,
+            1
+          ],
+          "placement": "spread",
+          "reason": "Tile 63 weight_bytes=8208 exceeds 4096",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            16,
+            1
+          ],
+          "placement": "spread",
+          "reason": "Tile 63 weight_bytes=8208 exceeds 4096",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            4,
+            4
+          ],
+          "placement": "compact",
+          "reason": "Tile 1 weight_bytes=8256 exceeds 4096",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            4,
+            4
+          ],
+          "placement": "compact",
+          "reason": "Tile 1 weight_bytes=8256 exceeds 4096",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            4,
+            4
+          ],
+          "placement": "spread",
+          "reason": "Tile 63 weight_bytes=8256 exceeds 4096",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            4,
+            4
+          ],
+          "placement": "spread",
+          "reason": "Tile 63 weight_bytes=8256 exceeds 4096",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            1,
+            32
+          ],
+          "placement": "compact",
+          "reason": "Tile 1 weight_bytes=4352 exceeds 4096",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            1,
+            32
+          ],
+          "placement": "compact",
+          "reason": "Tile 1 weight_bytes=4352 exceeds 4096",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            1,
+            32
+          ],
+          "placement": "spread",
+          "reason": "Tile 63 weight_bytes=4352 exceeds 4096",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            1,
+            32
+          ],
+          "placement": "spread",
+          "reason": "Tile 63 weight_bytes=4352 exceeds 4096",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            32,
+            1
+          ],
+          "placement": "compact",
+          "reason": "Tile 1 weight_bytes=4104 exceeds 4096",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            32,
+            1
+          ],
+          "placement": "compact",
+          "reason": "Tile 1 weight_bytes=4104 exceeds 4096",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            32,
+            1
+          ],
+          "placement": "spread",
+          "reason": "Tile 63 weight_bytes=4104 exceeds 4096",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            32,
+            1
+          ],
+          "placement": "spread",
+          "reason": "Tile 63 weight_bytes=4104 exceeds 4096",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            4,
+            8
+          ],
+          "placement": "compact",
+          "reason": "Tile 1 weight_bytes=4160 exceeds 4096",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            4,
+            8
+          ],
+          "placement": "compact",
+          "reason": "Tile 1 weight_bytes=4160 exceeds 4096",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            4,
+            8
+          ],
+          "placement": "spread",
+          "reason": "Tile 63 weight_bytes=4160 exceeds 4096",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            4,
+            8
+          ],
+          "placement": "spread",
+          "reason": "Tile 63 weight_bytes=4160 exceeds 4096",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            8,
+            4
+          ],
+          "placement": "compact",
+          "reason": "Tile 1 weight_bytes=4128 exceeds 4096",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            8,
+            4
+          ],
+          "placement": "compact",
+          "reason": "Tile 1 weight_bytes=4128 exceeds 4096",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            8,
+            4
+          ],
+          "placement": "spread",
+          "reason": "Tile 63 weight_bytes=4128 exceeds 4096",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            8,
+            4
+          ],
+          "placement": "spread",
+          "reason": "Tile 63 weight_bytes=4128 exceeds 4096",
+          "reduction": "tree"
+        }
+      ],
+      "status": "unsupported"
+    },
+    {
+      "attempted": 28,
+      "feasible": 0,
+      "k": 128,
+      "m": 640,
+      "rejected": [
+        {
+          "grid": [
+            1,
+            16
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            1,
+            16
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            1,
+            16
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            1,
+            16
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            16,
+            1
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            16,
+            1
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            16,
+            1
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            16,
+            1
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            4,
+            4
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            4,
+            4
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            4,
+            4
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            4,
+            4
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            1,
+            32
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            1,
+            32
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            1,
+            32
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            1,
+            32
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            32,
+            1
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            32,
+            1
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            32,
+            1
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            32,
+            1
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            4,
+            8
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            4,
+            8
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            4,
+            8
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            4,
+            8
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            8,
+            4
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            8,
+            4
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            8,
+            4
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            8,
+            4
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        }
+      ],
+      "status": "unsupported"
+    },
+    {
+      "attempted": 28,
+      "feasible": 0,
+      "k": 4096,
+      "m": 4096,
+      "rejected": [
+        {
+          "grid": [
+            1,
+            16
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            1,
+            16
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            1,
+            16
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            1,
+            16
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            16,
+            1
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            16,
+            1
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            16,
+            1
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            16,
+            1
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            4,
+            4
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            4,
+            4
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            4,
+            4
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            4,
+            4
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            1,
+            32
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            1,
+            32
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            1,
+            32
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            1,
+            32
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            32,
+            1
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            32,
+            1
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            32,
+            1
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            32,
+            1
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            4,
+            8
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            4,
+            8
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            4,
+            8
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            4,
+            8
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            8,
+            4
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            8,
+            4
+          ],
+          "placement": "compact",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        },
+        {
+          "grid": [
+            8,
+            4
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "central"
+        },
+        {
+          "grid": [
+            8,
+            4
+          ],
+          "placement": "spread",
+          "reason": "single-transaction output is limited to 256 INT32 words",
+          "reduction": "tree"
+        }
+      ],
+      "status": "unsupported"
+    }
+  ],
+  "sha256": "a66ca34e7a83c95336d242ac83d3f6033bc03f27b2889ce9563f84e4bf328d55"
+}

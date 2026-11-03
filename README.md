@@ -1,14 +1,26 @@
 # Digital NMC Research Platform
 
+GEMV 仿真成果独立分支：[团队阅读入口（Python＋真实 64 Tile RTL）](docs/gemv_8x8_validation/README.md)，含两轮报告、数据、十组图及仓库相对复现命令。
+
 面向 GEMV 的数字近存计算（NMC）研究平台，研究有限 Bank、MAC、NoC 带宽和 FIFO 条件下的切分、放置与端点归约。
 
-当前可运行：单 Tile GEMV、Packet/NI/2×2 XY Mesh，以及 Demo 1 行切分/FINAL 收集、Demo 2 K 切分/INT32 PSUM 归约的多 Tile 闭环，配套 Python 自检查测试。输入通过 NoC 写入并收齐 ACK 后启动计算，Root 完成收集或归约后向 Host 发送全局 DONE。Compute 和归约仍为功能模型，通信调度周期不代表完整 GEMV 延迟。Mapper v0.1 已提供 ROW/K 切分、容量检查和 ROW 优先的 auto 选择，生成与现有 TileTask/Packet 字段一致的 JSON 计划；Demo 1/2 CLI 可通过 `--plan` 直接读取并执行该计划。性能优化 Mapper、完整时序模型和 NMC RTL 仍待实现。早期 RV32I CPU 示例仅作本地学习参考。
+当前提供 8×8/64 物理 Tile 的 GEMV 周期模型，支持 ROW/K/二维分块、compact/spread 放置、有限队列及集中/树归约；保留原 2×2 Demo 与接口。输入经 MEM_WRITE/ACK 后启动计算，Root 发送唯一全局 Done。新增自动映射搜索在共同候选目录内比较 UniNDP 方法适配与通信感知排序，再用同一个有限资源 evaluator 验证前 K 项。
+
+64 Tile 集成 RTL 已接通真实 Tile SRAM/MAC、NI、XY Router、归约与 Done，包含 16/32 个活跃计算 Tile、反压和复位重放用例；独立归约端点与 Python 逐边沿对齐。Python 的输入写提交仍为功能操作，RTL 使用真实窄 X 写端口和注册 NI，完整系统周期偏差单独报告。完整芯片综合及 PPA 不在当前验证范围。早期 RV32I CPU 示例仅作本地学习参考。
 
 ## 从这里开始
 
 - 定义计算/通信接口：[Compute v0.1](docs/spec/compute_architecture_v0.1.md)、[Communication v0.1](docs/spec/communication_architecture_v0.1.md)。
 - 运行 Demo：[Demo 0 指南](docs/validation.md#demo0)、[Comm 0A–0C 记录](docs/validation.md#comm)、[NMC Demo 1](docs/validation.md#demo1)、[NMC Demo 2](docs/validation.md#demo2)。
 - Mapper：[v0.1 使用说明与规则](src/compiler/README.md)。
+- 实验：[Root 接收压力](tools/experiments/pressure_sweep.md)、[Compute/SRAM 参考时序对照与单 Tile 逐请求验证](tools/experiments/compute_timing.md)。另见 [Tile 端口与 Bank 参考合同](docs/spec/compute_architecture_v0.1.md#92-单-tile-端口与-bank-参考组织2026-10-28-补充)；默认 Demo 行为不变，端点归约仍为功能操作。
+- 硬件验证：[单 Tile RTL](src/rtl/nmc_tile/README.md)，包含 SRAM/控制/MAC 和 Python 逐周期对照；另两台电脑的分工见 [并行推进计划](docs/parallel_work.zh-CN.md)。
+- Root 时序：[有限接收/部分和/Done 资源与服务合同](docs/spec/root_service_v0.1.md)，含独立手算 Trace 和同配置 ROW/K 实验；[宽写回 RTL 校准](docs/spec/root_writeback_rtl_v0.1.md) 包含 ready/valid、Bank 仲裁、错误原子性和 51 组逐周期对照。
+- 同硬件自动映射：[v0.3 搜索合同](docs/spec/mapping_search_v0.3.md)，含 UniNDP 原方法核对、适配边界、通信感知选择和 1/2/4/8 次精确模拟预算；[对照指标](docs/unindp_evaluation.zh-CN.md)。
+- 集成硬件验证：[64 Tile RTL](src/rtl/nmc_mesh/README.md)，包含九项闭环用例和独立端点的逐周期对照。
+- v0.3 记录：[原映射实验与强基线核查](data/results/mapping_search_20261028/README.md)、[64 Tile RTL 数据](data/results/mesh_rtl_20261028/README.md)。原始结果和反证保留。
+- v0.4 修复：[有界时序预测](docs/spec/bounded_prediction_v0.4.md)、[新形状验证与搜索成本](data/results/prediction_v04_20261028/README.md)。修复两个误选；新八形状首选全部命中候选最优，参考模型任务周期 MAPE 约 0.37%，预测开销也完整列出。
+- 64 Tile 主实验：[v0.2 执行合同](docs/spec/scalable_execution_v0.2.md) 复用原 Tile/Root/NoC，提供 ROW/K/二维分块、集中/分层归约；[三台电脑运行说明](docs/distributed_experiments.zh-CN.md) 使用固定 112 项清单、续跑和严格合并。
 - 阅读计划：[团队路线](docs/project_plan.zh-CN.md)、[Proposal](docs/proposal.md)。文献调研保存在本地 `docs/papers/`，不随 GitHub 仓库发布。
 - 使用 VS Code：直接打开仓库根目录。本地的 `Digital-NMC.code-workspace` 与论文工作区为可选配置，不是运行依赖。
 
@@ -17,6 +29,7 @@
 ```text
 computer architecture project/
 ├── src/                 # 代码：Python 模型、Mapper、RTL、测试
+│   ├── hardware.py      # 统一硬件资源配置（SRAM、Bank、FIFO、Mesh）
 │   ├── simulator/
 │   ├── compiler/
 │   ├── rtl/             # legacy_cpu/ 仅为早期示例
@@ -63,6 +76,20 @@ PYTHONPATH=src python -m simulator.system.demo1 --plan dump/mapper_plan.json --w
 PYTHONPATH=src python -m compiler.auto_mapper_v0_1 --workload data/workloads/demo1_gemv.json --strategy k -o dump/mapper_plan_k.json
 PYTHONPATH=src python -m simulator.system.demo2 --plan dump/mapper_plan_k.json --workload data/workloads/demo1_gemv.json
 python -m pytest -q -p no:cacheprovider src/tests/test_mapper_v0_1.py src/tests/test_plan_runner.py
+# 批量计划对比：ROW/K × worker/Root 放置，输出 JSON/CSV
+PYTHONPATH=src python tools/experiments/mapper_sweep.py --demo --placements all --output data/results/mapper_sweep_demo.json --csv data/results/mapper_sweep_demo.csv
+PYTHONPATH=src python tools/experiments/mapper_sweep.py --workload data/workloads/demo1_gemv.json --k-splits all
+# 形状矩阵：suite = frontier + half + extremes + aspect
+PYTHONPATH=src python tools/experiments/mapper_sweep.py --shapes suite --output data/results/mapper_sweep_suite.json --csv data/results/mapper_sweep_suite.csv
+PYTHONPATH=src python tools/experiments/mapper_sweep.py --shapes 16x128,128x16,32x64,64x32 --top 2
+python -m pytest -q -p no:cacheprovider src/tests/test_mapper_sweep.py
+# 详细 Tile SRAM/Bank 时序，与 NI/Mesh 共用时钟；--plan 同样支持这些选项
+PYTHONPATH=src python -m simulator.system.demo1 --compute-model tile --tile-config ini/tile_system/baseline.json --tile-trace --trace dump/tile_row.json
+PYTHONPATH=src python -m simulator.system.demo2 --compute-model tile --tile-config ini/tile_system/result_1bank.json --trace dump/tile_k.json
+python tools/experiments/timed_tile_system.py --output-dir dump/timed_tile_system_20261028
+# 同时启用实际有限 Root 服务；不需要人工接收压力窗口
+PYTHONPATH=src python -m simulator.system.demo2 --compute-model tile --root-model timed --root-trace --trace dump/root_k.json
+python tools/experiments/finite_root_system.py --output-dir dump/finite_root_system_20261028
 # 检查随 Git 发布的文档链接
 python tools/check_layout.py --tracked
 ```

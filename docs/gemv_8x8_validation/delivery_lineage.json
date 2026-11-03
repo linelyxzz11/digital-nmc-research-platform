@@ -1,0 +1,26 @@
+{
+  "base_commit": "f128f237a5393dbc1fadb8e47278e10d82d81f86",
+  "prior_deliveries": [
+    {
+      "phase": "python",
+      "artifact": "changes.patch",
+      "sha256": "3d9bed0b9cbb7c77c210c6890e654709e117546f0ec6d9346259e8c2d6c6958d"
+    },
+    {
+      "phase": "python",
+      "artifact": "changed_files.json",
+      "sha256": "f1a3306ee67174c11af8f8dcf3d4b49262bf8203fc6fdb458c8a77fc9b7eb103"
+    },
+    {
+      "phase": "rtl",
+      "artifact": "changes.patch",
+      "sha256": "e44a07e30152e8dfac47b3c32786a6f820e6eb1c0245efbae60072a34b0e6dd2"
+    },
+    {
+      "phase": "rtl",
+      "artifact": "changed_files.json",
+      "sha256": "7967d4107e98a2d7e361816d213530f06826544bafb9f3337e1cf57a0a671a1e"
+    }
+  ],
+  "note": "Source files were integrated from their original worktrees, not reconstructed from reports. No original result values were edited."
+}

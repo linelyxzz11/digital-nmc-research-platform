@@ -1,0 +1,6 @@
+{
+  "original_manifest_sha256": "49f54ed75fbf1c32fcbe5bf7c09b1e94fa91de35a8835a62d83d09fe71f3215c",
+  "published_manifest_sha256": "c785bf5505b941b23aa3d4e9f770f66f1b2f91274fbc37eb897d14e8cc596d4b",
+  "change": "Only selected_history source_record pointers changed from machine paths to published gzip-record identifiers. All cases, parameters, plan hashes, seeds and numeric results are unchanged. Historical summary hashes describe the original local manifest.",
+  "format_note": "Published text uses LF. SVG trailing whitespace was normalized; JSON values and numerical measurements were preserved."
+}

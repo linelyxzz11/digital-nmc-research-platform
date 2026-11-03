@@ -91,3 +91,27 @@ These are research extensions rather than v0.1 ambiguities:
 Until these checks pass, the specification remains `IMPLEMENTATION DRAFT v0.1` even though its encoding decisions are fixed for initial coding.
 
 2026-10-06 已有 Packet 与 Comm 0A–0C 的 10 项 Python 测试记录，见[验证指南](../validation.md#comm)。这不等于上述冻结条件全部满足；Demo 1/2、随机反压、错误恢复及 RTL 对照仍需相应证据。
+
+## 2026-10-28：Root 最终写回的内部宽接口
+
+Result SRAM 的四个 Bank 经显式向量复用器接受 Compute 或 Root 的一项最多四字写入，再与 Host 32-bit 口复用。Compute 在任务期间独占；IDLE 优先级为未完成/新 Host 请求、Root、新任务。固定优先级避免同时驱动 Bank，但不保证饥饿自由；现有分阶段调度不依赖争用公平性。
+
+合法 Root 请求在 ready/valid 握手的同一上升沿原子提交，错误通过同一边沿的 `root_wr_error` 返回，不增加响应缓冲或气泡。保留非 16-byte 对齐和稀疏 Lane，全部有效地址先校验，避免低位 Bank 寻址掩盖越界。连续全宽写验证每周期四字，支持默认 W=1；SRAM 仍为六块单端口、49,152 bit。
+
+Python `write_request()` 与 `step(write_ready=...)` 对接同一合同，端口停顿期间不提交输出或推进 Done。51 组对照包含真实 Host 占用造成的六周期写等待。此项选择仅校准最终写口；Root 归约存储、ALU、Packet/Done 控制及器件时序仍需后续实现。[详细合同和证据](root_writeback_rtl_v0.1.md)。
+
+## 64 Tile 扩展：保留校准合同，扩展计划和端点图
+
+v0.2 复用原 TileTask、SRAM 布局、Compute 周期模型、有限 Root 和 Router 仲裁，拓扑/codec 改为实例参数，v0.1 默认线格式不变。二维分块按输出范围配置直接来源表；中间端点使用一项输出寄存器，最后一组等待本地来源完成。树归约使用同一 64 Tile 物理预算中的闲置 Tile，端点能力预算对所有策略一致。
+
+主实验为 8×8，RTL 继续做局部校准。三台电脑分担独立完整案例，公共清单固定源码/计划哈希，结果记录实际 commit；完整性、数值和版本校验通过后才能合并。此选择避免多份仿真代码及跨机器逐周期同步。[v0.2 合同](scalable_execution_v0.2.md)。
+
+## v0.3：有限预算自动映射与集成 RTL
+
+共同候选范围保持不变，新增 predictor→top-K→精确执行的自动选择。UniNDP 适配保留可核对的平坦 PU 划分/剪枝/分配与搜索流程，SRAM 代价替换 DRAM 后端；通信感知策略增加实际单播距离和 XY 链路资源预留。两者共享有限 Tile/Root/NoC evaluator，精确预算相同，事后最优只用作质量参考，不能把启发式或移植子集声称为完整 UniNDP。[搜索合同](mapping_search_v0.3.md)。
+
+新增 64 Tile 集成 RTL，计算与树节点共享固定物理预算。NI 注册队列、真实窄 X 写入、任务接受/VALIDATE 使系统周期与旧 Python 功能输入提交有差别；数值/包协议必须完全一致，周期偏差按输入与 kernel 单独保存。默认四 Lane 归约端点直接对齐 TimedRoot 的每个服务边沿；不把集成仿真通过说成芯片 PPA 或所有参数已校准。[RTL 范围](../../src/rtl/nmc_mesh/README.md)。
+
+## v0.4：修复输入开销与有界反压预测
+
+输入 stop-and-wait 的参考协议为每包 `2*d+5`，原 NoC 预测多算两周期。仅修正常数仍会低估长输出 K 切分的拥塞，因此改用有限 credit 的整包逐跳近似，并把源结果释放与 NI 握手关联；加载留下的 RR 状态也恢复。它复用端点服务合同，但不执行真实矩阵计算或完整 Flit Mesh，不叫精确 evaluator。保留旧预测与强资源基线，显式报告每候选包级推演开销，并以冻结后的新形状验证。[合同与复现](bounded_prediction_v0.4.md)。

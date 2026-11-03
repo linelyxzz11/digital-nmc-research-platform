@@ -1,0 +1,1754 @@
+{
+  "schema_version": 1,
+  "cases": 47,
+  "phases": 53,
+  "passed": 47,
+  "random_seeds": 8,
+  "tools": {
+    "iverilog": "Icarus Verilog version 13.0 (devel) (s20251012-33-ga7502173d-dirty)",
+    "verilator": "Verilator 5.041 devel rev v5.040-201-g21dbdbf69",
+    "yosys": "Yosys 0.58+94 (git sha1 4011d7265, x86_64-w64-mingw32-g++ 13.2.1 -O3)"
+  },
+  "synthesis": {
+    "check": "pass",
+    "memory_bits": 49152,
+    "memories": [
+      {
+        "module": "nmc_tile_sram",
+        "cell": "input_mem",
+        "width": 8,
+        "size": 1024,
+        "read_ports": 1,
+        "write_ports": 1,
+        "synchronous_read": true
+      },
+      {
+        "module": "nmc_tile_sram",
+        "cell": "result_banks[0].mem",
+        "width": 32,
+        "size": 64,
+        "read_ports": 1,
+        "write_ports": 1,
+        "synchronous_read": true
+      },
+      {
+        "module": "nmc_tile_sram",
+        "cell": "result_banks[1].mem",
+        "width": 32,
+        "size": 64,
+        "read_ports": 1,
+        "write_ports": 1,
+        "synchronous_read": true
+      },
+      {
+        "module": "nmc_tile_sram",
+        "cell": "result_banks[2].mem",
+        "width": 32,
+        "size": 64,
+        "read_ports": 1,
+        "write_ports": 1,
+        "synchronous_read": true
+      },
+      {
+        "module": "nmc_tile_sram",
+        "cell": "result_banks[3].mem",
+        "width": 32,
+        "size": 64,
+        "read_ports": 1,
+        "write_ports": 1,
+        "synchronous_read": true
+      },
+      {
+        "module": "nmc_tile_sram",
+        "cell": "weight_mem",
+        "width": 32,
+        "size": 1024,
+        "read_ports": 1,
+        "write_ports": 1,
+        "synchronous_read": true
+      }
+    ]
+  },
+  "source_sha256": {
+    "src/rtl/nmc_tile/nmc_mac4.sv": "e0d9b48b1d1a527b586ef3d76cac5798b73bf4943eda9991df9088c5c7539699",
+    "src/rtl/nmc_tile/nmc_tile_sram.sv": "4e3c1b2213815aaad9c3a39d0d6f718d74fb9d21754c552f8bf99ccaa3062ff7",
+    "src/rtl/nmc_tile/nmc_tile_compute.sv": "a5cb341883127c1ba7387210472b5de7bf3eb5943209884b8c3bd2f5c63d0a75",
+    "src/rtl/nmc_tile/tb_nmc_tile_compute.sv": "8343ec30fe81b74a507ccabc69ab81e1e13c65cebdd8de117cffb9538aec86ee",
+    "tools/rtl/run_tile_rtl.py": "9af265ffd85a08572142668083a2e657d16c3f400547396a860358ed48a317cd",
+    "src/simulator/system/tile_memory.py": "11822bfcfc7e1a9532b390be7af669916f02d85e90692eb39f271b13e5cc32b8",
+    "src/simulator/system/tile_timing.py": "05f69c24cb81836210a25907918dc380962c8df5f74bccc9afe2cc9736a8bf80",
+    "src/simulator/functional/demo0_model.py": "48d663e891722c5e2c5ccd7635669566bc4c31fdaa79f62f8b3c079c8ea9809f",
+    "src/hardware.py": "583e43a8c1152c33d4ed60cfc356f0d05a77565810229c7c33bc403ffabcc8c8",
+    "src/simulator/communication/v0_1.py": "3e44c32e050aa234b2f80cd3fa340d18573f6be8f4fc08806b826ca762dd9fb4"
+  },
+  "results": [
+    {
+      "name": "hand_5x3",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 15,
+          "aborted": false,
+          "result_handshake_cycles": [
+            6,
+            13
+          ],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "hand_stalls",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 24,
+          "aborted": false,
+          "result_handshake_cycles": [
+            9,
+            19
+          ],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "two_by_two",
+      "m": 2,
+      "k": 2,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 2,
+        "k_local": 2,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 7,
+          "aborted": false,
+          "result_handshake_cycles": [
+            5
+          ],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "one_signed",
+      "m": 1,
+      "k": 1,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 1,
+        "k_local": 1,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 6,
+          "aborted": false,
+          "result_handshake_cycles": [
+            4
+          ],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "psum_not_last",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "PSUM",
+        "result_dst_tile": 0,
+        "task_last": false,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 15,
+          "aborted": false,
+          "result_handshake_cycles": [
+            6,
+            13
+          ],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "full_weight_input",
+      "m": 4,
+      "k": 1024,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 4,
+        "k_local": 1024,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 1029,
+          "aborted": false,
+          "result_handshake_cycles": [
+            1027
+          ],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "full_result",
+      "m": 256,
+      "k": 4,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 256,
+        "k_local": 4,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 513,
+          "aborted": false,
+          "result_handshake_cycles": [
+            7,
+            15,
+            23,
+            31,
+            39,
+            47,
+            55,
+            63,
+            71,
+            79,
+            87,
+            95,
+            103,
+            111,
+            119,
+            127,
+            135,
+            143,
+            151,
+            159,
+            167,
+            175,
+            183,
+            191,
+            199,
+            207,
+            215,
+            223,
+            231,
+            239,
+            247,
+            255,
+            263,
+            271,
+            279,
+            287,
+            295,
+            303,
+            311,
+            319,
+            327,
+            335,
+            343,
+            351,
+            359,
+            367,
+            375,
+            383,
+            391,
+            399,
+            407,
+            415,
+            423,
+            431,
+            439,
+            447,
+            455,
+            463,
+            471,
+            479,
+            487,
+            495,
+            503,
+            511
+          ],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "offset_y_4",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 4,
+        "x_base": 4097,
+        "y_base": 8196,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 15,
+          "aborted": false,
+          "result_handshake_cycles": [
+            6,
+            13
+          ],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "offset_y_8",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 4,
+        "x_base": 4097,
+        "y_base": 8200,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 15,
+          "aborted": false,
+          "result_handshake_cycles": [
+            6,
+            13
+          ],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "offset_y_12",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 4,
+        "x_base": 4097,
+        "y_base": 8204,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 15,
+          "aborted": false,
+          "result_handshake_cycles": [
+            6,
+            13
+          ],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "global_index_edge",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 65531,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 15,
+          "aborted": false,
+          "result_handshake_cycles": [
+            6,
+            13
+          ],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "reset_cycle_0",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 0,
+          "aborted": true,
+          "result_handshake_cycles": [],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        },
+        {
+          "phase": 1,
+          "cycles": 15,
+          "aborted": false,
+          "result_handshake_cycles": [
+            6,
+            13
+          ],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "reset_cycle_2",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 2,
+          "aborted": true,
+          "result_handshake_cycles": [],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        },
+        {
+          "phase": 1,
+          "cycles": 15,
+          "aborted": false,
+          "result_handshake_cycles": [
+            6,
+            13
+          ],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "reset_cycle_3",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 3,
+          "aborted": true,
+          "result_handshake_cycles": [],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        },
+        {
+          "phase": 1,
+          "cycles": 15,
+          "aborted": false,
+          "result_handshake_cycles": [
+            6,
+            13
+          ],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "reset_cycle_5",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 5,
+          "aborted": true,
+          "result_handshake_cycles": [],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        },
+        {
+          "phase": 1,
+          "cycles": 15,
+          "aborted": false,
+          "result_handshake_cycles": [
+            6,
+            13
+          ],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "reset_cycle_6",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 6,
+          "aborted": true,
+          "result_handshake_cycles": [],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        },
+        {
+          "phase": 1,
+          "cycles": 25,
+          "aborted": false,
+          "result_handshake_cycles": [
+            11,
+            23
+          ],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "reset_cycle_14",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 14,
+          "aborted": true,
+          "result_handshake_cycles": [
+            6,
+            13
+          ],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        },
+        {
+          "phase": 1,
+          "cycles": 20,
+          "aborted": false,
+          "result_handshake_cycles": [
+            6,
+            13
+          ],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "invalid_00",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "INVALID",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 4,
+          "aborted": false,
+          "result_handshake_cycles": [],
+          "status": "BAD_OPCODE",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "invalid_01",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 0
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 4,
+          "aborted": false,
+          "result_handshake_cycles": [],
+          "status": "BAD_FIELD",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "invalid_02",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "INVALID",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 4,
+          "aborted": false,
+          "result_handshake_cycles": [],
+          "status": "BAD_FIELD",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "invalid_03",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 0,
+        "k_local": 3,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 4,
+          "aborted": false,
+          "result_handshake_cycles": [],
+          "status": "BAD_SHAPE",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "invalid_04",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 0,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 4,
+          "aborted": false,
+          "result_handshake_cycles": [],
+          "status": "BAD_SHAPE",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "invalid_05",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 257,
+        "k_local": 3,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 4,
+          "aborted": false,
+          "result_handshake_cycles": [],
+          "status": "BAD_SHAPE",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "invalid_06",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 1025,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 4,
+          "aborted": false,
+          "result_handshake_cycles": [],
+          "status": "BAD_SHAPE",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "invalid_07",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 2,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 4,
+          "aborted": false,
+          "result_handshake_cycles": [],
+          "status": "BAD_TILE",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "invalid_08",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 4,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 4,
+          "aborted": false,
+          "result_handshake_cycles": [],
+          "status": "BAD_TILE",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "invalid_09",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 65535,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 4,
+          "aborted": false,
+          "result_handshake_cycles": [],
+          "status": "BAD_FIELD",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "invalid_10",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 1,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 4,
+          "aborted": false,
+          "result_handshake_cycles": [],
+          "status": "ADDR_ALIGN",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "invalid_11",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8193,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 4,
+          "aborted": false,
+          "result_handshake_cycles": [],
+          "status": "ADDR_ALIGN",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "invalid_12",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 4092,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 4,
+          "aborted": false,
+          "result_handshake_cycles": [],
+          "status": "ADDR_RANGE",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "invalid_13",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 0,
+        "x_base": 4095,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 4,
+          "aborted": false,
+          "result_handshake_cycles": [],
+          "status": "ADDR_RANGE",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "invalid_14",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 0,
+        "x_base": 5119,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 4,
+          "aborted": false,
+          "result_handshake_cycles": [],
+          "status": "ADDR_RANGE",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "invalid_15",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 9212,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 4,
+          "aborted": false,
+          "result_handshake_cycles": [],
+          "status": "ADDR_RANGE",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "invalid_16",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 4,
+        "m_local": 0,
+        "k_local": 3,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "INVALID",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 4,
+          "aborted": false,
+          "result_handshake_cycles": [],
+          "status": "BAD_OPCODE",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "invalid_17",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 4,
+        "m_local": 0,
+        "k_local": 3,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 0
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 4,
+          "aborted": false,
+          "result_handshake_cycles": [],
+          "status": "BAD_FIELD",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "invalid_18",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 4,
+        "m_local": 0,
+        "k_local": 3,
+        "w_base": 0,
+        "x_base": 4096,
+        "y_base": 8193,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 4,
+          "aborted": false,
+          "result_handshake_cycles": [],
+          "status": "BAD_SHAPE",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "invalid_19",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 4,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 1,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 65535,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 4,
+          "aborted": false,
+          "result_handshake_cycles": [],
+          "status": "BAD_TILE",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "invalid_20",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 1,
+        "x_base": 4096,
+        "y_base": 8192,
+        "global_row_base": 65535,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 4,
+          "aborted": false,
+          "result_handshake_cycles": [],
+          "status": "BAD_FIELD",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "invalid_21",
+      "m": 5,
+      "k": 3,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 3,
+        "w_base": 1,
+        "x_base": 4095,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 4,
+          "aborted": false,
+          "result_handshake_cycles": [],
+          "status": "ADDR_ALIGN",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "random_000",
+      "m": 33,
+      "k": 5,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 33,
+        "k_local": 5,
+        "w_base": 4,
+        "x_base": 4097,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": false,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 82,
+          "aborted": false,
+          "result_handshake_cycles": [
+            8,
+            17,
+            26,
+            35,
+            44,
+            53,
+            62,
+            71,
+            80
+          ],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "random_001",
+      "m": 3,
+      "k": 7,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 3,
+        "k_local": 7,
+        "w_base": 4,
+        "x_base": 4097,
+        "y_base": 8196,
+        "global_row_base": 8,
+        "result_kind": "PSUM",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 14,
+          "aborted": false,
+          "result_handshake_cycles": [
+            11
+          ],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "random_002",
+      "m": 33,
+      "k": 5,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 33,
+        "k_local": 5,
+        "w_base": 4,
+        "x_base": 4097,
+        "y_base": 8200,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": false,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 102,
+          "aborted": false,
+          "result_handshake_cycles": [
+            10,
+            21,
+            32,
+            43,
+            54,
+            65,
+            76,
+            87,
+            98
+          ],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "random_003",
+      "m": 3,
+      "k": 7,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 3,
+        "k_local": 7,
+        "w_base": 4,
+        "x_base": 4097,
+        "y_base": 8204,
+        "global_row_base": 8,
+        "result_kind": "PSUM",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 15,
+          "aborted": false,
+          "result_handshake_cycles": [
+            13
+          ],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "random_004",
+      "m": 3,
+      "k": 7,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 3,
+        "k_local": 7,
+        "w_base": 4,
+        "x_base": 4097,
+        "y_base": 8192,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": false,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 13,
+          "aborted": false,
+          "result_handshake_cycles": [
+            10
+          ],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "random_005",
+      "m": 13,
+      "k": 37,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 13,
+        "k_local": 37,
+        "w_base": 4,
+        "x_base": 4097,
+        "y_base": 8196,
+        "global_row_base": 8,
+        "result_kind": "PSUM",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 171,
+          "aborted": false,
+          "result_handshake_cycles": [
+            41,
+            83,
+            125,
+            167
+          ],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "random_006",
+      "m": 33,
+      "k": 5,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 33,
+        "k_local": 5,
+        "w_base": 4,
+        "x_base": 4097,
+        "y_base": 8200,
+        "global_row_base": 8,
+        "result_kind": "FINAL",
+        "result_dst_tile": 0,
+        "task_last": false,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 100,
+          "aborted": false,
+          "result_handshake_cycles": [
+            10,
+            21,
+            32,
+            43,
+            54,
+            65,
+            76,
+            87,
+            98
+          ],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    },
+    {
+      "name": "random_007",
+      "m": 5,
+      "k": 19,
+      "task": {
+        "tid": 4660,
+        "tile_id": 1,
+        "m_local": 5,
+        "k_local": 19,
+        "w_base": 4,
+        "x_base": 4097,
+        "y_base": 8204,
+        "global_row_base": 8,
+        "result_kind": "PSUM",
+        "result_dst_tile": 0,
+        "task_last": true,
+        "opcode": "GEMV_LOCAL",
+        "version": 1
+      },
+      "phases": [
+        {
+          "phase": 0,
+          "cycles": 54,
+          "aborted": false,
+          "result_handshake_cycles": [
+            25,
+            51
+          ],
+          "status": "OK",
+          "cycle_trace_match": true,
+          "sram_readback_match": true
+        }
+      ]
+    }
+  ]
+}

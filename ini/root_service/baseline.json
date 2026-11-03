@@ -1,0 +1,10 @@
+{
+  "rx_queue_packets": 2,
+  "reduction_entries": 256,
+  "done_queue_packets": 1,
+  "lanes_per_cycle": 4,
+  "read_cycles": 1,
+  "add_cycles": 1,
+  "update_cycles": 1,
+  "write_cycles": 1
+}

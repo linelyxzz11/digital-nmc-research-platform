@@ -1,0 +1,4 @@
+name,operator,optimal_latency,optimal_commands,optimal_pu_dram_access,optimal_host_dram_access,optimal_row_changes,baseline_latency,baseline_commands,baseline_pu_dram_access,baseline_host_dram_access,baseline_row_changes,m,k,speedup,compiler_wall_seconds
+mvm_4096x4096,mm,9366,1120,1024,64,16,10922,1340,1024,284,16,4096,4096,1.166132820841341,1.877812874969095
+mvm_11008x4096,mm,24722,2945,2752,107,43,26714,3237,2816,333,44,11008,4096,1.0805760051775746,2.2049024580046535
+mvm_4096x11008,mm,25646,2987,2752,107,64,29406,3612,2752,772,44,4096,11008,1.1466115573578726,2.121673332992941

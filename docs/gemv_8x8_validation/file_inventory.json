@@ -1,0 +1,530 @@
+{
+  "note": "Inventory excludes this index itself. Historical provenance retains original artifact hashes; these hashes describe published file bytes.",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "status": "modified",
+      "bytes": 367,
+      "sha256": "19655041cf5f2dc204944ee5c39466b1744c8355f98f0a711d265ed1cd52a58b",
+      "purpose": "portable text formatting"
+    },
+    {
+      "path": "README.md",
+      "status": "modified",
+      "bytes": 9501,
+      "sha256": "39403d4ffa71dd39b7f2132791216bf40c106be7b6986e8b16bbde46eb0d8f13",
+      "purpose": "documentation, provenance and reproduction"
+    },
+    {
+      "path": "data/results/rtl_gemv_20261031/README.md",
+      "status": "added",
+      "bytes": 1075,
+      "sha256": "55bb4c4c3b9b68eba292e3d794479964620a8373db66e52be5e158bd315cf9ff",
+      "purpose": "documentation, provenance and reproduction"
+    },
+    {
+      "path": "data/results/rtl_gemv_20261031/comparison.csv",
+      "status": "added",
+      "bytes": 5081,
+      "sha256": "d55c16deb98fc0064b0d3ca8036e6bab85241470256aa8620f56366e87589362",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/rtl_gemv_20261031/evidence.json.gz",
+      "status": "added",
+      "bytes": 23386,
+      "sha256": "45ed90de90512a97c6180f065644c60212f307923ac392b5cb372f8e661cfe8c",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/rtl_gemv_20261031/figure/01_rtl_paired_latency.png",
+      "status": "added",
+      "bytes": 70155,
+      "sha256": "42a9bdb720595b478b69d7a0863f61b9ebd35e3d263bfeb03bd97afd90d2f337",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/rtl_gemv_20261031/figure/01_rtl_paired_latency.svg",
+      "status": "added",
+      "bytes": 13806,
+      "sha256": "141889dcdd13e238f1d00248bf92438c4c60f703532ef89f18629b826064eb67",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/rtl_gemv_20261031/figure/02_rtl_phases.png",
+      "status": "added",
+      "bytes": 68868,
+      "sha256": "d1f12bc51764acf64cc953bdea393af8dfb373b2e74af6165537289d6d9488b9",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/rtl_gemv_20261031/figure/02_rtl_phases.svg",
+      "status": "added",
+      "bytes": 14030,
+      "sha256": "b95d80ef420ef5217781b3e39defd4e74ddce0135b4598f1c265d0aa2c318beb",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/rtl_gemv_20261031/figure/03_python_vs_rtl.png",
+      "status": "added",
+      "bytes": 97920,
+      "sha256": "2dadbafcb402fd4f96ba33b8a9096c1f2d5f4087aa84f04e82ca3df306464791",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/rtl_gemv_20261031/figure/03_python_vs_rtl.svg",
+      "status": "added",
+      "bytes": 32098,
+      "sha256": "3a2b0b2ab3b956f8c227658b3ee8d5c6223ff67b2f8c152e6e5c32f5fca9d35f",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/rtl_gemv_20261031/figure/04_rtl_communication.png",
+      "status": "added",
+      "bytes": 116670,
+      "sha256": "6dfa4543fb3bfa7e12f0a1fad1e929208dc1dbeff3753bb53f4d6fb81d041ebd",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/rtl_gemv_20261031/figure/04_rtl_communication.svg",
+      "status": "added",
+      "bytes": 34285,
+      "sha256": "ba92c19c72215b7dc89d7d6193356283d8030fbd88a64dd9f8b2470176f8a7b8",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/rtl_gemv_20261031/legacy_local.json",
+      "status": "added",
+      "bytes": 10672,
+      "sha256": "74093cec637eb17c767b36ad15070b26e9f94f17ca7b6e45c2410947b2577dd0",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/rtl_gemv_20261031/legacy_reproduction.json",
+      "status": "added",
+      "bytes": 4315,
+      "sha256": "62a246b749db0850d11cd432cf2064003ba1c0ea39d4bca99597a0538342d86c",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/rtl_gemv_20261031/paired.csv",
+      "status": "added",
+      "bytes": 502,
+      "sha256": "0d9465f09fe2375fc01efaf356881ca248fee4732cc9fa3da68cb056c83c8d2a",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/rtl_gemv_20261031/publication.json",
+      "status": "added",
+      "bytes": 605,
+      "sha256": "f9020a2f7dab62cca62a5bf19dd159567d48b07fe9b36772cb92217ebaef57a1",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/rtl_gemv_20261031/root_local.json",
+      "status": "added",
+      "bytes": 229494,
+      "sha256": "e9939b0bf0fdfcf4e9f874a68c4071d36713f2866b211d0d7d7425d276d986c0",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/rtl_gemv_20261031/summary.json",
+      "status": "added",
+      "bytes": 17493,
+      "sha256": "777485310a5aa658792aa8d86bb67f488d053b3d4b974ed0763d94186266b1a6",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/rtl_gemv_20261031/tile_local.json",
+      "status": "added",
+      "bytes": 39023,
+      "sha256": "6b339fe7230654418d6cb5da78988cbbd48358317731688d2cdbc4e7aaf65290",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/rtl_gemv_20261031/tools.json",
+      "status": "added",
+      "bytes": 625,
+      "sha256": "c01af5391b81e5259a0afcc9701af8495272fbb04da0aba464b1181e242cb39a",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/validation_20261031/README.md",
+      "status": "added",
+      "bytes": 1075,
+      "sha256": "55bb4c4c3b9b68eba292e3d794479964620a8373db66e52be5e158bd315cf9ff",
+      "purpose": "documentation, provenance and reproduction"
+    },
+    {
+      "path": "data/results/validation_20261031/compact_audit.json",
+      "status": "added",
+      "bytes": 52886,
+      "sha256": "ba12ffe4150be4d91de1f848ffd6c0d5dd514cc13ea4dd8f45cd7d94fe5469a9",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/validation_20261031/figure/01_latency_ratios.png",
+      "status": "added",
+      "bytes": 319555,
+      "sha256": "adc872bf1d16007f6c484c248c14aafb2555bdf99452968d1b2a93d293815fc7",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/validation_20261031/figure/01_latency_ratios.svg",
+      "status": "added",
+      "bytes": 102807,
+      "sha256": "4a054c5288692fc7e91296e53c1b1bfcda445c1c5c65312c3b310e55c016c097",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/validation_20261031/figure/02_phases.png",
+      "status": "added",
+      "bytes": 66598,
+      "sha256": "06b940d6c82e25eb6fb62d2dcca8e238a680b66107fc58fe349831907da90d0b",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/validation_20261031/figure/02_phases.svg",
+      "status": "added",
+      "bytes": 22931,
+      "sha256": "facc903efd587fc8371b2cd867695a17a2040ae2ccf78e46e14320599efe4b60",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/validation_20261031/figure/03_budget_quality.png",
+      "status": "added",
+      "bytes": 77066,
+      "sha256": "d302bfbb1484b665e3ea0472ba349757afa9f3ec83aae02faca4ff2137dd3fe5",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/validation_20261031/figure/03_budget_quality.svg",
+      "status": "added",
+      "bytes": 27859,
+      "sha256": "85bd1f1861e057c24a82b4ba516b18f13d713eb05fa0e4f86289ee666c593033",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/validation_20261031/figure/04_search_cost.png",
+      "status": "added",
+      "bytes": 153508,
+      "sha256": "7e9235dd9f3150e4ce3491cc3f5f8b0eb0118fad4e3cabefb093b401cb38da1e",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/validation_20261031/figure/04_search_cost.svg",
+      "status": "added",
+      "bytes": 49690,
+      "sha256": "450c68396f87c713334e2ca7d2485b76867b7118c37ca2bdd47a9b42c484634c",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/validation_20261031/figure/05_prediction_errors.png",
+      "status": "added",
+      "bytes": 73797,
+      "sha256": "989d5d77e3620a956af7a449440eb17dd75ddfa047eb1975525e3cecd1baa794",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/validation_20261031/figure/05_prediction_errors.svg",
+      "status": "added",
+      "bytes": 70007,
+      "sha256": "cf9adca7f87f7503c221278c1b62b974f47c311a5e56931c6738d26c691dbc19",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/validation_20261031/figure/06_sensitivity.png",
+      "status": "added",
+      "bytes": 128405,
+      "sha256": "7cfc21be4d44ed3267a356bd5602fb38c0bcae05ac775cd3c40c4a9439b2c156",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/validation_20261031/figure/06_sensitivity.svg",
+      "status": "added",
+      "bytes": 33303,
+      "sha256": "799353b453c68fe1fe2753fa8fba390de548940505779e1354f24d1f77b83f20",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/validation_20261031/historical_integrity.json",
+      "status": "added",
+      "bytes": 1391,
+      "sha256": "e2a04ef01cbe657fe0c952a6ee6bee44eb3fb8feb68f7cc84e408263979ca6f6",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/validation_20261031/historical_main_rerun.json",
+      "status": "added",
+      "bytes": 65329,
+      "sha256": "d99bd878ce3e1a16223a6e87abc8c4b0cbab056a7288d39d24495b6061d34e1b",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/validation_20261031/historical_v03_rerun.json",
+      "status": "added",
+      "bytes": 128299,
+      "sha256": "69e55c47c64dd19d39c3dab40e146525a575a0e98faf7252799f33617e6cdcec",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/validation_20261031/historical_v04_rerun.json",
+      "status": "added",
+      "bytes": 132362,
+      "sha256": "08591c5ac75018935239a389fffbb17d4a22e141fe4042c7f23153766c17455e",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/validation_20261031/phase_errors.csv",
+      "status": "added",
+      "bytes": 213094,
+      "sha256": "330314c55149a374f270919dced5740f6789388932d2dfabaaf8febfe1427968",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/validation_20261031/provenance.json",
+      "status": "added",
+      "bytes": 3718,
+      "sha256": "1be23500754bde401b2cb0a8115463e64817bcc3eb5bce02a51213511f68f3c9",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/validation_20261031/quality.csv",
+      "status": "added",
+      "bytes": 67263,
+      "sha256": "02854482fb27a6f2ba688d20ede623d9c6f1863226895feb04d3e94a8f82899f",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/validation_20261031/records.json.gz",
+      "status": "added",
+      "bytes": 1036054,
+      "sha256": "6b9639b26bf10634201c06a3577d80252fe9d993c6e54e4312ad430a1766d56a",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/validation_20261031/summary.json",
+      "status": "added",
+      "bytes": 11867,
+      "sha256": "b718c19f71bfec259aebe752b4884c74e1a043839830206b098f8d7b42732698",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/validation_20261031/unsupported.json",
+      "status": "added",
+      "bytes": 19169,
+      "sha256": "d90462ea074b009be4be344ad9c3b6bf5b287a6bbc8cd327439e8bf231cfbe9f",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "data/results/validation_20261031/walltime.json",
+      "status": "added",
+      "bytes": 345403,
+      "sha256": "2af4d69fc475d8b4222cb48f7bd82e93cc203012e3921c3fed359bea2a06c763",
+      "purpose": "published measurement or compact execution evidence"
+    },
+    {
+      "path": "docs/gemv_8x8_validation/README.en.md",
+      "status": "added",
+      "bytes": 1641,
+      "sha256": "c1f9645f0beaacc4f5879b87211684f51acc1801da653089f0f1919a679dd132",
+      "purpose": "documentation, provenance and reproduction"
+    },
+    {
+      "path": "docs/gemv_8x8_validation/README.md",
+      "status": "added",
+      "bytes": 4832,
+      "sha256": "d7faf14be48fba427be8fac96ac5c44169c72bc569d06cd7df37a2eb752faf4b",
+      "purpose": "documentation, provenance and reproduction"
+    },
+    {
+      "path": "docs/gemv_8x8_validation/delivery_lineage.json",
+      "status": "added",
+      "bytes": 864,
+      "sha256": "a71627dedbb001c18a3ebd3f9041590ed3e850ca6b3797c076894a2fb12b7a71",
+      "purpose": "documentation, provenance and reproduction"
+    },
+    {
+      "path": "docs/gemv_8x8_validation/integration_files.json",
+      "status": "added",
+      "bytes": 15117,
+      "sha256": "4d2f8f0daf30669c03739bf09d34319e03322faafe12b8c4f0b7689efceff4c2",
+      "purpose": "documentation, provenance and reproduction"
+    },
+    {
+      "path": "docs/gemv_8x8_validation/integration_pytest.txt",
+      "status": "added",
+      "bytes": 512,
+      "sha256": "c235eaa22085c0515101cfad5c84bef6780321a2442bcfbf9903708d3bcdd169",
+      "purpose": "documentation, provenance and reproduction"
+    },
+    {
+      "path": "docs/gemv_8x8_validation/integration_validation.zh-CN.md",
+      "status": "added",
+      "bytes": 2900,
+      "sha256": "9cdd3479abadff3412d24be86416791f859d555e1dd9d0b34b93c33fd9229f82",
+      "purpose": "documentation, provenance and reproduction"
+    },
+    {
+      "path": "docs/gemv_8x8_validation/integration_verification.json",
+      "status": "added",
+      "bytes": 126949,
+      "sha256": "c606becc208f657c25cc52e73e7cd6ad21c1da8693442b545540bf73b4fb9195",
+      "purpose": "documentation, provenance and reproduction"
+    },
+    {
+      "path": "docs/gemv_8x8_validation/meeting_summary.zh-CN.md",
+      "status": "added",
+      "bytes": 1984,
+      "sha256": "9a8c1e42729b5ccd69bf0e3df9402e26f35050eb303ea729a481dd5efe9d11dc",
+      "purpose": "documentation, provenance and reproduction"
+    },
+    {
+      "path": "docs/gemv_8x8_validation/python_validation.zh-CN.md",
+      "status": "added",
+      "bytes": 25879,
+      "sha256": "6145ecf15e70c8f642fc7cb307cf9bf2d1c4234d013958ee10f320a407d0f686",
+      "purpose": "documentation, provenance and reproduction"
+    },
+    {
+      "path": "docs/gemv_8x8_validation/reproduce.zh-CN.md",
+      "status": "added",
+      "bytes": 5464,
+      "sha256": "baa12b84e71d85c4f82005a409a6100f3e5e6e929e34f9ecc9dc4c08b7a681dd",
+      "purpose": "documentation, provenance and reproduction"
+    },
+    {
+      "path": "docs/gemv_8x8_validation/rtl_validation.zh-CN.md",
+      "status": "added",
+      "bytes": 16189,
+      "sha256": "921362540d93c2e5ed24262157151d0c4d3e95ee18b1de4099bfcb26e8b457c2",
+      "purpose": "documentation, provenance and reproduction"
+    },
+    {
+      "path": "docs/spec/scalable_execution_v0.2.md",
+      "status": "modified",
+      "bytes": 8122,
+      "sha256": "196983448517a5d24917c257c54f71e3a1816e691067fa9e5c457aa82310cdb2",
+      "purpose": "documentation, provenance and reproduction"
+    },
+    {
+      "path": "ini/experiments/validation_20261031/protocol_final.json",
+      "status": "added",
+      "bytes": 5425,
+      "sha256": "120f018e327d7969f7c99d0aa404f91bfcdd56360d328800884ee9218bd58f90",
+      "purpose": "experiment protocol, cases and seeds"
+    },
+    {
+      "path": "ini/rtl_gemv_20261031.json",
+      "status": "added",
+      "bytes": 6807,
+      "sha256": "c785bf5505b941b23aa3d4e9f770f66f1b2f91274fbc37eb897d14e8cc596d4b",
+      "purpose": "experiment protocol, cases and seeds"
+    },
+    {
+      "path": "src/rtl/nmc_mesh/tb_nmc_mesh_system.sv",
+      "status": "modified",
+      "bytes": 15031,
+      "sha256": "96110cd5890fac7a256f0a7fd73f5b39b3d05962d5fa2cd1f4efa6def03af648",
+      "purpose": "verification testbench; production hardware unchanged"
+    },
+    {
+      "path": "src/tests/README.md",
+      "status": "modified",
+      "bytes": 4165,
+      "sha256": "b885fdd3e8be25982bb26724720bf05dcb16810ab377aa5d48030bb1c522408f",
+      "purpose": "documentation, provenance and reproduction"
+    },
+    {
+      "path": "src/tests/test_rtl_gemv_runner.py",
+      "status": "added",
+      "bytes": 1483,
+      "sha256": "937f1ee2c20eef22b217ff7d7d8466b26e0ca6a8883dfc15a3b8dcacff91304b",
+      "purpose": "regression tests"
+    },
+    {
+      "path": "src/tests/test_validation_campaign.py",
+      "status": "added",
+      "bytes": 1846,
+      "sha256": "09e206d87fdb167783664e0d35bc2b032fb0efbd4aa20f0d0768e0fc0fb0f81d",
+      "purpose": "regression tests"
+    },
+    {
+      "path": "tools/experiments/pressure_sweep.py",
+      "status": "modified",
+      "bytes": 15701,
+      "sha256": "b57ce1219dd5e94b2c3033a4831e9892640ef4f982e8980f365310a6156275b4",
+      "purpose": "experiment runner, summary, audit or portable tool adapter"
+    },
+    {
+      "path": "tools/experiments/review_validation_results.py",
+      "status": "added",
+      "bytes": 1665,
+      "sha256": "24f397d54a47e1362b5fa2d0efb1eac6489e24477c92296c4ff770c83ab76d4c",
+      "purpose": "experiment runner, summary, audit or portable tool adapter"
+    },
+    {
+      "path": "tools/experiments/summarize_validation_campaign.py",
+      "status": "added",
+      "bytes": 13327,
+      "sha256": "0c1f4b258556210d3f6226a0e67cc6d8c2d28cdae6baacb8aae13cfaf2f67ac6",
+      "purpose": "experiment runner, summary, audit or portable tool adapter"
+    },
+    {
+      "path": "tools/experiments/validation_campaign.py",
+      "status": "added",
+      "bytes": 12551,
+      "sha256": "190322effbbd82905c2bb75205fad5dccc7590032fb7d79466b389fc33a0361a",
+      "purpose": "experiment runner, summary, audit or portable tool adapter"
+    },
+    {
+      "path": "tools/rtl/export_gemv_validation.py",
+      "status": "added",
+      "bytes": 29478,
+      "sha256": "d65b7ef83cb0c753dd879a82746ffe7d660a8ae6a89b518e411257f1a0401d42",
+      "purpose": "experiment runner, summary, audit or portable tool adapter"
+    },
+    {
+      "path": "tools/rtl/review_gemv_results.py",
+      "status": "added",
+      "bytes": 1357,
+      "sha256": "7d0148ecfb94dc6f50f6942c6159490789c6fb3d002bfd2708e3ad4b48f71a58",
+      "purpose": "experiment runner, summary, audit or portable tool adapter"
+    },
+    {
+      "path": "tools/rtl/run_mesh_rtl.py",
+      "status": "modified",
+      "bytes": 17319,
+      "sha256": "c898a7094d660b6d116af842abaa645d60491b5f3318a2d50294f0b76e14671e",
+      "purpose": "experiment runner, summary, audit or portable tool adapter"
+    },
+    {
+      "path": "tools/rtl/run_tile_rtl.py",
+      "status": "modified",
+      "bytes": 16044,
+      "sha256": "9af265ffd85a08572142668083a2e657d16c3f400547396a860358ed48a317cd",
+      "purpose": "experiment runner, summary, audit or portable tool adapter"
+    },
+    {
+      "path": "tools/rtl/summarize_gemv_rtl.py",
+      "status": "added",
+      "bytes": 12628,
+      "sha256": "e40fbf4f7b979a5416aa4d30325c716404ea52a0bc553958342ff0126842ea9a",
+      "purpose": "experiment runner, summary, audit or portable tool adapter"
+    },
+    {
+      "path": "tools/rtl/windows_oss_environment.ps1",
+      "status": "added",
+      "bytes": 1463,
+      "sha256": "47969a5a95183fe6cb1d2f88ebc7c20ef6827ed2f3fbf7a94c45ae0012df6e15",
+      "purpose": "experiment runner, summary, audit or portable tool adapter"
+    },
+    {
+      "path": "tools/rtl/windows_tool_launcher.cs",
+      "status": "added",
+      "bytes": 2313,
+      "sha256": "200570e4102e9102313d751d24e80f4f771309d3576908df5951b50ed10c73fb",
+      "purpose": "experiment runner, summary, audit or portable tool adapter"
+    }
+  ]
+}

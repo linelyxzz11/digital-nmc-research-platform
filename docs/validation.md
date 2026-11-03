@@ -1,5 +1,7 @@
 # 验证指南与运行记录
 
+v0.3 新增 [自动映射与同硬件评价](spec/mapping_search_v0.3.md)、[九项 64 Tile 集成 RTL](../src/rtl/nmc_mesh/README.md) 和独立完整端点的逐边沿比较。数据见 [映射实验](../data/results/mapping_search_20261028/README.md)、[集成 RTL](../data/results/mesh_rtl_20261028/README.md)。以下分阶段指南保留原 Demo 合同与历史验证记录。
+
 [Demo 0 入门](#demo0) · [Demo 0B 周期 Trace](#trace) · [Comm 0A–0C](#comm) · [NMC Demo 1](#demo1) · [NMC Demo 2](#demo2)
 
 <a id="demo0"></a>
@@ -568,7 +570,7 @@ Demo 2 定向测试：34 passed in 0.14s
 日期：2026-10-20，计划执行集成更新于 2026-10-21。入口为 `src/compiler/auto_mapper_v0_1.py`，规则与运行方法见 [Mapper 说明](../src/compiler/README.md)。
 
 - ROW 与 K 默认沿用现有 Demo 的连续、近似均分；K 模式接受合法的显式切分点。
-- auto 只在默认 ROW/K 候选间按合法性选择，ROW 合法则优先；这不是性能最优声明。
+- auto 在默认 ROW/K 候选间按 `cost_score = 每 Tile MAC/4 周期 + 输入写/ACK/结果包/DONE 包数` 选择，平局取 ROW；这是一阶代理，不是真实周期预测。
 - 计划包括 TileTask、权重预加载镜像、输入 MEM_WRITE、Root 配置和期望 ACK。
 - 保留现有“权重驻留、输入经 NoC 写入并等待 ACK”的边界，不把权重加载计为已经模拟的传输。
 - Demo CLI 通过 `--plan` 直接读取并执行计划；执行前重新校验固定硬件参数、切分覆盖、TileTask 字段、权重镜像长度、输入写字节覆盖和 ACK 身份。
@@ -594,10 +596,130 @@ python tools/check_layout.py --tracked
 计划执行入口复用 Demo 1/2 的同一调度链：`plan_from_mapping` 校验 JSON 并生成 `ExecutionPlan`，`run_plan` 预加载权重镜像、发送输入写、启动任务并收集结果。计划路径与硬编码 Demo 路径的 `y`、事件 Trace、ACK 集合和摘要必须完全一致。`--workload` 只用于 Host 侧 golden 比较，不向执行链提供矩阵数据。
 
 ```text
-完整 pytest 回归：145 passed
-其中 Mapper 回归：26 项
+完整 pytest 回归：163 passed
+其中 Mapper 回归：31 项
 其中 Plan Runner：40 项（7 组等价执行、CLI 往返、错误入口、30 种篡改计划）
+其中 Plan Sweep：13 项（枚举、形状预设、采样切分、不可行记录、确定性、排序、一阶代价、CSV/JSON 输出）
 Mapper 内置自检：28 个场景全部通过
 ```
 
 计划执行仍使用功能 Compute 和周期步进 NoC，不构成完整 GEMV 延迟，也不代表 RTL 等价。
+
+### 2026-10-21 批量计划对比
+
+入口：`tools/experiments/mapper_sweep.py`。它枚举显式 ROW/K、worker 顺序、Root 位置和 K 切分，为每个候选生成计划并执行，记录 `network_schedule_cycles`、`flit_hops`、最大 Router FIFO 占用、结果包数和 golden 校验，可输出 JSON 与 CSV。
+
+```bash
+PYTHONPATH=src python tools/experiments/mapper_sweep.py --demo --placements all --output data/results/mapper_sweep_demo.json --csv data/results/mapper_sweep_demo.csv
+PYTHONPATH=src python tools/experiments/mapper_sweep.py --workload data/workloads/demo1_gemv.json --k-splits all
+```
+
+Demo 4×4 工作负载、12 种放置、ROW/K 各一份默认计划的结果为 `cases=24 ok=24 infeasible=0 error=0 golden_failures=0`。相同放置下 ROW 与 K 的通信调度相同；不同的是放置：
+
+```text
+workers (1,2)/(2,1), Root 0  -> 22 cycles, 10 hops
+workers (1,2)/(2,1), Root 3  -> 24 cycles, 12 hops
+workers (1,3)/(3,1), Root 0  -> 24 cycles, 15 hops
+workers (2,3)/(3,2), Root 0  -> 24 cycles, 15 hops
+```
+
+这说明批量层能区分放置带来的 NoC 差异，但 4×4 Demo 太小，无法区分 ROW 与 K。要研究切分与归约策略，需要更大 M/K 的工作负载。所有数字仅为通信调度，Compute 仍是功能模型。
+
+### 2026-10-21 形状矩阵
+
+`--shapes` 接受 `MxK` 列表或预设，矩阵按确定性公式生成，不额外提交数据文件：
+
+- `frontier`：每 Tile 权重占满 4096 B（4×2048 … 256×32）。
+- `half`：半容量中间点（4×1024 … 256×16）。
+- `extremes`：细长边界（1×2048、256×1 等）。
+- `aspect`：同权重、反向长宽比（16×128 vs 128×16、32×64 vs 64×32 等）。
+- `suite`：以上四组去重后的 24 个形状。
+
+```bash
+PYTHONPATH=src python tools/experiments/mapper_sweep.py --shapes suite --output data/results/mapper_sweep_suite.json --csv data/results/mapper_sweep_suite.csv
+PYTHONPATH=src python tools/experiments/mapper_sweep.py --shapes 16x128,128x16,32x64,64x32 --top 2
+```
+
+`--k-splits all` 在 K ≤ 64 时穷举，K > 64 时改为 1/8、1/4、1/2、3/4、7/8 采样。
+
+默认放置 `(1,2)`、Root 3、默认切分下的结果为 `24 shapes / 48 cases：ok=43 infeasible=5 error=0 golden_failures=0`。5 个不可行用例分别是 4×2048、1×2048、2×2048、1×1024 的 ROW，以及 256×1 的 K。代表性对比（cycles/hops）：
+
+| 形状 | ROW | K | 较优 |
+|---|---|---|---|
+| 4×2048 | 不可行 | 3594/1542 | K |
+| 16×256 | 910/394 | 470/210 | K |
+| 64×128 | 486/226 | 294/162 | K |
+| 128×32 | 182/114 | 190/154 | ROW（微幅） |
+| 256×32 | 246/178 | 318/282 | ROW |
+| 16×128 | 462/202 | 246/114 | K |
+| 128×16 | 126/90 | 162/142 | ROW |
+| 32×64 | 246/114 | 150/82 | K |
+| 64×32 | 150/82 | 126/90 | K |
+
+初步规律：M/K 比值低（K 主导）时 K 切分更省；M/K 高（M 主导，ROW 的结果包更少）时 ROW 更省，交叉点大致在 M/K ≈ 4 附近（128×32 仅领先 8 cycles）。这只是当前包计数模型的观测，不是最终代价模型；Compute 仍是功能模型，放置也固定在 `(1,2)`/Root 3。
+
+### 2026-10-21 一阶代价与校准
+
+计划诊断新增每 Tile 的 `mac_cycles` 和整体的一阶代价：
+
+```text
+estimated_compute_cycles = max_tile ceil(m_local * k_local / 4)
+estimated_packets        = 2 * 输入写包数 + 结果包数 + 1 (DONE)
+cost_score               = estimated_compute_cycles + estimated_packets
+```
+
+`auto` 已改为在 ROW/K 候选间选择较小的 `cost_score`，平局取 ROW。该模型假设 Compute 与通信不重叠、每个包至少占一个周期，且不区分包类型与路由距离，因此只是排序代理，不是周期预测。
+
+用 `--shapes suite` 的 24 个形状校准：`cost_score` 选出的候选在 **22/24** 个形状上达到观测最佳周期。两个不一致点是 128×64 与 64×32——两种切分的 `cost_score` 完全相同（1121、305），`auto` 按平局规则取 ROW，而实测 K 少 16/24 cycles。因为代价函数无法区分这两种包的组合，这属于当前一阶模型的已知盲区；若要消除，需要引入包类型/路由距离或实测标定。
+
+仍缺失的代价项：Bank 服务时间、权重预加载、Compute 与通信的重叠、FIFO 反压对端到端的影响。
+
+## 2026-10-28：单 Tile SRAM/Bank/MAC 逐请求时序
+
+先冻结内部计算端口：Weight 32 bit/周期、Input 8 bit/周期、独立并行、同步读延迟 1；Result 四个 32-bit Bank；两个操作数对槽位、每周期一次 4-Lane MAC 更新。请求在接受时取数，在指定周期返回，全部有效 Lane 写完后才允许结果握手。完整约定见 [Compute 9.2](spec/compute_architecture_v0.1.md#92-单-tile-端口与-bank-参考组织2026-10-28-补充)。
+
+`src/tests/test_tile_timing.py` 的 28 项测试核对手算 5×3 Trace、实际返回数据、SRAM 提前写入禁止、Y_base 四种 word 对齐、延迟/带宽分离、有限缓冲、地址决定的冲突、轮询公平性、Result 序列化写回与反压。默认配置与原公式时序模型逐周期比较信号和存储内容。全部项目回归 **233 项通过**。
+
+`tools/experiments/tile_timing.py` 对 12 套配置、12 种形状、两个种子及手算/反压例子执行 **301 次验证，全部通过**；基线 5×3 为 15 周期，Result 单 Bank 为 18，共享单 Bank 的 Weight/Input 为 21。原始记录与源码快照位于 `data/results/tile_timing_20261028/`。详细方法与结论见 [实验记录](../tools/experiments/compute_timing.md#2026-10-28先验证单-tile-端口时序)。
+
+此验证覆盖 Python 单 Tile 内部端口与计算调度；外部加载/读回控制器、复位时序、非法任务的硬件握手、NI/归约争用和 NMC Tile RTL 尚需独立实现与验证。
+
+## 2026-10-28：单 Tile RTL 与 Python 逐周期对照
+
+上述单 Tile 的下一阶段现已实现。`src/rtl/nmc_tile/` 包含 MAC、显式单口 SRAM 组织、Task/Result/LocalDone 控制与外部加载接口。运行 `python tools/rtl/run_tile_rtl.py --seeds 32 --output-dir dump/rtl_tile_20261028`：71 个用例/77 段任务执行全部通过。5×3 两次结果握手为 cycle 6/13，Done 为 14；每个结果与 Done 各阻塞三周期时共 24 周期。
+
+每个边沿与 Python 请求级模型核对请求、返回、累加器、写回和握手；外部端口读回全部 Result SRAM，覆盖复位保留和重启。Verilator lint 通过，Yosys `check -assert` 通过；检查六块存储、49,152 bit、每块一个同步读口和一个写口，Host/Compute 显式互斥复用。该检查使用通用存储结构，不提供具体 SRAM 宏时序、面积、功耗或 Fmax。
+
+完整说明及结果入口见 [Tile RTL](../src/rtl/nmc_tile/README.md)。项目回归现为 234 项；完整波形保存在上述 dump 目录，GitHub Actions 也保存回归 artifact。剩余系统工作与两台电脑的分工见 [并行计划](parallel_work.zh-CN.md)。
+
+## 2026-10-28：逐请求 Tile/NI/Mesh 同时钟集成
+
+`run_plan` 与 Demo 1/2 支持 `tile_timing=TileComputeConfig()`，CLI 为 `--compute-model tile`，可选 JSON 配置与 `--tile-trace`。共享执行循环直接使用已预加载 SRAM 和原 ResultNI，逐周期推进 Compute/NoC；可选 `TILE_CYCLE` 将局部周期映射到 `TASK_START + local_cycle`。完成后的 Tile 不再重复输出旧周期事件。
+
+全部 24 个形状、默认放置、ROW/K 的 43 个可行计划完整系统 Trace 与公式基线一致；另 5 个保持原不可行状态。强压力、Host 兼 Root、端口限制、参数冲突与 CLI 导出均通过。五组实验比较 open/eighth 的固定相位 0，共 480 条记录，430 次成功、50 次预期不可行；其中默认端口的 86 次执行全部网络指标与公式模型一致，10 次不可行状态一致。项目回归 **265 项通过**。
+
+详细配置、计数单位、例子与计时边界见 [实验记录](../tools/experiments/compute_timing.md#timed-tile-system)。当前输入写提交与端点归约仍为功能操作，权重预加载与命令/VALIDATE 不计时；下一阶段在本机继续补有限 Root 服务与缓冲。
+
+## 2026-10-28：有限 Root 队列和服务周期
+
+`TimedRoot` 已接入同一系统时钟，默认两项 RX 槽、一项活动 Packet、256 项部分和、一个 Done 槽，每次最多服务四个 INT32；读、加、更新和最终写回分别占周期。接收 RESULT HEAD 前预留整个包槽，已预留的 TAIL 不再申请槽；Done 直接从有限输出队列交给 NI。所有旧的功能 Root 入口继续支持。
+
+独立两来源/四输出例子：四通道共 13 周期，两通道 20，单通道 34；数值 `[5,3,-3,-11]`，首次最终写回分别在 9、12、18。新增 40 项测试覆盖阶段可见性、队列/输出反压、来源 mask、错误原子性、回绕/到达顺序和 Host 兼 Root；不均衡 K 切分填满部分和缓冲后仍能由匹配来源排空。全项目现为 **305 项通过**。
+
+全部 24 形状、固定放置、五组 Root 配置，无人工 ejection gate：240 条记录，215 次成功、25 次容量不可行；数值、ACK/Done、输入加载与网络流量检查通过。默认 Root 的 19 个双策略可行形状仍为 K 胜 14、ROW 胜 5。详细配置、阶段公式、实验表和数据入口见 [Root 服务规范](spec/root_service_v0.1.md)。当前输入写提交仍为功能操作；Root 复位/ERROR 传播和 RTL 尚待验证。
+
+## 2026-10-28：Root 宽写回接入和 RTL 校准
+
+Tile 顶层新增 128-bit `root_wr_*`，仲裁后复用四个 Result Bank。连续 16 周期接受 16 个全宽向量，确认空闲端口每周期最多四个 INT32，默认 `write_cycles=1` 与 RTL 一致。无额外响应气泡，非法地址/mask 整组拒绝；每项错误后立即读回完整 SRAM。Compute/Host 争用、Host 响应保持、任务优先级、复位取消与已提交数据保留通过。
+
+Python 新增写请求观察与 `write_ready` 反压；六项测试覆盖 1/2/4 通道、W=1/3 的请求保持和延迟完成。51 组 Python/RTL 对照覆盖 FINAL/PSUM、1/3/4/5/7/13/256 输出、混合来源完成及六组真实 Host 争用；请求、ready、提交周期及完整 1 KiB SRAM 均一致。
+
+原单 Tile 71 用例/77 段执行继续通过，5×3 无阻塞时序仍为结果 6/13、LocalDone 14。Yosys 保留六块单读/单写服务端口、同步读 SRAM，共 49,152 bit。全项目 **312 项 pytest** 的验收入口包含新的 Root RTL 回归。完整命令、精简结果和源码快照见 [写回合同](spec/root_writeback_rtl_v0.1.md)。这些证据覆盖最终写路径；Root 部分和 SRAM、ALU、协议控制和完整系统输入提交仍需继续实现/校准。
+
+## 2026-10-28：64 Tile 主实验与三机分片
+
+新 Mapper 和同时钟执行入口复用 TileTask、SRAM/Compute、有限 Root 和 wormhole Router，扩展多 worker、二维分块、每输出来源表及分层归约。新旧 2×2 任务、数值、周期和 flit-hop 一致；三个二维 leaf 任务通过 ID 重映射送入原 Tile RTL，周期/数据/地址/全部 SRAM 读回通过。扩容没有替换既有局部校准。
+
+新增实例隔离、64-bit 完成来源、有限多层归约反压、错误原子性、计划篡改、跨分片续跑和严格合并测试，项目共 **349 项 pytest**。JSON 数字 Tile key 的往返规范化有独立回归；错误源码、错误计划、损坏文件、重复、漏项、混合 commit 和错误数值均会拒绝。独立干净克隆用纯标准库执行三分片冒烟，12/12 通过并合并完整。
+
+固定主清单的三个分片为 38/37/37 项，在本机并行验证 112/112 成功，所有记录经哈希、版本、计划和独立 golden 检查后合并。56 组同条件比较中树归约赢 40、平 16，几何平均模型周期加速比 1.4851×；额外小任务探针集中 64、树 74，作为收益边界单独保留。完整配置、范围和数据见 [64 Tile 合同](spec/scalable_execution_v0.2.md)，组员运行方式见 [多机说明](distributed_experiments.zh-CN.md)。没有宣称完整 64 Tile RTL 或相对 UniNDP 的性能收益。

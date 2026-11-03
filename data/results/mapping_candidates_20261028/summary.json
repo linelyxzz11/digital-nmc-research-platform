@@ -1,0 +1,594 @@
+{
+  "scope": "Same 2x2 hardware: balanced ROW, sampled K cuts, all legal two-worker/Root placements; exhaustive oracle over this finite candidate list only",
+  "timing_scope": "Weight-resident, functional input commit, timed Tile and Root; not full end-to-end RTL",
+  "tile_timing": {
+    "memory": {
+      "weight": {
+        "banks": 1,
+        "word_bytes": 4,
+        "ports_per_bank": 1,
+        "read_latency": 1,
+        "issue_interval": 1
+      },
+      "input": {
+        "banks": 1,
+        "word_bytes": 1,
+        "ports_per_bank": 1,
+        "read_latency": 1,
+        "issue_interval": 1
+      },
+      "result": {
+        "banks": 4,
+        "word_bytes": 4,
+        "ports_per_bank": 1,
+        "read_latency": 1,
+        "issue_interval": 1
+      },
+      "share_weight_input": false
+    },
+    "operand_slots": 2,
+    "mac_interval": 1
+  },
+  "root_timing": {
+    "rx_queue_packets": 2,
+    "reduction_entries": 256,
+    "done_queue_packets": 1,
+    "lanes_per_cycle": 4,
+    "read_cycles": 1,
+    "add_cycles": 1,
+    "update_cycles": 1,
+    "write_cycles": 1
+  },
+  "shapes": "suite",
+  "k_splits": "sample",
+  "cases": 1680,
+  "ok": 1188,
+  "source_commit": "1ea8010fb130c673e45c3c78eae5abe199f12bbc",
+  "source_sha256": {
+    "src/compiler/auto_mapper_v0_1.py": "57dbfd936b135d9594d20af867f00c74e812d8009a4e42787b07f8cea8624f79",
+    "src/simulator/system/demo1.py": "4185e7d93c50d5b8b45d6853fdca08e6c5aba3fa322a45eae409df75cf6a580b",
+    "src/simulator/system/tile_timing.py": "05f69c24cb81836210a25907918dc380962c8df5f74bccc9afe2cc9736a8bf80",
+    "src/simulator/system/tile_memory.py": "11822bfcfc7e1a9532b390be7af669916f02d85e90692eb39f271b13e5cc32b8",
+    "src/simulator/system/timed_endpoint.py": "49e32b152617f9f220014986427c23b39dc6d496ce4fa5499567e6ad938d9185",
+    "src/simulator/system/root_config.py": "3dceeff1b8146bd9965c5deb64106d0c75a6a3270dc6b4f00218f8d1938599d8",
+    "src/simulator/communication/v0_1.py": "7f9643487aaa80ef7fc8a9a31a372c98ae27c942aa10dcee33b6f020b174c87f",
+    "src/hardware.py": "583e43a8c1152c33d4ed60cfc356f0d05a77565810229c7c33bc403ffabcc8c8",
+    "tools/experiments/mapper_sweep.py": "a599347901461f478aaf6b0961c5d68c637f72bf16d56f18914fef386caa0097",
+    "tools/experiments/mapping_candidate_sweep.py": "ebe4135a5ad683ae75296e48a4ab31e84aaeee8cc645dd0c03c1add33ad1c072"
+  },
+  "summaries": [
+    {
+      "m": 4,
+      "k": 2048,
+      "candidates": 72,
+      "feasible": 12,
+      "fixed_row": null,
+      "fixed_k": 4631,
+      "current_auto": 4631,
+      "fixed_placement_oracle": 4631,
+      "expanded_oracle": 4629,
+      "expanded_choice": {
+        "partition": "K",
+        "workers": [
+          1,
+          2
+        ],
+        "root_tile": 0,
+        "split": 1024
+      },
+      "headroom_vs_current_auto": 1.0004320587599913,
+      "headroom_vs_fixed_oracle": 1.0004320587599913
+    },
+    {
+      "m": 8,
+      "k": 1024,
+      "candidates": 72,
+      "feasible": 24,
+      "fixed_row": 4626,
+      "fixed_k": 2843,
+      "current_auto": 2843,
+      "fixed_placement_oracle": 2843,
+      "expanded_oracle": 2841,
+      "expanded_choice": {
+        "partition": "K",
+        "workers": [
+          1,
+          2
+        ],
+        "root_tile": 0,
+        "split": 512
+      },
+      "headroom_vs_current_auto": 1.0007039774727209,
+      "headroom_vs_fixed_oracle": 1.0007039774727209
+    },
+    {
+      "m": 16,
+      "k": 512,
+      "candidates": 72,
+      "feasible": 24,
+      "fixed_row": 2838,
+      "fixed_k": 1955,
+      "current_auto": 1955,
+      "fixed_placement_oracle": 1955,
+      "expanded_oracle": 1953,
+      "expanded_choice": {
+        "partition": "K",
+        "workers": [
+          1,
+          2
+        ],
+        "root_tile": 0,
+        "split": 256
+      },
+      "headroom_vs_current_auto": 1.0010240655401945,
+      "headroom_vs_fixed_oracle": 1.0010240655401945
+    },
+    {
+      "m": 32,
+      "k": 256,
+      "candidates": 72,
+      "feasible": 24,
+      "fixed_row": 1950,
+      "fixed_k": 1523,
+      "current_auto": 1523,
+      "fixed_placement_oracle": 1523,
+      "expanded_oracle": 1521,
+      "expanded_choice": {
+        "partition": "K",
+        "workers": [
+          1,
+          2
+        ],
+        "root_tile": 0,
+        "split": 128
+      },
+      "headroom_vs_current_auto": 1.0013149243918475,
+      "headroom_vs_fixed_oracle": 1.0013149243918475
+    },
+    {
+      "m": 64,
+      "k": 128,
+      "candidates": 72,
+      "feasible": 24,
+      "fixed_row": 1518,
+      "fixed_k": 1331,
+      "current_auto": 1331,
+      "fixed_placement_oracle": 1331,
+      "expanded_oracle": 1329,
+      "expanded_choice": {
+        "partition": "K",
+        "workers": [
+          1,
+          2
+        ],
+        "root_tile": 0,
+        "split": 64
+      },
+      "headroom_vs_current_auto": 1.00150489089541,
+      "headroom_vs_fixed_oracle": 1.00150489089541
+    },
+    {
+      "m": 128,
+      "k": 64,
+      "candidates": 72,
+      "feasible": 24,
+      "fixed_row": 1326,
+      "fixed_k": 1283,
+      "current_auto": 1326,
+      "fixed_placement_oracle": 1283,
+      "expanded_oracle": 1281,
+      "expanded_choice": {
+        "partition": "K",
+        "workers": [
+          1,
+          2
+        ],
+        "root_tile": 0,
+        "split": 32
+      },
+      "headroom_vs_current_auto": 1.035128805620609,
+      "headroom_vs_fixed_oracle": 1.0015612802498048
+    },
+    {
+      "m": 256,
+      "k": 32,
+      "candidates": 72,
+      "feasible": 24,
+      "fixed_row": 1278,
+      "fixed_k": 1355,
+      "current_auto": 1278,
+      "fixed_placement_oracle": 1278,
+      "expanded_oracle": 1276,
+      "expanded_choice": {
+        "partition": "ROW",
+        "workers": [
+          1,
+          2
+        ],
+        "root_tile": 0,
+        "split": 128
+      },
+      "headroom_vs_current_auto": 1.0015673981191222,
+      "headroom_vs_fixed_oracle": 1.0015673981191222
+    },
+    {
+      "m": 4,
+      "k": 1024,
+      "candidates": 72,
+      "feasible": 72,
+      "fixed_row": 4626,
+      "fixed_k": 2327,
+      "current_auto": 2327,
+      "fixed_placement_oracle": 2327,
+      "expanded_oracle": 2325,
+      "expanded_choice": {
+        "partition": "K",
+        "workers": [
+          1,
+          2
+        ],
+        "root_tile": 0,
+        "split": 512
+      },
+      "headroom_vs_current_auto": 1.0008602150537635,
+      "headroom_vs_fixed_oracle": 1.0008602150537635
+    },
+    {
+      "m": 8,
+      "k": 512,
+      "candidates": 72,
+      "feasible": 72,
+      "fixed_row": 2322,
+      "fixed_k": 1435,
+      "current_auto": 1435,
+      "fixed_placement_oracle": 1435,
+      "expanded_oracle": 1433,
+      "expanded_choice": {
+        "partition": "K",
+        "workers": [
+          1,
+          2
+        ],
+        "root_tile": 0,
+        "split": 256
+      },
+      "headroom_vs_current_auto": 1.0013956734124214,
+      "headroom_vs_fixed_oracle": 1.0013956734124214
+    },
+    {
+      "m": 16,
+      "k": 256,
+      "candidates": 72,
+      "feasible": 72,
+      "fixed_row": 1430,
+      "fixed_k": 995,
+      "current_auto": 995,
+      "fixed_placement_oracle": 995,
+      "expanded_oracle": 993,
+      "expanded_choice": {
+        "partition": "K",
+        "workers": [
+          1,
+          2
+        ],
+        "root_tile": 0,
+        "split": 128
+      },
+      "headroom_vs_current_auto": 1.002014098690836,
+      "headroom_vs_fixed_oracle": 1.002014098690836
+    },
+    {
+      "m": 32,
+      "k": 128,
+      "candidates": 72,
+      "feasible": 72,
+      "fixed_row": 990,
+      "fixed_k": 787,
+      "current_auto": 787,
+      "fixed_placement_oracle": 787,
+      "expanded_oracle": 785,
+      "expanded_choice": {
+        "partition": "K",
+        "workers": [
+          1,
+          2
+        ],
+        "root_tile": 0,
+        "split": 64
+      },
+      "headroom_vs_current_auto": 1.002547770700637,
+      "headroom_vs_fixed_oracle": 1.002547770700637
+    },
+    {
+      "m": 64,
+      "k": 64,
+      "candidates": 72,
+      "feasible": 72,
+      "fixed_row": 782,
+      "fixed_k": 707,
+      "current_auto": 707,
+      "fixed_placement_oracle": 707,
+      "expanded_oracle": 705,
+      "expanded_choice": {
+        "partition": "K",
+        "workers": [
+          1,
+          2
+        ],
+        "root_tile": 0,
+        "split": 32
+      },
+      "headroom_vs_current_auto": 1.0028368794326241,
+      "headroom_vs_fixed_oracle": 1.0028368794326241
+    },
+    {
+      "m": 128,
+      "k": 32,
+      "candidates": 72,
+      "feasible": 72,
+      "fixed_row": 702,
+      "fixed_k": 715,
+      "current_auto": 702,
+      "fixed_placement_oracle": 702,
+      "expanded_oracle": 700,
+      "expanded_choice": {
+        "partition": "ROW",
+        "workers": [
+          1,
+          2
+        ],
+        "root_tile": 0,
+        "split": 64
+      },
+      "headroom_vs_current_auto": 1.002857142857143,
+      "headroom_vs_fixed_oracle": 1.002857142857143
+    },
+    {
+      "m": 256,
+      "k": 16,
+      "candidates": 72,
+      "feasible": 72,
+      "fixed_row": 710,
+      "fixed_k": 815,
+      "current_auto": 710,
+      "fixed_placement_oracle": 710,
+      "expanded_oracle": 708,
+      "expanded_choice": {
+        "partition": "ROW",
+        "workers": [
+          1,
+          2
+        ],
+        "root_tile": 0,
+        "split": 128
+      },
+      "headroom_vs_current_auto": 1.002824858757062,
+      "headroom_vs_fixed_oracle": 1.002824858757062
+    },
+    {
+      "m": 1,
+      "k": 2048,
+      "candidates": 72,
+      "feasible": 12,
+      "fixed_row": null,
+      "fixed_k": 4631,
+      "current_auto": 4631,
+      "fixed_placement_oracle": 4631,
+      "expanded_oracle": 4629,
+      "expanded_choice": {
+        "partition": "K",
+        "workers": [
+          1,
+          2
+        ],
+        "root_tile": 0,
+        "split": 1024
+      },
+      "headroom_vs_current_auto": 1.0004320587599913,
+      "headroom_vs_fixed_oracle": 1.0004320587599913
+    },
+    {
+      "m": 2,
+      "k": 2048,
+      "candidates": 72,
+      "feasible": 12,
+      "fixed_row": null,
+      "fixed_k": 4631,
+      "current_auto": 4631,
+      "fixed_placement_oracle": 4631,
+      "expanded_oracle": 4629,
+      "expanded_choice": {
+        "partition": "K",
+        "workers": [
+          1,
+          2
+        ],
+        "root_tile": 0,
+        "split": 1024
+      },
+      "headroom_vs_current_auto": 1.0004320587599913,
+      "headroom_vs_fixed_oracle": 1.0004320587599913
+    },
+    {
+      "m": 1,
+      "k": 1024,
+      "candidates": 72,
+      "feasible": 60,
+      "fixed_row": null,
+      "fixed_k": 2327,
+      "current_auto": 2327,
+      "fixed_placement_oracle": 2327,
+      "expanded_oracle": 2325,
+      "expanded_choice": {
+        "partition": "K",
+        "workers": [
+          1,
+          2
+        ],
+        "root_tile": 0,
+        "split": 512
+      },
+      "headroom_vs_current_auto": 1.0008602150537635,
+      "headroom_vs_fixed_oracle": 1.0008602150537635
+    },
+    {
+      "m": 256,
+      "k": 1,
+      "candidates": 24,
+      "feasible": 12,
+      "fixed_row": 219,
+      "fixed_k": null,
+      "current_auto": 219,
+      "fixed_placement_oracle": 219,
+      "expanded_oracle": 217,
+      "expanded_choice": {
+        "partition": "ROW",
+        "workers": [
+          1,
+          2
+        ],
+        "root_tile": 0,
+        "split": 128
+      },
+      "headroom_vs_current_auto": 1.0092165898617511,
+      "headroom_vs_fixed_oracle": 1.0092165898617511
+    },
+    {
+      "m": 256,
+      "k": 8,
+      "candidates": 72,
+      "feasible": 72,
+      "fixed_row": 426,
+      "fixed_k": 734,
+      "current_auto": 426,
+      "fixed_placement_oracle": 426,
+      "expanded_oracle": 424,
+      "expanded_choice": {
+        "partition": "ROW",
+        "workers": [
+          1,
+          2
+        ],
+        "root_tile": 0,
+        "split": 128
+      },
+      "headroom_vs_current_auto": 1.0047169811320755,
+      "headroom_vs_fixed_oracle": 1.0047169811320755
+    },
+    {
+      "m": 8,
+      "k": 256,
+      "candidates": 72,
+      "feasible": 72,
+      "fixed_row": 1170,
+      "fixed_k": 731,
+      "current_auto": 731,
+      "fixed_placement_oracle": 731,
+      "expanded_oracle": 729,
+      "expanded_choice": {
+        "partition": "K",
+        "workers": [
+          1,
+          2
+        ],
+        "root_tile": 0,
+        "split": 128
+      },
+      "headroom_vs_current_auto": 1.0027434842249656,
+      "headroom_vs_fixed_oracle": 1.0027434842249656
+    },
+    {
+      "m": 16,
+      "k": 128,
+      "candidates": 72,
+      "feasible": 72,
+      "fixed_row": 726,
+      "fixed_k": 515,
+      "current_auto": 515,
+      "fixed_placement_oracle": 515,
+      "expanded_oracle": 513,
+      "expanded_choice": {
+        "partition": "K",
+        "workers": [
+          1,
+          2
+        ],
+        "root_tile": 0,
+        "split": 64
+      },
+      "headroom_vs_current_auto": 1.003898635477583,
+      "headroom_vs_fixed_oracle": 1.003898635477583
+    },
+    {
+      "m": 128,
+      "k": 16,
+      "candidates": 72,
+      "feasible": 72,
+      "fixed_row": 390,
+      "fixed_k": 431,
+      "current_auto": 390,
+      "fixed_placement_oracle": 390,
+      "expanded_oracle": 388,
+      "expanded_choice": {
+        "partition": "ROW",
+        "workers": [
+          1,
+          2
+        ],
+        "root_tile": 0,
+        "split": 64
+      },
+      "headroom_vs_current_auto": 1.0051546391752577,
+      "headroom_vs_fixed_oracle": 1.0051546391752577
+    },
+    {
+      "m": 32,
+      "k": 64,
+      "candidates": 72,
+      "feasible": 72,
+      "fixed_row": 510,
+      "fixed_k": 419,
+      "current_auto": 419,
+      "fixed_placement_oracle": 419,
+      "expanded_oracle": 417,
+      "expanded_choice": {
+        "partition": "K",
+        "workers": [
+          1,
+          2
+        ],
+        "root_tile": 0,
+        "split": 32
+      },
+      "headroom_vs_current_auto": 1.0047961630695443,
+      "headroom_vs_fixed_oracle": 1.0047961630695443
+    },
+    {
+      "m": 64,
+      "k": 32,
+      "candidates": 72,
+      "feasible": 72,
+      "fixed_row": 414,
+      "fixed_k": 395,
+      "current_auto": 414,
+      "fixed_placement_oracle": 395,
+      "expanded_oracle": 393,
+      "expanded_choice": {
+        "partition": "K",
+        "workers": [
+          1,
+          2
+        ],
+        "root_tile": 0,
+        "split": 16
+      },
+      "headroom_vs_current_auto": 1.0534351145038168,
+      "headroom_vs_fixed_oracle": 1.005089058524173
+    }
+  ],
+  "wall_seconds": 117.44747254101094,
+  "infeasible": 492,
+  "common_feasible_shapes": 19,
+  "geometric_mean_oracle_speedup_vs_fixed_K": 1.0489573431633732,
+  "geometric_mean_oracle_speedup_vs_current_AUTO": 1.0068271056407136
+}

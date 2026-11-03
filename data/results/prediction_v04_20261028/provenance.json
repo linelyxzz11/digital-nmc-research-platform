@@ -1,0 +1,127 @@
+{
+  "frozen_commits": [
+    "9aaf78037f155ad5249451dfe0950ad29a8c15a4"
+  ],
+  "source_sha256": {
+    "pyproject.toml": "e7f42fc55a826f32afd0ccf94819bc08b9715bab91602e28a2f8af399d08b642",
+    "requirements.txt": "f6cbf18a7b3965f12327069ea80bceb9aa09da97dfb3b30e615d5eb119256aec",
+    "src/compiler/__init__.py": "e4aba99cc09fc3b939b16f9b4ada4104a7565230f8fa8120876ed56115c7d5f9",
+    "src/compiler/auto_mapper_v0_1.py": "57dbfd936b135d9594d20af867f00c74e812d8009a4e42787b07f8cea8624f79",
+    "src/compiler/bounded_predictor.py": "1c36670ffec61db730e85eadac35da53e4cfb4d445b4394d544550699172ae62",
+    "src/compiler/grid_mapper.py": "c42845f5612add2cb364958937993a8fefc4e8740234bdd8821ebfe7830d7e2e",
+    "src/compiler/mapping_search.py": "3405e132949b19c46b64e6209b05eae833445df05f130481520c3479d2bbb3b3",
+    "src/compiler/unindp_adapter.py": "529b5ef6248dd3b4dd26e8212fd8a1a0e1552ca683e9d1c7b63ac46d288e4a13",
+    "src/hardware.py": "583e43a8c1152c33d4ed60cfc356f0d05a77565810229c7c33bc403ffabcc8c8",
+    "src/simulator/__init__.py": "c433defde033fc2f2e62da6c6e66c6bbc6d8b3cc75f6df61349f994be6181147",
+    "src/simulator/communication/__init__.py": "7cb6d906a9bd63db2fc42d0547e96083574948a25fd920a939e2d88a3d74e6dc",
+    "src/simulator/communication/scalable.py": "d00b747867d06aa3791c7799315c5f8ae22469d19f2245edd4548e90d8016266",
+    "src/simulator/communication/v0_1.py": "3e44c32e050aa234b2f80cd3fa340d18573f6be8f4fc08806b826ca762dd9fb4",
+    "src/simulator/functional/__init__.py": "cf6ad18c2d47b3492e59d3fcf4d1b5d5de6bf823fe5ae5c20949c0635598e274",
+    "src/simulator/functional/demo0_model.py": "48d663e891722c5e2c5ccd7635669566bc4c31fdaa79f62f8b3c079c8ea9809f",
+    "src/simulator/system/__init__.py": "1172c8910c6d2a224c18b68c2063af9a2208de46b04593c74949c2d595b3c8ab",
+    "src/simulator/system/compute_timing.py": "e512f4eda89a0051486ab6fef2a522fe7fd02551796ac9c52133007b12b25e3e",
+    "src/simulator/system/demo1.py": "4185e7d93c50d5b8b45d6853fdca08e6c5aba3fa322a45eae409df75cf6a580b",
+    "src/simulator/system/demo2.py": "0169a581863f74f7de8f640bed9c46affeaaffa677246a0e190c1912f5bfc4b0",
+    "src/simulator/system/endpoint_common.py": "99de8a7fea103e14ce5ecdf5c2fd8011b07ac97c089580538fa6d1a0183116d9",
+    "src/simulator/system/root_config.py": "3dceeff1b8146bd9965c5deb64106d0c75a6a3270dc6b4f00218f8d1938599d8",
+    "src/simulator/system/scalable.py": "9ddb0e58e9c289d6e98f16b1088b75e56d1b1ee58a61237922e5b4779cd97a63",
+    "src/simulator/system/tile_config.py": "2e8bdd2208acb274ca873e5f8c33f78b10ec86f32bcc7f781ea1f79c0bc286f0",
+    "src/simulator/system/tile_memory.py": "11822bfcfc7e1a9532b390be7af669916f02d85e90692eb39f271b13e5cc32b8",
+    "src/simulator/system/tile_timing.py": "05f69c24cb81836210a25907918dc380962c8df5f74bccc9afe2cc9736a8bf80",
+    "src/simulator/system/timed_endpoint.py": "1a1b9b4b5e48f05e814a17944dc6ddd4d195351dcc26c520de7598e38d580e46",
+    "tools/experiments/mapper_sweep.py": "a599347901461f478aaf6b0961c5d68c637f72bf16d56f18914fef386caa0097",
+    "tools/experiments/scalable_experiments.py": "a04d5bc2bfa33c0a0ae9e402e424a7bdd11dec5c7574706939e9232f8cf49b1a",
+    "tools/experiments/prediction_validation.py": "3931c41bc3b7b94ddf8f1260887068b9af235771a9d161057a00c12357c40ce5",
+    "tools/experiments/mapping_evaluation.py": "1a620aaaf896fbac67bbb5f99b739b13446d52de26b35338502d742ec19ef7b8"
+  },
+  "protocol": {
+    "version": "prediction-v0.4",
+    "seed": 70417,
+    "mesh": [
+      8,
+      8
+    ],
+    "grids": [
+      [
+        1,
+        16
+      ],
+      [
+        16,
+        1
+      ],
+      [
+        4,
+        4
+      ],
+      [
+        1,
+        32
+      ],
+      [
+        32,
+        1
+      ],
+      [
+        4,
+        8
+      ],
+      [
+        8,
+        4
+      ]
+    ],
+    "placements": [
+      "compact",
+      "spread"
+    ],
+    "reductions": [
+      "central",
+      "tree"
+    ],
+    "budgets": [
+      1,
+      2,
+      4
+    ],
+    "fresh_shapes": [
+      [
+        23,
+        79
+      ],
+      [
+        47,
+        143
+      ],
+      [
+        79,
+        47
+      ],
+      [
+        111,
+        173
+      ],
+      [
+        159,
+        91
+      ],
+      [
+        223,
+        43
+      ],
+      [
+        95,
+        287
+      ],
+      [
+        191,
+        239
+      ]
+    ],
+    "baseline": "unindp-adapted with fixed compact placement, unchanged resource predictor",
+    "protocol": "Known cases are development regressions; fresh shapes are evaluated only after the predictor is frozen. Select before collecting the catalogue oracle. Report proxy ranking time plus fresh numerical evaluations, not only evaluation count."
+  },
+  "protocol_source_sha256": "a7b8d0d91fa881811937920053c1807553a1e23ed2ad0347828043d71b421ac2",
+  "records_sha256": "502ee815d27e52a9965be61514db450ba75c89421f439831fe71bbd2b91ce8f7",
+  "export_source_sha256": "1c46052f7f1f258bcef80f6b72af543bdde42a5d3616c7a7caa1238314ba4945"
+}

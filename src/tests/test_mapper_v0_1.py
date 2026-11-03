@@ -98,6 +98,25 @@ def test_auto_capacity_choice_produces_correct_results(m, k, partition):
     assert plan == map_gemv(W, x, strategy="auto")
 
 
+@pytest.mark.parametrize("m,k,partition", [
+    (9, 5, "K"),
+    (16, 128, "K"),
+    (128, 16, "ROW"),
+    (64, 128, "K"),
+    (256, 32, "ROW"),
+])
+def test_auto_uses_first_order_cost(m, k, partition):
+    W, x = _workload(m, k)
+    plan = map_gemv(W, x, strategy="auto")
+    assert plan["partition"] == partition
+    assert plan["selection_policy"] == "cost_score_min_row_tiebreak"
+    diagnostics = plan["diagnostics"]
+    assert diagnostics["cost_score"] == (diagnostics["estimated_compute_cycles"]
+                                        + diagnostics["estimated_packets"])
+    assert all(tile["mac_cycles"] == (tile["m_local"] * tile["k_local"] + 3) // 4
+               for tile in diagnostics["tiles"])
+
+
 @pytest.mark.parametrize("changes", [
     {"workers": (1, 1)},
     {"workers": (0, 1)},

@@ -1,0 +1,27 @@
+[
+  {
+    "tool": "iverilog",
+    "version": "Icarus Verilog version 13.0 (devel) (s20251012-33-ga7502173d-dirty)",
+    "exit_code": 0
+  },
+  {
+    "tool": "vvp",
+    "version": "Icarus Verilog runtime version 13.0 (devel) (s20251012-33-ga7502173d-dirty)",
+    "exit_code": 0
+  },
+  {
+    "tool": "verilator",
+    "version": "Verilator 5.041 devel rev v5.040-201-g21dbdbf69",
+    "exit_code": 0
+  },
+  {
+    "tool": "yosys",
+    "version": "Yosys 0.58+94 (git sha1 4011d7265, x86_64-w64-mingw32-g++ 13.2.1 -O3)",
+    "exit_code": 0
+  },
+  {
+    "tool": "python.exe",
+    "version": "Python 3.12.14",
+    "exit_code": 0
+  }
+]

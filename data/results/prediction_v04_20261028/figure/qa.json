@@ -1,0 +1,15 @@
+{
+  "mapping_shapes": 8,
+  "prediction_candidates": 220,
+  "development_candidates": 440,
+  "rendered_pngs_inspected": true,
+  "overlap": false,
+  "clipping": false,
+  "missing_glyphs": false,
+  "editable_svg_text": {
+    "fresh_prediction_error.svg": 10,
+    "fresh_mapping.svg": 21
+  },
+  "accuracy_scope": "full reference Python evaluator, not RTL; kernel and total errors reported separately",
+  "runtime_scope": "all packet-proxy calls included; single-run observations without statistical claims"
+}

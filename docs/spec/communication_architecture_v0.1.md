@@ -364,6 +364,10 @@ TRANSACTION_DONE 发往 `host_tile`，包含 `output_count` 和 `source_mask`。
 
 `LocalDone(OK)` 仅说明结果进入源 NI；`TRANSACTION_DONE` 才说明 Root 已完成全部收集或归约。
 
+### 9.4 有限服务实现（2026-10-28）
+
+可选 `RootTiming` / `--root-model timed` 已实现有限包槽预留、输入 FIFO、活动 Packet 寄存器、部分和读/加/更新/最终写回及持有 Done 的输出队列。详细资源、阶段时钟、容量限制、错误原子性与验证证据见 [Finite Root Service v0.1](root_service_v0.1.md)。该模型不改变 Packet 格式、归约 key 或完成语义，Root RTL 与 ERROR 恢复仍待实现。
+
 ## 10. Router 架构
 
 ### 10.1 输入缓冲
