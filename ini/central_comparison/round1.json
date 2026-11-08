@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "seed": 20261108,
+  "shapes": [[128, 128], [128, 512], [256, 512]],
+  "link_intervals": [1, 2, 4],
+  "central_tiles": [0, 36],
+  "prefetch_packets": 8,
+  "sink_interval": 1,
+  "scope": "resident W; input initially at Host; complete INT32 output written at Host; experimental streaming Python endpoints"
+}

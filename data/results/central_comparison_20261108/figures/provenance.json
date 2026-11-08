@@ -1,0 +1,6 @@
+{
+  "source": "../comparison.csv",
+  "source_sha256": "0729b3ba9da93c2b21b8492354adf195d9d148de332d0ae5b979e87d5dc994d2",
+  "script_sha256": "d50e1ea4826b104f8aa73f8395cb91c49427055dd60f70292d26a54f3fb2bb0f",
+  "scope": "Deterministic Python architecture simulation; not RTL or PPA; no error bars."
+}

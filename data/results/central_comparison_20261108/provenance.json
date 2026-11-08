@@ -1,0 +1,63 @@
+{
+  "config": {
+    "schema_version": 1,
+    "seed": 20261108,
+    "shapes": [
+      [
+        128,
+        128
+      ],
+      [
+        128,
+        512
+      ],
+      [
+        256,
+        512
+      ]
+    ],
+    "link_intervals": [
+      1,
+      2,
+      4
+    ],
+    "central_tiles": [
+      0,
+      36
+    ],
+    "prefetch_packets": 8,
+    "sink_interval": 1,
+    "scope": "resident W; input initially at Host; complete INT32 output written at Host; experimental streaming Python endpoints"
+  },
+  "config_sha256": "17fe861e0316c4d409763e7d29e916ec276b1a43eb2aca2eed560a0e39cc6133",
+  "source_sha256": {
+    "src/simulator/system/central_comparison.py": "84df3d6f680b3023eb8579cda818fd94acee010c9bcb897be95873026272a9c7",
+    "src/simulator/communication/v0_1.py": "3e44c32e050aa234b2f80cd3fa340d18573f6be8f4fc08806b826ca762dd9fb4",
+    "src/simulator/system/tile_timing.py": "05f69c24cb81836210a25907918dc380962c8df5f74bccc9afe2cc9736a8bf80",
+    "src/simulator/system/tile_memory.py": "11822bfcfc7e1a9532b390be7af669916f02d85e90692eb39f271b13e5cc32b8",
+    "src/simulator/functional/demo0_model.py": "48d663e891722c5e2c5ccd7635669566bc4c31fdaa79f62f8b3c079c8ea9809f",
+    "src/compiler/grid_mapper.py": "c42845f5612add2cb364958937993a8fefc4e8740234bdd8821ebfe7830d7e2e",
+    "tools/experiments/central_comparison.py": "5bbcf019f962fcff867e3170e7ae4f2fef4d6587bab294aa93f943ae7579f848"
+  },
+  "base_commit": "d340f3f35f5f4811ccd742fc7c7af45ba16648f9",
+  "total_wall_seconds": 129.2106751250103,
+  "cases": 27,
+  "pairs": 18,
+  "all_golden_ok": true,
+  "hardware": {
+    "physical_tiles": 64,
+    "storage_workers": 32,
+    "total_active_mac": 128,
+    "weight_sram_bytes_per_storage_tile": 4096,
+    "input_sram_bytes_per_cluster": 1024,
+    "result_sram_bytes_per_cluster": 1024,
+    "weight_bank_read_bytes_per_cycle": 4,
+    "weight_bank_read_latency": 1,
+    "input_port_bytes_per_cycle": 1,
+    "host_output_bytes_per_cycle": 16,
+    "router_fifo_flits": 4,
+    "ni_fifo_flits": 4,
+    "provisioned_prefetch_bytes": 4096,
+    "note": "Same capacity budgets; central relocates 32 X/Y buffers and four-lane clusters to one endpoint. No area/Fmax equivalence claim."
+  }
+}

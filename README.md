@@ -10,6 +10,8 @@ GEMV 仿真成果独立分支：[团队阅读入口（Python＋真实 64 Tile RT
 
 ## 从这里开始
 
+- 权重长包对照：[固定 128 B 预取预算的 16/32/64/128 B 扫描](data/results/weight_bursts_20261108/README.md)，45 点数值验证；新增长包 RTL 校准后置。
+- NMC 架构对照：[同 MAC/存储预算的 Central vs NMC 第一轮](data/results/central_comparison_20261108/README.md)，27 点数值通过；独立 Python 流式模型，单集中 NI，尚非 RTL/PPA 结论。
 - 第三层 Mapper 证据：[多 Root 放置/有限目录 Oracle](data/results/multi_root_oracle_20261107/README.md)，72 组、2160 候选；原始代码归档，待配套多 Root 接口接通。
 
 - 定义计算/通信接口：[Compute v0.1](docs/spec/compute_architecture_v0.1.md)、[Communication v0.1](docs/spec/communication_architecture_v0.1.md)。
