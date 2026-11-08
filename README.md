@@ -10,6 +10,8 @@ GEMV 仿真成果独立分支：[团队阅读入口（Python＋真实 64 Tile RT
 
 ## 从这里开始
 
+- NMC 架构对照：[同 MAC/存储预算的 Central vs NMC 第一轮](data/results/central_comparison_20261108/README.md)，27 点数值通过；独立 Python 流式模型，单集中 NI，尚非 RTL/PPA 结论。
+
 - 定义计算/通信接口：[Compute v0.1](docs/spec/compute_architecture_v0.1.md)、[Communication v0.1](docs/spec/communication_architecture_v0.1.md)。
 - 运行 Demo：[Demo 0 指南](docs/validation.md#demo0)、[Comm 0A–0C 记录](docs/validation.md#comm)、[NMC Demo 1](docs/validation.md#demo1)、[NMC Demo 2](docs/validation.md#demo2)。
 - Mapper：[v0.1 使用说明与规则](src/compiler/README.md)。

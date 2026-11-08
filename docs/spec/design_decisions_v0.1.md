@@ -115,3 +115,11 @@ v0.2 复用原 TileTask、SRAM 布局、Compute 周期模型、有限 Root 和 R
 ## v0.4：修复输入开销与有界反压预测
 
 输入 stop-and-wait 的参考协议为每包 `2*d+5`，原 NoC 预测多算两周期。仅修正常数仍会低估长输出 K 切分的拥塞，因此改用有限 credit 的整包逐跳近似，并把源结果释放与 NI 握手关联；加载留下的 RR 状态也恢复。它复用端点服务合同，但不执行真实矩阵计算或完整 Flit Mesh，不叫精确 evaluator。保留旧预测与强资源基线，显式报告每候选包级推演开销，并以冻结后的新形状验证。[合同与复现](bounded_prediction_v0.4.md)。
+
+## 2026-11-08：集中计算与 NMC 的首轮架构对照
+
+固定 ROW、32 组四 Lane MAC 和相同权重 Bank，将 Central 的计算/X/Y 移到单一 NI，NMC 保留本地读。
+Central 使用有限信用预取并允许与输入分发重叠，避免每字请求往返人为串行化；两边统一窄 X 提交与 Host 最终输出口径。
+新增流式 codec 仅供独立 Python 实验，不改既有协议或声称已完成 RTL 校准。
+同容量/端口预算不是等面积证明；单 NI 和 16 B 突发是须继续检验的关键限制。
+[合同](central_nmc_comparison_v0.1.md)与[27 点结果](../../data/results/central_comparison_20261108/README.md)。
