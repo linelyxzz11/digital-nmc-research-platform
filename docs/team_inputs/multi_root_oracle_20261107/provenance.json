@@ -1,0 +1,17 @@
+{
+  "archive_sha256": "c0e40d841eb80d204a5f7c8defab53a548c82b22647230ffbc2719b4b134d74d",
+  "files": {
+    "docs/team_inputs/multi_root_oracle_20261107/source/README_中文.md": "6c5a8bb1422bec14cdabf93aae1fbe507da5987bbd4cb607ea0f0c1b50d9ceb5",
+    "docs/team_inputs/multi_root_oracle_20261107/source/docs/design/2026-11-02-multi-root-placement-oracle-design.md": "df8bbcf4fa5e3102f0a2d1ab991ac39b433d277bba7b240d45fed8d900b546dd",
+    "docs/team_inputs/multi_root_oracle_20261107/source/docs/plan/2026-11-02-multi-root-placement-oracle.md": "6c13ca942f28ba16ad79dbe72ea580a254b00c18ab8b8abf4420702da401f316",
+    "docs/team_inputs/multi_root_oracle_20261107/source/docs/spec/multi_root_placement_search_v0.1.md": "8134e3c2aea01d543a4f60a0465685ecbf42d75db7b642d2dd70b41ca899a407",
+    "docs/team_inputs/multi_root_oracle_20261107/source/ini/scalable/multi_root_placement_search.json": "5d7abd801244866f8338f7a8593b422aca61772c33cb39a6678c65ce4bb084be",
+    "data/results/multi_root_oracle_20261107/candidates.csv": "448ac2bc57d3bb7193533fb073fa8d8a5c9f57f99aebfa9882b3b72f72194ddb",
+    "data/results/multi_root_oracle_20261107/rejected.json": "a5338d955b09046ec0b16f3a9625b7955c763aae07dc722e474e6078745f932f",
+    "data/results/multi_root_oracle_20261107/results.csv": "eea1139e63b80734288486238587079582c7925a04093673531a3d4ce90dff60",
+    "docs/team_inputs/multi_root_oracle_20261107/source/src/compiler/multi_root_placement.py": "2579556cf339dd6d7e114cfa92190cd825bc25665903f218148ca48f29770b78",
+    "docs/team_inputs/multi_root_oracle_20261107/source/src/tests/test_multi_root_placement.py": "90c32fdbeb01af8325c0860a6a8e8b4064188804885566d0c0654dab4b770bce",
+    "docs/team_inputs/multi_root_oracle_20261107/source/tools/experiments/multi_root_placement_search.py": "cc9b1597d925420480bbdce4810f2c0afdb8c7dab0a65f9ca3bc8ec67e3196c6"
+  },
+  "status": "Imported evidence; full simulator not rerun; prerequisite multi-root implementation absent from main"
+}
