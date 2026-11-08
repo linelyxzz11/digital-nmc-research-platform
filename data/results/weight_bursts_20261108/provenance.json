@@ -1,0 +1,63 @@
+{
+  "config": {
+    "schema_version": 1,
+    "seed": 20261108,
+    "shapes": [
+      [
+        128,
+        128
+      ],
+      [
+        128,
+        512
+      ],
+      [
+        256,
+        512
+      ]
+    ],
+    "link_intervals": [
+      1,
+      2,
+      4
+    ],
+    "central_tile": 36,
+    "weight_packet_bytes": [
+      16,
+      32,
+      64,
+      128
+    ],
+    "prefetch_bytes_per_cluster": 128,
+    "sink_interval": 1,
+    "scope": "ROW, resident weights, 128 MACs, one central NI; fixed 128 B prefetch and fixed 128 B assembly plus 128 B TX store per source; Python only"
+  },
+  "config_sha256": "8d09d2b87116402717bd7f55f6061ac341800c05c08cf3e887b8e6b4f6f024f7",
+  "source_sha256": {
+    "src/simulator/system/central_comparison.py": "eb3e40bdffdab5be30bf4dc372a48717bfbf7acf0b66bbae203efd2e8f560610",
+    "src/simulator/communication/v0_1.py": "3e44c32e050aa234b2f80cd3fa340d18573f6be8f4fc08806b826ca762dd9fb4",
+    "src/simulator/system/tile_timing.py": "05f69c24cb81836210a25907918dc380962c8df5f74bccc9afe2cc9736a8bf80",
+    "src/simulator/system/tile_memory.py": "11822bfcfc7e1a9532b390be7af669916f02d85e90692eb39f271b13e5cc32b8",
+    "src/simulator/functional/demo0_model.py": "48d663e891722c5e2c5ccd7635669566bc4c31fdaa79f62f8b3c079c8ea9809f",
+    "src/compiler/grid_mapper.py": "c42845f5612add2cb364958937993a8fefc4e8740234bdd8821ebfe7830d7e2e",
+    "tools/experiments/weight_burst_sweep.py": "ed2441da9a90989c17dba8bb35a2963f346dfe2b6776d6ee8eaada14c4157260"
+  },
+  "base_commit": "8508bfe09f14408ff1be8bd4a5f598a245a576e4",
+  "total_wall_seconds": 392.91414179094136,
+  "cases": 45,
+  "pairs": 36,
+  "all_golden_ok": true,
+  "round1_exact_replays": 18,
+  "hardware": {
+    "physical_routers": 64,
+    "storage_workers": 32,
+    "total_active_mac": 128,
+    "prefetch_bytes_per_cluster": 128,
+    "source_assembly_bytes": 128,
+    "source_tx_bytes": 128,
+    "source_pending_read_bytes": 4,
+    "router_fifo_flits": 4,
+    "ni_fifo_flits": 4,
+    "note": "Source stores fixed at maximum size for every point, including 16 B and NMC; not an area/Fmax or RTL claim."
+  }
+}

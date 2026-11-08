@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "seed": 20261108,
+  "shapes": [[128,128],[128,512],[256,512]],
+  "link_intervals": [1,2,4],
+  "central_tile": 36,
+  "weight_packet_bytes": [16,32,64,128],
+  "prefetch_bytes_per_cluster": 128,
+  "sink_interval": 1,
+  "scope": "ROW, resident weights, 128 MACs, one central NI; fixed 128 B prefetch and fixed 128 B assembly plus 128 B TX store per source; Python only"
+}

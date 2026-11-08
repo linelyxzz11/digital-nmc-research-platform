@@ -1,0 +1,6 @@
+{
+  "source": "../comparison.csv",
+  "source_sha256": "edb9516a18f2000433163d4778464e93736037b827a40dc0b9af4f8d3123bf25",
+  "script_sha256": "d1f812ff0c52451d848dcd6e7604d34ce8a7ffab980177a2d3d26dc2ca75af79",
+  "scope": "Deterministic Python model; no RTL or energy claim; fixed seed, no error bars."
+}

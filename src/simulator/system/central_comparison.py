@@ -11,7 +11,7 @@ from compiler.grid_mapper import map_grid
 from simulator.communication.v0_1 import Mesh2x2, Flit, FlitType
 from simulator.functional import Demo0Tile, int32_wrap
 from simulator.system.tile_timing import PortScheduledCompute
-from simulator.system.tile_memory import SramCycle, SramResponse, TileMemoryPorts
+from simulator.system.tile_memory import SramCycle, SramResponse
 
 
 @dataclass(frozen=True)
@@ -25,32 +25,83 @@ class StreamPacket:
 
 
 class StreamCodec:
-    """Experimental header plus <=16 byte payload, same router destination bits."""
+    """Experimental header plus <=128 byte payload, same router destination bits."""
     def pack(self, p):
         if not (0 <= p.src_tile < 64 and 0 <= p.dst_tile < 64 and
                 0 <= p.worker < 64 and 0 <= p.offset < 65536 and
-                p.kind in (1, 2, 3, 4) and len(p.data) <= 16):
+                p.kind in (1, 2, 3, 4) and
+                ((p.kind == 4 and not p.data) or
+                 (p.kind != 4 and 1 <= len(p.data) <= (128 if p.kind == 2 else 16)))):
             raise ValueError('invalid streaming packet')
         h = (p.kind | p.src_tile << 4 | p.dst_tile << 12 | p.worker << 20 |
              p.offset << 28 | len(p.data) << 44)
         if not p.data:
             return (Flit(FlitType.HEADTAIL, h),)
-        return (Flit(FlitType.HEAD, h),
-                Flit(FlitType.TAIL, int.from_bytes(p.data, 'little')))
+        chunks = [p.data[i:i+16] for i in range(0, len(p.data), 16)]
+        return (Flit(FlitType.HEAD, h), *(
+            Flit(FlitType.TAIL if i == len(chunks)-1 else FlitType.BODY,
+                 int.from_bytes(chunk, 'little')) for i, chunk in enumerate(chunks)))
 
     def unpack(self, flits):
+        if not flits:
+            raise ValueError('empty streaming packet')
         h = flits[0].data
-        size = (h >> 44) & 31
+        size = (h >> 44) & 255
         if size:
-            if len(flits) != 2 or flits[0].type is not FlitType.HEAD or flits[1].type is not FlitType.TAIL:
+            if (len(flits) != 1 + (size+15)//16 or
+                    flits[0].type is not FlitType.HEAD or flits[-1].type is not FlitType.TAIL or
+                    any(f.type is not FlitType.BODY for f in flits[1:-1])):
                 raise ValueError('invalid streaming framing')
-            payload = flits[1].data.to_bytes(16, 'little')[:size]
+            payload = b''.join(f.data.to_bytes(16, 'little') for f in flits[1:])[:size]
         else:
             if len(flits) != 1 or flits[0].type is not FlitType.HEADTAIL:
                 raise ValueError('invalid credit framing')
             payload = b''
-        return StreamPacket((h >> 4) & 255, (h >> 12) & 255, h & 15,
-                            (h >> 20) & 255, (h >> 28) & 65535, payload)
+        packet = StreamPacket((h >> 4) & 255, (h >> 12) & 255, h & 15,
+                              (h >> 20) & 255, (h >> 28) & 65535, payload)
+        self.pack(packet)  # Validate decoded fields as well as framing.
+        return packet
+
+
+class StreamInjector:
+    """One bounded packet serializer per source, ahead of the unchanged NI.
+
+    Short packets retain the original atomic enqueue timing. Long packets fill
+    available NI slots and retain only their remaining flits; they cannot be
+    interleaved with another packet. A source provisions one 128-byte TX store
+    plus header metadata, separately from its 128-byte burst assembly store.
+    """
+    def __init__(self, mesh, codec):
+        self.mesh, self.codec = mesh, codec
+        self.pending = [deque() for _ in range(mesh.tile_count)]
+        self.max_pending_flits = 0
+        self.max_ni_flits = 0
+
+    def _fill(self, node):
+        while self.pending[node] and self.mesh.can_inject(node, 1):
+            self.mesh.inject_flits(node, (self.pending[node].popleft(),))
+        self.max_ni_flits = max(self.max_ni_flits, len(self.mesh.ni_injection[node]))
+
+    def tick(self):
+        for node, pending in enumerate(self.pending):
+            if pending:
+                self._fill(node)
+
+    def submit(self, packet):
+        node = packet.src_tile
+        if self.pending[node]:
+            return False
+        fs = self.codec.pack(packet)
+        required = len(fs) if len(fs) <= self.mesh.ni_depth else 1
+        if not self.mesh.can_inject(node, required):
+            return False
+        self.pending[node].extend(fs)
+        self._fill(node)
+        self.max_pending_flits = max(self.max_pending_flits, len(self.pending[node]))
+        return True
+
+    def idle(self):
+        return not any(self.pending)
 
 
 class RemoteWeightPorts:
@@ -109,7 +160,7 @@ class RemoteWeightPorts:
 
 
 def run_comparison(matrix, vector, *, architecture, workers=None, central_tile=0,
-                   link_interval=1, prefetch_packets=8, sink_interval=1,
+                   link_interval=1, prefetch_packets=8, sink_interval=1, weight_packet_bytes=16,
                    max_cycles=200000):
     """Return Host-visible numeric result and bounded cycle/traffic evidence.
 
@@ -121,6 +172,8 @@ def run_comparison(matrix, vector, *, architecture, workers=None, central_tile=0
     if any(type(v) is not int or v < 1 for v in
            (link_interval, prefetch_packets, sink_interval, max_cycles)):
         raise ValueError('intervals and capacities must be positive integers')
+    if type(weight_packet_bytes) is not int or weight_packet_bytes not in (16, 32, 64, 128):
+        raise ValueError('weight_packet_bytes must be 16, 32, 64 or 128')
     if not 0 <= central_tile < 64:
         raise ValueError('central Tile outside Mesh')
     m, k = len(matrix), len(vector)
@@ -138,6 +191,7 @@ def run_comparison(matrix, vector, *, architecture, workers=None, central_tile=0
     plan = map_grid(m, k, grid=(len(workers), 1), workers=workers, reduction='central')
     codec = StreamCodec()
     mesh = Mesh2x2(mesh_x=8, mesh_y=8, codec=codec, fifo_depth=4, ni_depth=4)
+    injector = StreamInjector(mesh, codec)
     tiles, engines, remote = {}, {}, {}
     credits = {w: prefetch_packets for w in workers}
     credit_tx = deque()
@@ -177,21 +231,20 @@ def run_comparison(matrix, vector, *, architecture, workers=None, central_tile=0
     first_mac = last_mac = None
     max_input_rx = max_result_rx = max_credit_tx = max_result_tx = 0
     central_rr = 0
-    sender_rr = 0
     source_reads = 0
     local_done = set()
 
     def inject(p):
         fs = codec.pack(p)
-        if not mesh.can_inject(p.src_tile, len(fs)):
+        if not injector.submit(p):
             return False
-        mesh.inject_flits(p.src_tile, fs)
         name = {1:'input', 2:'weight', 3:'result', 4:'credit'}[p.kind]
         traffic[name] += len(fs)
         payload[name] += len(p.data)
         return True
 
     for cycle in range(max_cycles):
+        injector.tick()
         # Accepted input packets write through the same 1-byte X SRAM port.
         for w in workers:
             if input_rx[w]:
@@ -218,7 +271,7 @@ def run_comparison(matrix, vector, *, architecture, workers=None, central_tile=0
                 s = source[w]
                 if s['pending'] is not None:
                     s['data'].extend(s['pending']); s['pending'] = None
-                    if len(s['data']) == 16 or s['offset'] == len(images[w]):
+                    if len(s['data']) == weight_packet_bytes or s['offset'] == len(images[w]):
                         s['packet'] = StreamPacket(w, central_tile, 2, w,
                             s['offset'] - len(s['data']), bytes(s['data']))
                         s['data'].clear()
@@ -303,7 +356,7 @@ def run_comparison(matrix, vector, *, architecture, workers=None, central_tile=0
         assert max_input_rx <= 2 and max_result_rx <= 2
         assert len(credit_tx) <= len(workers)*prefetch_packets
         if (len(output) == m and len(local_done) == len(workers) and not result_rx
-                and not result_tx and not credit_tx and not inputs and mesh.idle()):
+                and not result_tx and not credit_tx and not inputs and injector.idle() and mesh.idle()):
             y = [output[i] for i in range(m)]
             golden = [int32_wrap(sum(a*b for a,b in zip(row,vector))) for row in matrix]
             assert y == golden
@@ -318,6 +371,11 @@ def run_comparison(matrix, vector, *, architecture, workers=None, central_tile=0
             return dict(architecture=architecture, m=m, k=k, workers=list(workers),
                 central_tile=central_tile, link_interval=link_interval,
                 prefetch_packets=prefetch_packets, sink_interval=sink_interval,
+                weight_packet_bytes=weight_packet_bytes,
+                prefetch_bytes_per_cluster=prefetch_packets*weight_packet_bytes,
+                source_assembly_capacity_bytes=128, source_tx_capacity_bytes=128,
+                max_serializer_pending_flits=injector.max_pending_flits,
+                max_ni_flits=injector.max_ni_flits,
                 total_cycles=total, input_ready_cycle=compute_start,
                 kernel_to_host_cycles=total-compute_start,
                 host_output_ready_cycles=last_write+1,
@@ -333,5 +391,6 @@ def run_comparison(matrix, vector, *, architecture, workers=None, central_tile=0
                 max_result_rx_packets=max_result_rx,max_credit_tx_packets=max_credit_tx,
                 max_result_tx_packets=max_result_tx,
                 max_weight_outstanding_packets=max((s['max_outstanding'] for s in source.values()),default=0),
+                max_weight_reserved_bytes=max((s['max_outstanding'] for s in source.values()),default=0)*weight_packet_bytes,
                 golden_ok=True,y=y)
     raise TimeoutError(f'comparison exceeded {max_cycles} core cycles')

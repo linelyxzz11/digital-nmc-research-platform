@@ -64,3 +64,70 @@ def test_capacity_and_input_errors_are_not_silently_truncated():
         run_comparison([[1]],[1],architecture='nmc',workers=(0,))
     with pytest.raises(ValueError):
         run_comparison([[1]*512 for _ in range(16)],[1]*512,architecture='central',workers=(1,))
+
+
+@pytest.mark.parametrize('burst', [16, 32, 64, 128])
+@pytest.mark.parametrize('interval', [1, 3])
+def test_weight_bursts_keep_fixed_byte_budget_with_partial_tail(burst, interval):
+    w,x=workload(16,67)  # Each worker reads 268 B: partial final packet at every size.
+    r=run_comparison(w,x,architecture='central',workers=(1,2,8,9),
+                     central_tile=36,weight_packet_bytes=burst,
+                     prefetch_packets=128//burst,link_interval=interval,sink_interval=7)
+    assert r['y']==[sum(a*b for a,b in zip(row,x)) for row in w]
+    packets=4*((268+burst-1)//burst)
+    assert r['network_injected_flits']['credit']==packets
+    assert r['network_injected_flits']['weight']==packets+4*((268+15)//16)
+    assert r['network_payload_bytes']['weight']==16*67
+    assert r['prefetch_bytes_per_cluster']==128
+    assert r['max_weight_reserved_bytes']<=128
+    assert r['max_ni_flits']<=4 and r['router_max_flits']<=4
+    assert r['source_tx_capacity_bytes']==128
+    assert r['source_assembly_capacity_bytes']==128
+    if burst>=64:
+        assert r['max_serializer_pending_flits']>0
+
+
+def test_long_packet_serializer_survives_blocked_destination_without_interleaving():
+    from simulator.system.central_comparison import StreamInjector
+    from simulator.communication.v0_1 import Mesh2x2
+    codec=StreamCodec()
+    mesh=Mesh2x2(codec=codec,ni_depth=4,fifo_depth=4)
+    sender=StreamInjector(mesh,codec)
+    first=StreamPacket(1,0,2,1,0,bytes(range(128)))
+    second=StreamPacket(1,0,2,1,128,bytes(range(64)))
+    assert sender.submit(first)
+    assert not sender.submit(second)
+    sent_second=False
+    for cycle in range(200):
+        mesh.ejection_ready[0]=cycle>=50
+        sender.tick()
+        if not sent_second:
+            sent_second=sender.submit(second)
+        mesh.step()
+        assert all(len(q)<=4 for q in mesh.ni_injection)
+        if cycle<50:
+            assert not mesh.received_packets[0]
+        if sent_second and sender.idle() and mesh.idle():
+            break
+    else:
+        pytest.fail('long packets did not drain after backpressure was released')
+    assert mesh.received_packets[0]==[first,second]
+    assert mesh.max_occupancy<=4
+
+
+def test_long_codec_rejects_truncation_and_wrong_body_type():
+    from simulator.communication.v0_1 import Flit,FlitType
+    codec=StreamCodec()
+    for size in (20,32,64,128):
+        p=StreamPacket(63,36,2,62,4092,bytes(range(size)))
+        flits=codec.pack(p)
+        assert codec.unpack(flits)==p
+        with pytest.raises(ValueError):
+            codec.unpack(flits[:-1])
+        wrong=list(flits);wrong[1]=Flit(FlitType.HEAD,wrong[1].data)
+        with pytest.raises(ValueError):
+            codec.unpack(wrong)
+    with pytest.raises(ValueError):
+        codec.pack(StreamPacket(1,0,2,1,0,bytes(129)))
+    with pytest.raises(ValueError):
+        run_comparison([[1]],[1],architecture='central',workers=(1,),weight_packet_bytes=48)
