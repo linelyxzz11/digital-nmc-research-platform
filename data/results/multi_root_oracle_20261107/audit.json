@@ -1,0 +1,9 @@
+{
+  "groups": 72,
+  "candidates": 2160,
+  "oracle_hits": 38,
+  "mean_regret": 0.05441015152302913,
+  "max_regret": 0.2845303867403315,
+  "geomean_speedup_vs_fixed_compact": 1.0519942572896082,
+  "geomean_speedup_vs_fixed_spread": 1.1324058026891068
+}

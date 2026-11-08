@@ -10,6 +10,8 @@ GEMV 仿真成果独立分支：[团队阅读入口（Python＋真实 64 Tile RT
 
 ## 从这里开始
 
+- 第三层 Mapper 证据：[多 Root 放置/有限目录 Oracle](data/results/multi_root_oracle_20261107/README.md)，72 组、2160 候选；原始代码归档，待配套多 Root 接口接通。
+
 - 定义计算/通信接口：[Compute v0.1](docs/spec/compute_architecture_v0.1.md)、[Communication v0.1](docs/spec/communication_architecture_v0.1.md)。
 - 运行 Demo：[Demo 0 指南](docs/validation.md#demo0)、[Comm 0A–0C 记录](docs/validation.md#comm)、[NMC Demo 1](docs/validation.md#demo1)、[NMC Demo 2](docs/validation.md#demo2)。
 - Mapper：[v0.1 使用说明与规则](src/compiler/README.md)。
