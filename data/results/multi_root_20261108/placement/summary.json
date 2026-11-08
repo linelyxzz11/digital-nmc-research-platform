@@ -1,0 +1,32 @@
+{
+  "aggregate": {
+    "geomean_speedup_vs_fixed_compact": 1.0519942572896082,
+    "geomean_speedup_vs_fixed_spread": 1.1324058026891068,
+    "groups": 72,
+    "mean_regret": 0.05441015152302913,
+    "oracle_hit_rate": 0.5277777777777778,
+    "oracle_hits": 38,
+    "outcomes_vs_fixed_compact": {
+      "losses": 4,
+      "ties": 38,
+      "wins": 30
+    },
+    "outcomes_vs_fixed_spread": {
+      "losses": 4,
+      "ties": 0,
+      "wins": 68
+    },
+    "worst_regret": 0.2845303867403315
+  },
+  "candidate_count": 2160,
+  "config_sha256": "5d7abd801244866f8338f7a8593b422aca61772c33cb39a6678c65ce4bb084be",
+  "contract": "multi-root-placement-search-v0.1",
+  "execution": {
+    "jobs": 8,
+    "mode": "process-pool"
+  },
+  "group_count": 72,
+  "rejected_count": 0,
+  "schema_version": 1,
+  "scope": "finite 8x8 central multi-Root placement catalogue; static Mapper selection precedes exact Python-cycle evaluation; no tree/RTL/scaling claim"
+}

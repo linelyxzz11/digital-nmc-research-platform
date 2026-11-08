@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "contract": "multi-root-row-v0.1",
+  "mesh_x": 8,
+  "mesh_y": 8,
+  "host_tile": 0,
+  "root_sets": {
+    "1": [0],
+    "2": [0, 63],
+    "4": [0, 7, 56, 63]
+  },
+  "workloads": [
+    {"m": 128, "k": 32, "workers": 16},
+    {"m": 256, "k": 64, "workers": 16},
+    {"m": 256, "k": 64, "workers": 32}
+  ],
+  "placements": ["compact", "spread"],
+  "root_profiles": {
+    "baseline": {
+      "rx_queue_packets": 2,
+      "reduction_entries": 256,
+      "done_queue_packets": 1,
+      "lanes_per_cycle": 4,
+      "read_cycles": 1,
+      "add_cycles": 1,
+      "update_cycles": 1,
+      "write_cycles": 1
+    },
+    "pressure": {
+      "rx_queue_packets": 1,
+      "reduction_entries": 256,
+      "done_queue_packets": 1,
+      "lanes_per_cycle": 1,
+      "read_cycles": 1,
+      "add_cycles": 1,
+      "update_cycles": 1,
+      "write_cycles": 2
+    }
+  },
+  "seed": 0,
+  "tid": 1
+}

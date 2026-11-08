@@ -1,0 +1,108 @@
+{
+  "baseline": "f128f237a5393dbc1fadb8e47278e10d82d81f86",
+  "branch": "codex/sim-multi-root-extension",
+  "full_suite": {
+    "passed": 457,
+    "skipped": 5,
+    "failed": [
+      "src.tests.test_pressure_sweep::test_cli_exports_results_and_source_provenance"
+    ]
+  },
+  "multi_root_tests_passed": 79,
+  "new_test_failures_vs_unmodified_baseline": 0,
+  "known_baseline_failure": "Windows provenance path separators in unmodified pressure_sweep.py",
+  "pytest_command": "python -m pytest -q -p no:cacheprovider --basetemp=dump/test_multi_root_release --junitxml=dump/multi_root_preparation/pytest.xml src/tests",
+  "fresh_replay": {
+    "row": [
+      {
+        "m": 128,
+        "k": 32,
+        "root_count": 1,
+        "cycles": 2378
+      },
+      {
+        "m": 128,
+        "k": 32,
+        "root_count": 2,
+        "cycles": 2357
+      },
+      {
+        "m": 128,
+        "k": 32,
+        "root_count": 4,
+        "cycles": 2346
+      }
+    ],
+    "k": [
+      {
+        "m": 128,
+        "k": 64,
+        "root_count": 1,
+        "cycles": 1634
+      },
+      {
+        "m": 128,
+        "k": 64,
+        "root_count": 2,
+        "cycles": 992
+      },
+      {
+        "m": 128,
+        "k": 64,
+        "root_count": 4,
+        "cycles": 732
+      }
+    ],
+    "2d": [
+      {
+        "m": 128,
+        "k": 64,
+        "root_count": 1,
+        "cycles": 1818
+      },
+      {
+        "m": 128,
+        "k": 64,
+        "root_count": 2,
+        "cycles": 1497
+      },
+      {
+        "m": 128,
+        "k": 64,
+        "root_count": 4,
+        "cycles": 1329
+      }
+    ],
+    "placement": {
+      "groups": 3,
+      "candidates": 90,
+      "historical_metrics_match": true
+    }
+  },
+  "source_sha256": {
+    "src/compiler/grid_mapper.py": "71d1f7d514b999c1c5ae1f9ddd0e0a082973323da9c02e32b1198ea079e2d896",
+    "src/compiler/bounded_predictor.py": "f81ee406a9aa8a6698f3a600ea51e78da36e6ba21d42d5b7701f0b5288fd3b4c",
+    "src/compiler/mapping_search.py": "e4ebbc7390d011ccb9728d0dabdbdf1120c5d84f2b120dac29a09ed71d51bcbd",
+    "src/simulator/system/scalable.py": "80a2cdf00153900f604df61a47608ae5230b4a45bdac59c2cd50763af7776eb5",
+    "src/simulator/system/multi_root.py": "a5aaba6e48cf1b9561abd97284c3fc915613a1728983f2da776463b20b509a58",
+    "src/simulator/system/task_queue.py": "41800948f2ea5579dae3489b6191100468e9252b2e78cc5306682bd4ec9128a4",
+    "tools/experiments/multi_root_row.py": "026d3c28d2e9b69b8aecbb82cc56293a3afb635787b4fc100c2a54fe37b82d52",
+    "ini/scalable/multi_root_row.json": "ad8b716157641809ba164ea57248ec5b963c7deded895f7cb890562342f4af1b",
+    "src/tests/test_multi_root_row.py": "890c45e4e3ade80c39271fad803300d6a1cdbada662039cea4503bafe041eddb",
+    "tools/experiments/multi_root_k.py": "46cd5ffe7d13f6078e6d11fa8135680140bd00d7c1bc40ea7fe6ef6ac20ab8f0",
+    "ini/scalable/multi_root_k.json": "c2b59f603545b2ebfdba5db2ae776fb0df57c1f5238b2d62435f37045aea3bf3",
+    "src/tests/test_multi_root_k.py": "8a8518542dfb330cc012bae73cdf234ae993c71b08aea1a5b9575fd1f3bd901b",
+    "tools/experiments/multi_root_2d.py": "32e856b015238b02b323b28078315d016fb778834e6c3fafa095fef8ed441e14",
+    "ini/scalable/multi_root_2d.json": "940717d0312626e03d2fa98309c726c74f3bef3794f2b1c57c87f40ca20734a9",
+    "src/tests/test_multi_root_2d.py": "e0453dc9d4b6574e9408ef5fce38b79223cab86060341eed8004a7f3bedc6099",
+    "src/compiler/multi_root_placement.py": "2579556cf339dd6d7e114cfa92190cd825bc25665903f218148ca48f29770b78",
+    "tools/experiments/multi_root_placement_search.py": "cc9b1597d925420480bbdce4810f2c0afdb8c7dab0a65f9ca3bc8ec67e3196c6",
+    "ini/scalable/multi_root_placement_search.json": "5d7abd801244866f8338f7a8593b422aca61772c33cb39a6678c65ce4bb084be",
+    "src/tests/test_multi_root_placement.py": "90c32fdbeb01af8325c0860a6a8e8b4064188804885566d0c0654dab4b770bce"
+  },
+  "import_archive_sha256": {
+    "multi_root_source_20261101.zip": "527128c9fbf74af6e75ab3be15948da88c65cf77f97c85b7d8c9d712936a920d",
+    "multi_root_oracle_search_20261107.zip": "c0e40d841eb80d204a5f7c8defab53a548c82b22647230ffbc2719b4b134d74d"
+  },
+  "raw_results_policy": "Historical full results remain local; fresh replay outputs are in ignored dump/."
+}

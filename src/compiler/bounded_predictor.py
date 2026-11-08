@@ -172,6 +172,10 @@ def warm_arbitration(network,plan):
 
 
 def bounded_estimate(plan,tile_timing,root_timing,*,beats_for,path_for,max_cycles=1000000):
+    if len(plan.final_roots)>1 and plan.grid[0]==1 and plan.grid[1]>1:
+        raise ValueError('K multi-Root task queues are not supported by this predictor')
+    if len(plan.final_roots)>1 and plan.grid[0]>1 and plan.grid[1]>1:
+        raise ValueError('2D multi-Root plans are not supported by this predictor')
     root_mask=0
     for _,_,mask in plan.root_ranges: root_mask|=mask
     config=GridGatherConfig(plan.tid,plan.root_tile,plan.host_tile,root_mask,

@@ -1,0 +1,29 @@
+{
+  "evidence_kind": "historical_results_not_a_new_full_sweep",
+  "original_result_path": "dump/multi_root_k_20261101/results.json",
+  "original_result_sha256": "51e691c9db230d17ea099b73a73c8e160f20d96c9a90b49a70a2ab11bb49e768",
+  "original_result_bytes": 971096,
+  "git_head": "f128f237a5393dbc1fadb8e47278e10d82d81f86",
+  "git_dirty": true,
+  "python": "3.13.13 (tags/v3.13.13:01104ce, Apr  7 2026, 19:25:48) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "config_sha256": "c2b59f603545b2ebfdba5db2ae776fb0df57c1f5238b2d62435f37045aea3bf3",
+  "source_sha256": {
+    "ini/scalable/multi_root_k.json": "c2b59f603545b2ebfdba5db2ae776fb0df57c1f5238b2d62435f37045aea3bf3",
+    "src/compiler/grid_mapper.py": "8028cae67fc69a1c447a295307ba45d784fefe59f8fc1d8be00145be0ca4fab8",
+    "src/simulator/system/multi_root.py": "a5aaba6e48cf1b9561abd97284c3fc915613a1728983f2da776463b20b509a58",
+    "src/simulator/system/root_config.py": "3dceeff1b8146bd9965c5deb64106d0c75a6a3270dc6b4f00218f8d1938599d8",
+    "src/simulator/system/scalable.py": "80a2cdf00153900f604df61a47608ae5230b4a45bdac59c2cd50763af7776eb5",
+    "src/simulator/system/task_queue.py": "41800948f2ea5579dae3489b6191100468e9252b2e78cc5306682bd4ec9128a4",
+    "tools/experiments/mapper_sweep.py": "a599347901461f478aaf6b0961c5d68c637f72bf16d56f18914fef386caa0097",
+    "tools/experiments/multi_root_k.py": "46cd5ffe7d13f6078e6d11fa8135680140bd00d7c1bc40ea7fe6ef6ac20ab8f0"
+  },
+  "published_files": [
+    {
+      "file": "results.csv",
+      "sha256": "a8bdebc4356baa08daa6b11b26bcf13255ee8445bbaebf088357c384e5d7c22e",
+      "bytes": 5862
+    }
+  ],
+  "note": "Original hashes retained. Earlier ROW/K snapshots may differ from the final combined implementation. Re-run commands regenerate evidence for this branch."
+}

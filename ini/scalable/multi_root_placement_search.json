@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "contract": "multi-root-placement-search-v0.1",
+  "mesh_x": 8,
+  "mesh_y": 8,
+  "host_tile": 0,
+  "tid": 1,
+  "reduction": "central",
+  "seeds": [0, 1, 2, 3, 4, 5, 6, 7],
+  "root_sets": {
+    "1": [
+      [0]
+    ],
+    "2": [
+      [0, 7],
+      [0, 56],
+      [0, 63],
+      [0, 36]
+    ],
+    "4": [
+      [0, 7, 56, 63],
+      [0, 3, 32, 35],
+      [0, 18, 36, 54],
+      [0, 7, 36, 56]
+    ]
+  },
+  "canonical_root_sets": {
+    "1": [0],
+    "2": [0, 63],
+    "4": [0, 7, 56, 63]
+  },
+  "workloads": [
+    {
+      "m": 128,
+      "k": 64,
+      "workers": 16,
+      "grids": {
+        "row": [16, 1],
+        "k": [1, 16],
+        "2d": [4, 4]
+      }
+    },
+    {
+      "m": 256,
+      "k": 64,
+      "workers": 16,
+      "grids": {
+        "row": [16, 1],
+        "k": [1, 16],
+        "2d": [4, 4]
+      }
+    },
+    {
+      "m": 256,
+      "k": 128,
+      "workers": 16,
+      "grids": {
+        "row": [16, 1],
+        "k": [1, 16],
+        "2d": [4, 4]
+      }
+    },
+    {
+      "m": 256,
+      "k": 128,
+      "workers": 32,
+      "grids": {
+        "row": [32, 1],
+        "k": [1, 32],
+        "2d": [8, 4]
+      }
+    }
+  ],
+  "root_profiles": {
+    "baseline": {
+      "rx_queue_packets": 2,
+      "reduction_entries": 256,
+      "done_queue_packets": 1,
+      "lanes_per_cycle": 4,
+      "read_cycles": 1,
+      "add_cycles": 1,
+      "update_cycles": 1,
+      "write_cycles": 1
+    },
+    "pressure": {
+      "rx_queue_packets": 1,
+      "reduction_entries": 256,
+      "done_queue_packets": 1,
+      "lanes_per_cycle": 1,
+      "read_cycles": 1,
+      "add_cycles": 1,
+      "update_cycles": 1,
+      "write_cycles": 2
+    }
+  }
+}

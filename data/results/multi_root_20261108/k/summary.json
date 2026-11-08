@@ -1,0 +1,8 @@
+{
+  "cases": 36,
+  "config_sha256": "c2b59f603545b2ebfdba5db2ae776fb0df57c1f5238b2d62435f37045aea3bf3",
+  "contract": "multi-root-k-v0.1",
+  "ok": 36,
+  "schema_version": 1,
+  "scope": "pure-K central 1/2/4 final Root Python cycle model with sequential per-Tile task queues; no tree/2D/predictor/RTL/4096 claim"
+}

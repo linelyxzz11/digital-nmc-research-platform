@@ -4,6 +4,14 @@
 
 当前提供 8×8/64 物理 Tile 的 GEMV 周期模型，支持 ROW/K/二维分块、compact/spread 放置、有限队列及集中/树归约；保留原 2×2 Demo 与接口。输入经 MEM_WRITE/ACK 后启动计算，Root 发送唯一全局 Done。新增自动映射搜索在共同候选目录内比较 UniNDP 方法适配与通信感知排序，再用同一个有限资源 evaluator 验证前 K 项。
 
+本分支的 Python 周期模型支持 ROW、K、二维切分的 1/2/4 个最终 Root。ROW Worker 按连续输出行范围分工，每个 Root 独立收集和写回，Host 收齐各 Root Done 后只产生一次全局完成；接口、公平对比规则和 36 组历史实验见 [ROW 多最终 Root v0.1](docs/spec/multi_root_row_v0.1.md)。输出保存在各 Root 的本地 SRAM，仿真结束后在软件中拼接用于校验；总周期不包含完整输出向量传回 Host。
+
+纯 K 切分的 1/2/4 最终 Root使用每 Tile顺序任务队列：子任务按输出范围绑定单一Root，不同Worker轮转任务顺序，任务切换周期计入总时间。当前仅支持central规约的Python周期模型；接口、限制和36组实验见 [K 多最终 Root v0.1](docs/spec/multi_root_k_v0.1.md)。
+
+二维切分的1/2/4最终Root按完整ROW分区分工，同一ROW分区内的K Worker向同一Root发送部分和；每个Worker仍只有一个任务且无任务切换。当前仅支持central规约，见 [二维多最终 Root v0.1](docs/spec/multi_root_2d_v0.1.md)。
+
+[多 Root 放置搜索](docs/spec/multi_root_placement_search_v0.1.md) 在多个 Root 位置、compact/spread 与 8 个随机种子组成的有限目录中，使用静态通信代价选择方案，并报告候选 Oracle、命中率、regret 和相对固定放置的加速。完整依赖已包含在分支中，无需另行覆盖 ZIP；[分支清单、精选结果与复现说明](data/results/multi_root_20261108/README.md) 记录上传范围和证据来源。本扩展不包含多 Root RTL、4096×4096、8/16 Root 或完整联合 Mapper；原有周期预测器对 K/二维多 Root 明确拒绝，放置搜索使用独立静态评分。
+
 64 Tile 集成 RTL 已接通真实 Tile SRAM/MAC、NI、XY Router、归约与 Done，包含 16/32 个活跃计算 Tile、反压和复位重放用例；独立归约端点与 Python 逐边沿对齐。Python 的输入写提交仍为功能操作，RTL 使用真实窄 X 写端口和注册 NI，完整系统周期偏差单独报告。完整芯片综合及 PPA 不在当前验证范围。早期 RV32I CPU 示例仅作本地学习参考。
 
 ## 从这里开始
@@ -19,6 +27,9 @@
 - v0.3 记录：[原映射实验与强基线核查](data/results/mapping_search_20261028/README.md)、[64 Tile RTL 数据](data/results/mesh_rtl_20261028/README.md)。原始结果和反证保留。
 - v0.4 修复：[有界时序预测](docs/spec/bounded_prediction_v0.4.md)、[新形状验证与搜索成本](data/results/prediction_v04_20261028/README.md)。修复两个误选；新八形状首选全部命中候选最优，参考模型任务周期 MAPE 约 0.37%，预测开销也完整列出。
 - 64 Tile 主实验：[v0.2 执行合同](docs/spec/scalable_execution_v0.2.md) 复用原 Tile/Root/NoC，提供 ROW/K/二维分块、集中/分层归约；[三台电脑运行说明](docs/distributed_experiments.zh-CN.md) 使用固定 112 项清单、续跑和严格合并。
+- ROW 多 Root：[v0.1 执行合同](docs/spec/multi_root_row_v0.1.md) 在相同 Worker 和硬件预算下比较 1/2/4 个最终 Root；当前仅为 Python 周期模型。
+- K 多 Root：[v0.1 执行合同](docs/spec/multi_root_k_v0.1.md) 使用单目的地顺序任务队列，在相同 K Worker 下比较 1/2/4 个最终 Root；当前仅支持central规约。
+- 二维多 Root：[v0.1 执行合同](docs/spec/multi_root_2d_v0.1.md) 按完整ROW分区分配Root，在相同二维Worker下比较1/2/4 Root；当前仅支持central规约。
 - 阅读计划：[团队路线](docs/project_plan.zh-CN.md)、[Proposal](docs/proposal.md)。文献调研保存在本地 `docs/papers/`，不随 GitHub 仓库发布。
 - 使用 VS Code：直接打开仓库根目录。本地的 `Digital-NMC.code-workspace` 与论文工作区为可选配置，不是运行依赖。
 
@@ -88,6 +99,19 @@ python tools/experiments/timed_tile_system.py --output-dir dump/timed_tile_syste
 # 同时启用实际有限 Root 服务；不需要人工接收压力窗口
 PYTHONPATH=src python -m simulator.system.demo2 --compute-model tile --root-model timed --root-trace --trace dump/root_k.json
 python tools/experiments/finite_root_system.py --output-dir dump/finite_root_system_20261028
+# ROW 切分的 1/2/4 最终 Root 公平对比，输出 36 组 JSON/CSV
+python tools/experiments/multi_root_row.py --output-dir dump/multi_root_row_20261101
+python -m pytest -q -p no:cacheprovider src/tests/test_multi_root_row.py
+# 纯K切分的1/2/4最终Root公平对比，输出36组JSON/CSV
+python tools/experiments/multi_root_k.py --output-dir dump/multi_root_k_20261101
+python -m pytest -q -p no:cacheprovider src/tests/test_multi_root_k.py
+# 二维切分的1/2/4最终Root公平对比
+python tools/experiments/multi_root_2d.py --output-dir dump/multi_root_2d_20261101
+python -m pytest -q -p no:cacheprovider src/tests/test_multi_root_2d.py
+# 放置搜索：快速检查 / 完整 72 组、2160 候选
+python tools/experiments/multi_root_placement_search.py --max-groups 1 --output-dir dump/multi_root_search_smoke
+python tools/experiments/multi_root_placement_search.py --jobs 4 --output-dir dump/multi_root_search_full
+python -m pytest -q -p no:cacheprovider src/tests/test_multi_root_placement.py
 # 检查随 Git 发布的文档链接
 python tools/check_layout.py --tracked
 ```

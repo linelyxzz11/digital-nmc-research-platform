@@ -1,0 +1,36 @@
+{
+  "evidence_kind": "historical_results_not_a_new_full_sweep",
+  "original_result_path": "dump/multi_root_placement_search_20261102/results.json",
+  "original_result_sha256": "051821fb9dab308ae3b39d87cc50a38c677bc64532b853381a0440ca3b75e056",
+  "original_result_bytes": 76163089,
+  "git_head": "f128f237a5393dbc1fadb8e47278e10d82d81f86",
+  "git_dirty": true,
+  "python": "3.13.13 (tags/v3.13.13:01104ce, Apr  7 2026, 19:25:48) [MSC v.1944 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "config_sha256": "5d7abd801244866f8338f7a8593b422aca61772c33cb39a6678c65ce4bb084be",
+  "source_sha256": {
+    "ini/scalable/multi_root_placement_search.json": "5d7abd801244866f8338f7a8593b422aca61772c33cb39a6678c65ce4bb084be",
+    "src/compiler/grid_mapper.py": "71d1f7d514b999c1c5ae1f9ddd0e0a082973323da9c02e32b1198ea079e2d896",
+    "src/compiler/multi_root_placement.py": "2579556cf339dd6d7e114cfa92190cd825bc25665903f218148ca48f29770b78",
+    "src/simulator/system/scalable.py": "80a2cdf00153900f604df61a47608ae5230b4a45bdac59c2cd50763af7776eb5",
+    "tools/experiments/multi_root_placement_search.py": "cc9b1597d925420480bbdce4810f2c0afdb8c7dab0a65f9ca3bc8ec67e3196c6"
+  },
+  "published_files": [
+    {
+      "file": "results.csv",
+      "sha256": "48fa215cc967b1b4645367cc7e504a11e5ead1a40ff99a784a3eafbb2c89e2da",
+      "bytes": 28437
+    },
+    {
+      "file": "candidates.csv",
+      "sha256": "d4fd1f47073afe987f7befb1aca3731e61cc41119f06b85938e051221a1a4f7b",
+      "bytes": 740588
+    },
+    {
+      "file": "rejected.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3
+    }
+  ],
+  "note": "Original hashes retained. Earlier ROW/K snapshots may differ from the final combined implementation. Re-run commands regenerate evidence for this branch."
+}

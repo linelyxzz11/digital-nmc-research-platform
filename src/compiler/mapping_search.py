@@ -106,6 +106,17 @@ class Estimate:
     max_rx_slots: int = 0
 
 
+def _uses_k_multi_root_queues(plan):
+    return len(plan.final_roots)>1 and plan.grid[0]==1 and plan.grid[1]>1
+
+
+def _reject_k_multi_root_prediction(plan):
+    if _uses_k_multi_root_queues(plan):
+        raise ValueError('K multi-Root task queues are not supported by this predictor')
+    if len(plan.final_roots)>1 and plan.grid[0]>1 and plan.grid[1]>1:
+        raise ValueError('2D multi-Root plans are not supported by this predictor')
+
+
 def predict_v03(plan, *, communication=True, tile_timing=TileComputeConfig(),
                 root_timing=RootTiming()):
     """Frozen v0.3 estimate, including its known input/backpressure errors.
@@ -116,6 +127,7 @@ def predict_v03(plan, *, communication=True, tile_timing=TileComputeConfig(),
     is serialized per physical node. Path reservations approximate contention;
     they deliberately do not claim finite-FIFO cycle accuracy.
     """
+    _reject_k_multi_root_prediction(plan)
     edge_free, edge_load, endpoint_free = defaultdict(int), defaultdict(int), defaultdict(int)
     arrivals, counter = [], 0
     parents = {task.tile_id:task.result_dst_tile for task in plan.tasks}
@@ -201,6 +213,7 @@ def predict_v03(plan, *, communication=True, tile_timing=TileComputeConfig(),
 
 def predict(plan, *, communication=True, tile_timing=TileComputeConfig(),
             root_timing=RootTiming()):
+    _reject_k_multi_root_prediction(plan)
     if not communication:
         return predict_v03(plan,communication=False,tile_timing=tile_timing,root_timing=root_timing)
     from compiler.bounded_predictor import bounded_estimate

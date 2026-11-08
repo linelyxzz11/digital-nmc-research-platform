@@ -1,0 +1,8 @@
+{
+  "cases": 36,
+  "config_sha256": "ad8b716157641809ba164ea57248ec5b963c7deded895f7cb890562342f4af1b",
+  "contract": "multi-root-row-v0.1",
+  "ok": 36,
+  "schema_version": 1,
+  "scope": "ROW-only 1/2/4 final Root Python cycle model; resident weights; functional input commit; no multi-Root RTL or 4096 claim"
+}
