@@ -12,6 +12,7 @@ from simulator.communication.v0_1 import Mesh2x2, Flit, FlitType
 from simulator.functional import Demo0Tile, int32_wrap
 from simulator.system.tile_timing import PortScheduledCompute
 from simulator.system.tile_memory import SramCycle, SramResponse
+from simulator.system.central_fabric import CentralFabric
 
 
 @dataclass(frozen=True)
@@ -161,7 +162,8 @@ class RemoteWeightPorts:
 
 def run_comparison(matrix, vector, *, architecture, workers=None, central_tile=0,
                    link_interval=1, prefetch_packets=8, sink_interval=1, weight_packet_bytes=16,
-                   max_cycles=200000):
+                   central_entries=None, fabric_lanes=4, gateway_queue_packets=2,
+                   fabric_base_latency=1, max_cycles=200000):
     """Return Host-visible numeric result and bounded cycle/traffic evidence.
 
     link_interval: one 128-bit flit opportunity per directed link every N core
@@ -188,6 +190,16 @@ def run_comparison(matrix, vector, *, architecture, workers=None, central_tile=0
     workers = tuple(workers)
     if central_tile in workers or 0 in workers:
         raise ValueError('host/central endpoint must be outside storage workers')
+    entries = None if central_entries is None else tuple(central_entries)
+    if entries is not None:
+        if (architecture != 'central' or len(entries) not in (1, 2, 4) or
+                len(set(entries)) != len(entries) or entries[0] != central_tile or
+                any(type(n) is not int or not 0 < n < 64 or n in workers for n in entries)):
+            raise ValueError('use 1/2/4 distinct non-Host/non-worker gateways, hub first, for central only')
+    gateways = entries if entries is not None else (central_tile,)
+    entry_for_worker = {w: gateways[i % len(gateways)] for i, w in enumerate(workers)}
+    fabric = None if entries is None else CentralFabric(entries, hub=central_tile,
+        lanes=fabric_lanes, depth=gateway_queue_packets, base_latency=fabric_base_latency)
     plan = map_grid(m, k, grid=(len(workers), 1), workers=workers, reduction='central')
     codec = StreamCodec()
     mesh = Mesh2x2(mesh_x=8, mesh_y=8, codec=codec, fifo_depth=4, ni_depth=4)
@@ -196,7 +208,7 @@ def run_comparison(matrix, vector, *, architecture, workers=None, central_tile=0
     credits = {w: prefetch_packets for w in workers}
     credit_tx = deque()
     def release(w, offset):
-        credit_tx.append(StreamPacket(central_tile, w, 4, w, offset))
+        credit_tx.append(StreamPacket(entry_for_worker[w], w, 4, w, offset))
     images = {}
     for shard, task in zip(plan.slices, plan.tasks):
         tile = Demo0Tile(shard.tile_id, tile_count=64)
@@ -212,7 +224,7 @@ def run_comparison(matrix, vector, *, architecture, workers=None, central_tile=0
         images[shard.tile_id] = bytes(tile.weight_sram[:size])
     # Input buffers are physically separate per 4-MAC cluster in both designs.
     # Central clusters share the finite central NI but each retains a 1B/cycle X port.
-    inputs = deque(StreamPacket(0, w if architecture == 'nmc' else central_tile,
+    inputs = deque(StreamPacket(0, w if architecture == 'nmc' else entry_for_worker[w],
                                 1, w, offset,
                                 bytes(v & 255 for v in vector[offset:offset + 16]))
                    for offset in range(0, k, 16) for w in workers)
@@ -220,6 +232,10 @@ def run_comparison(matrix, vector, *, architecture, workers=None, central_tile=0
     loaded = Counter()
     source = {w: dict(offset=0, data=bytearray(), pending=None, packet=None,
                       outstanding=set(), max_outstanding=0) for w in workers}
+    gateway_tx = {n: deque() for n in gateways}
+    gateway_rr = dict.fromkeys(gateways, 0)
+    gateway_max_rx = gateway_max_tx = 0
+    entry_rx_flits = Counter()
     result_tx = deque()
     result_rx = deque()
     output = {}
@@ -243,8 +259,30 @@ def run_comparison(matrix, vector, *, architecture, workers=None, central_tile=0
         payload[name] += len(p.data)
         return True
 
+    def fabric_ready(direction, node, packet, reserved):
+        if direction == 'out':
+            return len(gateway_tx[node]) + reserved < gateway_queue_packets
+        if packet.kind == 1:
+            return len(input_rx[packet.worker]) + reserved < 2
+        return len(remote[packet.worker].queue) + reserved < prefetch_packets
+
+    def fabric_deliver(direction, node, packet):
+        nonlocal max_input_rx, gateway_max_tx
+        if direction == 'out':
+            gateway_tx[node].append(packet)
+            gateway_max_tx = max(gateway_max_tx, len(gateway_tx[node]))
+        elif packet.kind == 1:
+            input_rx[packet.worker].append([packet, 0])
+            max_input_rx = max(max_input_rx, len(input_rx[packet.worker]))
+        else:
+            assert packet.kind == 2
+            remote[packet.worker].receive(packet)
+            assert len(remote[packet.worker].queue) <= prefetch_packets
+
     for cycle in range(max_cycles):
         injector.tick()
+        if fabric is not None:
+            fabric.tick(cycle, ready=fabric_ready, deliver=fabric_deliver)
         # Accepted input packets write through the same 1-byte X SRAM port.
         for w in workers:
             if input_rx[w]:
@@ -272,7 +310,7 @@ def run_comparison(matrix, vector, *, architecture, workers=None, central_tile=0
                 if s['pending'] is not None:
                     s['data'].extend(s['pending']); s['pending'] = None
                     if len(s['data']) == weight_packet_bytes or s['offset'] == len(images[w]):
-                        s['packet'] = StreamPacket(w, central_tile, 2, w,
+                        s['packet'] = StreamPacket(w, entry_for_worker[w], 2, w,
                             s['offset'] - len(s['data']), bytes(s['data']))
                         s['data'].clear()
                 if s['packet'] is not None and inject(s['packet']):
@@ -296,7 +334,7 @@ def run_comparison(matrix, vector, *, architecture, workers=None, central_tile=0
                 if sig.result_valid:
                     beat = sig.result_payload
                     values = [v for lane, v in enumerate(beat.data) if beat.lane_mask & (1 << lane)]
-                    packet = StreamPacket(w if architecture == 'nmc' else central_tile,
+                    packet = StreamPacket(w if architecture == 'nmc' else entry_for_worker[w],
                                           0, 3, w, beat.base_index,
                                           struct.pack('<' + 'i'*len(values), *values))
                     if architecture == 'nmc':
@@ -309,16 +347,33 @@ def run_comparison(matrix, vector, *, architecture, workers=None, central_tile=0
                     last_mac = cycle
                 if engine.finished:
                     local_done.add(w)
-        # A single central NI arbitrates input (when co-located), credit and result.
-        queues = [credit_tx, result_tx]
-        if central_tile == 0:
-            queues.append(inputs)
-        for delta in range(len(queues)):
-            i = (central_rr + delta) % len(queues)
-            if queues[i] and inject(queues[i][0]):
-                queues[i].popleft(); central_rr = (i+1) % len(queues); break
-        if central_tile != 0 and inputs and inject(inputs[0]):
-            inputs.popleft()
+        if fabric is None:
+            # Legacy single-NI admission and timing remain unchanged.
+            queues = [credit_tx, result_tx]
+            if central_tile == 0:
+                queues.append(inputs)
+            for delta in range(len(queues)):
+                i = (central_rr + delta) % len(queues)
+                if queues[i] and inject(queues[i][0]):
+                    queues[i].popleft(); central_rr = (i+1) % len(queues); break
+            if central_tile != 0 and inputs and inject(inputs[0]):
+                inputs.popleft()
+        else:
+            # Credit/result packets first traverse the bounded outward fabric;
+            # gateways then contend for their own real NoC NI injection slots.
+            queues = [credit_tx, result_tx]
+            for node in entries:
+                if gateway_tx[node] and inject(gateway_tx[node][0]):
+                    gateway_tx[node].popleft()
+                for delta in range(2):
+                    i = (gateway_rr[node] + delta) % 2
+                    packet = next((p for p in queues[i] if p.src_tile == node), None)
+                    if packet is not None and fabric.submit('out', node, packet):
+                        queues[i].remove(packet)
+                        gateway_rr[node] = (i+1) % 2
+                        break
+            if inputs and inject(inputs[0]):
+                inputs.popleft()
         # Bound receive buffers before accepting HEAD; a started packet has a slot.
         for node in range(64):
             mesh.ejection_ready[node] = True
@@ -326,7 +381,9 @@ def run_comparison(matrix, vector, *, architecture, workers=None, central_tile=0
             if f is None or f.type not in (FlitType.HEAD, FlitType.HEADTAIL):
                 continue
             h = f.data; kind = h & 15; w = (h >> 20) & 255
-            if kind == 1:
+            if fabric is not None and node in entries and kind in (1, 2):
+                mesh.ejection_ready[node] = fabric.can_submit('in', node)
+            elif kind == 1:
                 mesh.ejection_ready[node] = len(input_rx[w]) < 2
             elif kind == 3:
                 mesh.ejection_ready[node] = len(result_rx) < 2
@@ -335,7 +392,11 @@ def run_comparison(matrix, vector, *, architecture, workers=None, central_tile=0
             for node in range(64):
                 for p in mesh.received_packets[node][seen[node]:]:
                     assert p.dst_tile == node
-                    if p.kind == 1:
+                    if fabric is not None and node in entries and p.kind in (1, 2):
+                        assert entry_for_worker[p.worker] == node
+                        assert fabric.submit('in', node, p)
+                        entry_rx_flits[node] += len(codec.pack(p))
+                    elif p.kind == 1:
                         input_rx[p.worker].append([p, 0])
                         max_input_rx = max(max_input_rx, len(input_rx[p.worker]))
                     elif p.kind == 2:
@@ -351,12 +412,20 @@ def run_comparison(matrix, vector, *, architecture, workers=None, central_tile=0
                         credits[p.worker] += 1
                         assert credits[p.worker] <= prefetch_packets
                 seen[node] = len(mesh.received_packets[node])
+        if fabric is not None:
+            for node in entries:
+                # Include a partially received NoC packet's reserved buffer slot.
+                occupied = fabric.occupied['in'][node] + bool(mesh._assembly[node])
+                gateway_max_rx = max(gateway_max_rx, occupied)
+                assert occupied <= gateway_queue_packets
+                assert len(gateway_tx[node]) <= gateway_queue_packets
         max_credit_tx = max(max_credit_tx, len(credit_tx))
         max_result_tx = max(max_result_tx, len(result_tx))
         assert max_input_rx <= 2 and max_result_rx <= 2
         assert len(credit_tx) <= len(workers)*prefetch_packets
         if (len(output) == m and len(local_done) == len(workers) and not result_rx
-                and not result_tx and not credit_tx and not inputs and injector.idle() and mesh.idle()):
+                and not result_tx and not credit_tx and not inputs and injector.idle() and mesh.idle()
+                and (fabric is None or (fabric.idle() and not any(gateway_tx.values())))):
             y = [output[i] for i in range(m)]
             golden = [int32_wrap(sum(a*b for a,b in zip(row,vector))) for row in matrix]
             assert y == golden
@@ -370,6 +439,11 @@ def run_comparison(matrix, vector, *, architecture, workers=None, central_tile=0
             total = cycle + 1
             return dict(architecture=architecture, m=m, k=k, workers=list(workers),
                 central_tile=central_tile, link_interval=link_interval,
+                central_entries=list(entries) if entries is not None else None,
+                entry_for_worker=entry_for_worker if fabric is not None else None,
+                fabric=fabric.stats() if fabric is not None else None,
+                entry_rx_flits=dict(entry_rx_flits),
+                max_gateway_rx_packets=gateway_max_rx, max_gateway_tx_packets=gateway_max_tx,
                 prefetch_packets=prefetch_packets, sink_interval=sink_interval,
                 weight_packet_bytes=weight_packet_bytes,
                 prefetch_bytes_per_cluster=prefetch_packets*weight_packet_bytes,

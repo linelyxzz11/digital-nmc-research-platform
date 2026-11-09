@@ -1,0 +1,134 @@
+{
+  "config": {
+    "schema_version": 1,
+    "seed": 20261108,
+    "workloads": [
+      {
+        "m": 128,
+        "k": 128,
+        "link_intervals": [
+          1
+        ]
+      },
+      {
+        "m": 128,
+        "k": 512,
+        "link_intervals": [
+          1
+        ]
+      },
+      {
+        "m": 256,
+        "k": 512,
+        "link_intervals": [
+          1,
+          2,
+          4
+        ]
+      }
+    ],
+    "central_tile": 36,
+    "weight_packet_bytes": 128,
+    "prefetch_bytes_per_cluster": 128,
+    "gateway_queue_packets": 2,
+    "fabric_base_latency": 1,
+    "models": [
+      {
+        "name": "nmc",
+        "architecture": "nmc"
+      },
+      {
+        "name": "legacy_single",
+        "architecture": "central"
+      },
+      {
+        "name": "entry1_fabric64",
+        "architecture": "central",
+        "entries": [
+          36
+        ],
+        "fabric_lanes": 4
+      },
+      {
+        "name": "entry2_fabric64",
+        "architecture": "central",
+        "entries": [
+          36,
+          37
+        ],
+        "fabric_lanes": 4
+      },
+      {
+        "name": "entry4_fabric64",
+        "architecture": "central",
+        "entries": [
+          36,
+          37,
+          44,
+          45
+        ],
+        "fabric_lanes": 4
+      },
+      {
+        "name": "entry2_fabric16",
+        "architecture": "central",
+        "entries": [
+          36,
+          37
+        ],
+        "fabric_lanes": 1
+      },
+      {
+        "name": "entry4_fabric16",
+        "architecture": "central",
+        "entries": [
+          36,
+          37,
+          44,
+          45
+        ],
+        "fabric_lanes": 1
+      }
+    ],
+    "scope": "Same 128-MAC central array at node 36, same 32 weight Banks; real gateway NIs and bounded full-duplex internal fabric. Warm-resident ROW Python model, no new RTL."
+  },
+  "config_sha256": "cf15a5ff5309ff005a4f06f2d0b3c3eeda295843381da49994d0acae17603f95",
+  "source_sha256": {
+    "src/simulator/system/central_comparison.py": "12d6c96896cdcf8556e0b915a718ea2ef182ab2a45c0f9969f57f13e9a3c56a9",
+    "src/simulator/system/central_fabric.py": "cc0625f0ca33406a556f372e1f0f387e6eb2650c622c387771e0eebad6f61327",
+    "src/simulator/communication/v0_1.py": "3e44c32e050aa234b2f80cd3fa340d18573f6be8f4fc08806b826ca762dd9fb4",
+    "src/simulator/system/tile_timing.py": "05f69c24cb81836210a25907918dc380962c8df5f74bccc9afe2cc9736a8bf80",
+    "src/simulator/system/tile_memory.py": "11822bfcfc7e1a9532b390be7af669916f02d85e90692eb39f271b13e5cc32b8",
+    "src/simulator/functional/demo0_model.py": "48d663e891722c5e2c5ccd7635669566bc4c31fdaa79f62f8b3c079c8ea9809f",
+    "src/compiler/grid_mapper.py": "c42845f5612add2cb364958937993a8fefc4e8740234bdd8821ebfe7830d7e2e",
+    "tools/experiments/central_entry_sweep.py": "6aa25c751f0ff0b1374e85d7c3952b4877cb7f58d59890795bd9d2576ddd8ed2"
+  },
+  "base_commit": "d37fd915a5de89f246ee7df947e7299bcbbb3cbf",
+  "total_wall_seconds": 258.9394426671788,
+  "cases": 35,
+  "all_golden_ok": true,
+  "legacy_exact_replays": 10,
+  "hardware": {
+    "physical_routers": 64,
+    "storage_workers": 32,
+    "total_active_mac": 128,
+    "hub": 36,
+    "reserved_gateways": [
+      36,
+      37,
+      44,
+      45
+    ],
+    "weight_bytes_per_bank": 4096,
+    "prefetch_bytes_per_cluster": 128,
+    "source_assembly_bytes": 128,
+    "source_tx_bytes": 128,
+    "queue_packets_per_gateway_direction": 2,
+    "fabric_port_bytes_per_cycle": 16,
+    "max_fabric_bytes_per_cycle_per_direction": 64,
+    "gateway_rx_and_fabric_in_payload_budget_bytes": 1024,
+    "gateway_tx_payload_budget_bytes": 128,
+    "fabric_out_payload_budget_bytes": 128,
+    "note": "Queue budgets reserve all four gateways in all cases, including unused ports/NMC. Headers, descriptors and pipeline control are additional metadata. No area/Fmax claim."
+  }
+}

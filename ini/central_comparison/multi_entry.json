@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "seed": 20261108,
+  "workloads": [
+    {"m":128,"k":128,"link_intervals":[1]},
+    {"m":128,"k":512,"link_intervals":[1]},
+    {"m":256,"k":512,"link_intervals":[1,2,4]}
+  ],
+  "central_tile": 36,
+  "weight_packet_bytes": 128,
+  "prefetch_bytes_per_cluster": 128,
+  "gateway_queue_packets": 2,
+  "fabric_base_latency": 1,
+  "models": [
+    {"name":"nmc","architecture":"nmc"},
+    {"name":"legacy_single","architecture":"central"},
+    {"name":"entry1_fabric64","architecture":"central","entries":[36],"fabric_lanes":4},
+    {"name":"entry2_fabric64","architecture":"central","entries":[36,37],"fabric_lanes":4},
+    {"name":"entry4_fabric64","architecture":"central","entries":[36,37,44,45],"fabric_lanes":4},
+    {"name":"entry2_fabric16","architecture":"central","entries":[36,37],"fabric_lanes":1},
+    {"name":"entry4_fabric16","architecture":"central","entries":[36,37,44,45],"fabric_lanes":1}
+  ],
+  "scope":"Same 128-MAC central array at node 36, same 32 weight Banks; real gateway NIs and bounded full-duplex internal fabric. Warm-resident ROW Python model, no new RTL."
+}
