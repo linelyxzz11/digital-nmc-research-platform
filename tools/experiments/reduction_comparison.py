@@ -243,6 +243,15 @@ def _write_figures(directory, records):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
+    from matplotlib.patches import Patch
+
+    # Shared grey/blue palette sampled from the team's reference figure.
+    palette = {
+        "light_grey": "#D9D9D9",
+        "muted_blue": "#7B9AAD",
+        "blue": "#0072B2",
+        "edge": "#444444",
+    }
 
     figure_dir = Path(directory) / "figure"
     figure_dir.mkdir(parents=True, exist_ok=True)
@@ -265,12 +274,19 @@ def _write_figures(directory, records):
     for index, reduction in enumerate(REDUCTIONS):
         values = [lookup[(*group, reduction)]["total_cycles"] for group in groups]
         offset = (index - 0.5) * width
-        axis.bar([value + offset for value in x_values], values, width, label=reduction)
+        axis.bar(
+            [value + offset for value in x_values], values, width, label=reduction,
+            color=palette["muted_blue" if reduction == "central" else "blue"],
+            edgecolor=palette["edge"], linewidth=0.7,
+            hatch=None if reduction == "central" else "///",
+        )
     axis.set_xticks(x_values, labels, rotation=35, ha="right")
     axis.set_ylabel("Total cycles")
     axis.set_title("Central reduction and tree reduction end-to-end cycles")
-    axis.legend()
-    axis.grid(axis="y", alpha=0.25)
+    axis.legend(frameon=False)
+    axis.set_axisbelow(True)
+    axis.grid(axis="y", color="#EEEEEE", linewidth=0.8)
+    axis.spines[["top", "right"]].set_visible(False)
     fig.tight_layout()
     for suffix in ("png", "svg"):
         fig.savefig(figure_dir / f"total_cycles.{suffix}", dpi=220)
@@ -278,14 +294,23 @@ def _write_figures(directory, records):
 
     fig, axis = plt.subplots(figsize=(12.0, 5.0))
     speedups = [lookup[(*group, "tree")]["speedup_tree_vs_central"] for group in groups]
-    colors = [{"row": "#7f7f7f", "k": "#d62728", "2d": "#9467bd"}[group[3]]
-              for group in groups]
-    axis.bar(x_values, speedups, color=colors)
-    axis.axhline(1.0, color="black", linewidth=1, linestyle="--")
+    split_colors = {
+        "row": palette["light_grey"],
+        "k": palette["blue"],
+        "2d": palette["muted_blue"],
+    }
+    colors = [split_colors[group[3]] for group in groups]
+    axis.bar(x_values, speedups, color=colors, edgecolor=palette["edge"], linewidth=0.7)
+    axis.axhline(1.0, color=palette["edge"], linewidth=1, linestyle="--")
     axis.set_xticks(x_values, labels, rotation=35, ha="right")
     axis.set_ylabel("Tree speedup vs central")
     axis.set_title("Tree reduction speedup (>1 is faster)")
-    axis.grid(axis="y", alpha=0.25)
+    axis.legend(handles=[Patch(facecolor=split_colors[split], edgecolor=palette["edge"],
+                              label=split.upper()) for split in SPLITS],
+                frameon=False, ncol=3, loc="upper left")
+    axis.set_axisbelow(True)
+    axis.grid(axis="y", color="#EEEEEE", linewidth=0.8)
+    axis.spines[["top", "right"]].set_visible(False)
     fig.tight_layout()
     for suffix in ("png", "svg"):
         fig.savefig(figure_dir / f"tree_speedup.{suffix}", dpi=220)
