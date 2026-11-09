@@ -30,6 +30,7 @@
 - ROW 多 Root：[v0.1 执行合同](docs/spec/multi_root_row_v0.1.md) 在相同 Worker 和硬件预算下比较 1/2/4 个最终 Root；当前仅为 Python 周期模型。
 - K 多 Root：[v0.1 执行合同](docs/spec/multi_root_k_v0.1.md) 使用单目的地顺序任务队列，在相同 K Worker 下比较 1/2/4 个最终 Root；当前仅支持central规约。
 - 二维多 Root：[v0.1 执行合同](docs/spec/multi_root_2d_v0.1.md) 按完整ROW分区分配Root，在相同二维Worker下比较1/2/4 Root；当前仅支持central规约。
+- 归约方式比较：[实验合同与解释](docs/spec/reduction_comparison_v0.1.md) 固定单最终 Root、Worker 位置和计算资源，对比 Central 与 fan-in=4 的 Tree；[复跑结果与验证](data/results/reduction_comparison_20261109/README.md) 单独记录这一增量，不代表多 Root Tree 或 RTL 实现。
 - 阅读计划：[团队路线](docs/project_plan.zh-CN.md)、[Proposal](docs/proposal.md)。文献调研保存在本地 `docs/papers/`，不随 GitHub 仓库发布。
 - 使用 VS Code：直接打开仓库根目录。本地的 `Digital-NMC.code-workspace` 与论文工作区为可选配置，不是运行依赖。
 
@@ -112,6 +113,9 @@ python -m pytest -q -p no:cacheprovider src/tests/test_multi_root_2d.py
 python tools/experiments/multi_root_placement_search.py --max-groups 1 --output-dir dump/multi_root_search_smoke
 python tools/experiments/multi_root_placement_search.py --jobs 4 --output-dir dump/multi_root_search_full
 python -m pytest -q -p no:cacheprovider src/tests/test_multi_root_placement.py
+# 固定单最终 Root：ROW/K/二维 × Central/Tree，共 24 条记录
+python tools/experiments/reduction_comparison.py --config ini/experiments/reduction_comparison.json --output-dir dump/reduction_comparison_run
+python -m pytest -q -p no:cacheprovider src/tests/test_reduction_comparison.py
 # 检查随 Git 发布的文档链接
 python tools/check_layout.py --tracked
 ```

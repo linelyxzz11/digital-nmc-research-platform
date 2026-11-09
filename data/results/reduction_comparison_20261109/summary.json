@@ -1,0 +1,27 @@
+{
+  "correctness_failures": 0,
+  "records": 24,
+  "splits": {
+    "2d": {
+      "cases": 4,
+      "geomean_tree_speedup_vs_central": 1.4912991640301958,
+      "ties": 0,
+      "tree_losses": 0,
+      "tree_wins": 4
+    },
+    "k": {
+      "cases": 4,
+      "geomean_tree_speedup_vs_central": 2.6754574145081635,
+      "ties": 0,
+      "tree_losses": 0,
+      "tree_wins": 4
+    },
+    "row": {
+      "cases": 4,
+      "geomean_tree_speedup_vs_central": 1.0,
+      "ties": 4,
+      "tree_losses": 0,
+      "tree_wins": 0
+    }
+  }
+}

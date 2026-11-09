@@ -166,6 +166,7 @@ def run_grid(plan,matrix,vector,*,tile_timing=TileComputeConfig(),root_timing=Ro
     seen=[0]*plan.tile_count;seen_flits={node:0 for node in endpoints}
     emitters={};phase='LOAD';compute_start=gather_complete=None;packet_counts=Counter()
     final_root_finish_cycles={};global_done_count=0
+    first_result_write_cycle=last_result_write_cycle=None;final_write_cycles=set()
     for _ in range(max_cycles):
         if pending_ack is not None and mesh.can_inject(pending_ack.src_tile,1):
             mesh.inject_packet(pending_ack);pending_ack=None
@@ -197,6 +198,12 @@ def run_grid(plan,matrix,vector,*,tile_timing=TileComputeConfig(),root_timing=Ro
                 if mesh.ejection_ready[node]: root.counters['rx_blocked_flit_cycles']+=1
                 mesh.ejection_ready[node]=False
             event=endpoint.step(mesh)
+            # Observe committed final output only; intermediate reducer writes
+            # are forwarding events, not final GEMV output completion.
+            if node in expected_done and root.last_event.get('written_indices'):
+                write_cycle=mesh.cycle+1
+                if first_result_write_cycle is None: first_result_write_cycle=write_cycle
+                last_result_write_cycle=write_cycle;final_write_cycles.add(write_cycle)
             if node in expected_done and event.done_created is not None:
                 if node in final_root_finish_cycles: raise RuntimeError('final Root created Done twice')
                 final_root_finish_cycles[node]=mesh.cycle+1
@@ -253,11 +260,16 @@ def run_grid(plan,matrix,vector,*,tile_timing=TileComputeConfig(),root_timing=Ro
                             forwarded_result_packets=endpoint.accepted_outputs) for node,endpoint in endpoints.items()}
             final_stats={root:stats[root] for root in plan.final_roots}
             packet_loads=[item['accepted_packets'] for item in final_stats.values()]
+            assert first_result_write_cycle is not None and last_result_write_cycle is not None
             root_metrics=dict(
                 output_rows={str(r.root_tile):r.row_end-r.row_start for r in plan.final_root_ranges},
                 result_packets={str(root):final_stats[root]['accepted_packets'] for root in plan.final_roots},
                 load_imbalance=max(packet_loads)/(sum(packet_loads)/len(packet_loads)),
-                finish_cycle_span=max(final_root_finish_cycles.values())-min(final_root_finish_cycles.values()))
+                finish_cycle_span=max(final_root_finish_cycles.values())-min(final_root_finish_cycles.values()),
+                first_result_write_cycle=first_result_write_cycle,
+                last_result_write_cycle=last_result_write_cycle,
+                result_write_cycles=len(final_write_cycles),
+                output_span_cycles=last_result_write_cycle-first_result_write_cycle+1)
             compute={t:e.stats() for t,e in emitters.items()}
             queue_metrics=dict(
                 subtasks_per_worker={str(tile):stats['subtasks'] for tile,stats in compute.items()},

@@ -1,0 +1,83 @@
+{
+  "base_commit": "40ef59a10f4581cd550e7f83f5438dc15621fd0a",
+  "full_suite": {
+    "total": 473,
+    "passed": 467,
+    "failures": [
+      "src.tests.test_pressure_sweep::test_cli_exports_results_and_source_provenance"
+    ],
+    "errors": [],
+    "skipped": [
+      {
+        "name": "src.tests.test_grid_mapper_rtl::test_grid_mapper_leaf_tasks_match_existing_tile_rtl",
+        "reason": "install RTL simulators for the Mapper-to-RTL bridge"
+      },
+      {
+        "name": "src.tests.test_mesh_rtl::test_integrated_64_tile_rtl",
+        "reason": "install RTL simulators for integrated Mesh verification"
+      },
+      {
+        "name": "src.tests.test_reduce_rtl::test_reduce_rtl_matches_every_python_service_edge_and_rejects_malformed_packets",
+        "reason": "install Icarus for endpoint RTL verification"
+      },
+      {
+        "name": "src.tests.test_root_writeback_rtl::test_root_writeback_rtl_matches_finite_endpoint_and_preserves_banks",
+        "reason": "install Icarus Verilog for Root writeback RTL verification"
+      },
+      {
+        "name": "src.tests.test_tile_rtl::test_single_tile_rtl_matches_python_and_preserves_sram_on_reset",
+        "reason": "install Icarus Verilog and Verilator for RTL co-simulation"
+      }
+    ]
+  },
+  "baseline_full_suite": {
+    "total": 463,
+    "passed": 457,
+    "failures": [
+      "src.tests.test_pressure_sweep::test_cli_exports_results_and_source_provenance"
+    ],
+    "errors": [],
+    "skipped": [
+      {
+        "name": "src.tests.test_grid_mapper_rtl::test_grid_mapper_leaf_tasks_match_existing_tile_rtl",
+        "reason": "install RTL simulators for the Mapper-to-RTL bridge"
+      },
+      {
+        "name": "src.tests.test_mesh_rtl::test_integrated_64_tile_rtl",
+        "reason": "install RTL simulators for integrated Mesh verification"
+      },
+      {
+        "name": "src.tests.test_reduce_rtl::test_reduce_rtl_matches_every_python_service_edge_and_rejects_malformed_packets",
+        "reason": "install Icarus for endpoint RTL verification"
+      },
+      {
+        "name": "src.tests.test_root_writeback_rtl::test_root_writeback_rtl_matches_finite_endpoint_and_preserves_banks",
+        "reason": "install Icarus Verilog for Root writeback RTL verification"
+      },
+      {
+        "name": "src.tests.test_tile_rtl::test_single_tile_rtl_matches_python_and_preserves_sram_on_reset",
+        "reason": "install Icarus Verilog and Verilator for RTL co-simulation"
+      }
+    ]
+  },
+  "targeted_suite": {
+    "total": 89,
+    "passed": 89,
+    "failures": [],
+    "errors": [],
+    "skipped": []
+  },
+  "added_tests": 10,
+  "multi_root_tests": 79,
+  "new_failures_vs_base": 0,
+  "fresh_experiment_records": 24,
+  "identical_to_historical_records": true,
+  "execution_platform": "Windows",
+  "online_ci_on_this_branch": "not run; branch not uploaded",
+  "known_baseline_failure": "Windows backslash provenance keys in pressure_sweep.py; no changes to that file",
+  "commands": [
+    "python -m pytest -q -p no:cacheprovider src/tests",
+    "python -m pytest -q -p no:cacheprovider src/tests/test_reduction_comparison.py src/tests/test_multi_root_row.py src/tests/test_multi_root_k.py src/tests/test_multi_root_2d.py src/tests/test_multi_root_placement.py",
+    "python tools/experiments/reduction_comparison.py --config ini/experiments/reduction_comparison.json --output-dir dump/reduction_comparison_run"
+  ]
+}

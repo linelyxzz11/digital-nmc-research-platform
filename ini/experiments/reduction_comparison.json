@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "contract": "reduction-comparison-v0.1",
+  "mesh_x": 8,
+  "mesh_y": 8,
+  "host_tile": 0,
+  "root_tile": 0,
+  "tid": 1,
+  "placement": "compact",
+  "fan_in": 4,
+  "tile_config": "ini/tile_system/baseline.json",
+  "root_config": "ini/root_service/baseline.json",
+  "workloads": [
+    {
+      "m": 128,
+      "k": 64,
+      "workers": 16,
+      "grids": {
+        "row": [16, 1],
+        "k": [1, 16],
+        "2d": [4, 4]
+      }
+    },
+    {
+      "m": 256,
+      "k": 64,
+      "workers": 16,
+      "grids": {
+        "row": [16, 1],
+        "k": [1, 16],
+        "2d": [4, 4]
+      }
+    },
+    {
+      "m": 256,
+      "k": 128,
+      "workers": 16,
+      "grids": {
+        "row": [16, 1],
+        "k": [1, 16],
+        "2d": [4, 4]
+      }
+    },
+    {
+      "m": 256,
+      "k": 128,
+      "workers": 32,
+      "grids": {
+        "row": [32, 1],
+        "k": [1, 32],
+        "2d": [8, 4]
+      }
+    }
+  ]
+}

@@ -19,6 +19,7 @@ python -m pytest -q -p no:cacheprovider src/tests/test_multi_root_row.py
 python -m pytest -q -p no:cacheprovider src/tests/test_multi_root_k.py
 python -m pytest -q -p no:cacheprovider src/tests/test_multi_root_2d.py
 python -m pytest -q -p no:cacheprovider src/tests/test_multi_root_placement.py
+python -m pytest -q -p no:cacheprovider src/tests/test_reduction_comparison.py
 ```
 
 2026-10-28 当前共 312 项 pytest 回归。Compute 公式参考时序 17 项、逐请求 Tile/Bank 时序 28 项、Tile 系统接入 31 项；覆盖完整基线 Trace、全部 24 个形状、Root/Host 放置、反压、端口敏感性、配置校验和 CLI。有限 Root 共 46 项，覆盖手算阶段周期、包头槽预留、标量/向量服务、Done 保持、原子错误、到达顺序/回绕、缓冲满后排空、系统回压、写端口保持及 CLI。其他回归包括 Compute Demo 0、Packet/Comm、NMC Demo 1/2、Mapper、Plan Runner/Sweep 与硬件配置。单 Tile RTL 回归为一个 pytest 入口，内部运行 47 个用例/53 段任务执行；独立扩大运行使用 71 个用例/77 段执行，并检查 SRAM 综合结构。新增 Root 宽写口 RTL 入口，内部验证 218 个请求与 51 组 Python/RTL 时间线，含 Host/Compute 争用、错误原子性和复位保持。Root 其余端点控制及多 Tile NMC RTL 尚待实现。
@@ -34,3 +35,5 @@ Mapper 回归将生成计划实例化为现有 TileTask、MEM_WRITE 和 GatherCo
 `test_multi_root_2d.py` 验证central二维切分的v0.5计划、逐ROW来源mask、单任务Worker、1/2/4 Root数值与反压、旧版本兼容、预测器明确拒绝和36组实验入口。它不声称支持tree二维多Root、相关预测器或完整多Root RTL。
 
 `test_multi_root_placement.py` 验证 Root/Worker 候选生成与去重、静态通信评分、有限目录 Oracle、命中率/regret/加速比、先选择后仿真、并行一致性和 CLI。四个多 Root 测试文件合计 79 项；上文各日期的数量是历史记录。当前分支的完整测试状态与已知基线问题见 [分支验证记录](../../data/results/multi_root_20261108/README.md)。
+
+`test_reduction_comparison.py` 验证单最终 Root 下 Central/Tree 配对实验、Worker 与 MAC 数、ROW 退化、CLI 导出及不覆盖已有输出；直接观察 Root 写回事件，核对首末写回周期和全局写回周期集合，排除中间 reducer 写回，并覆盖 1/2/4 最终 Root 的统计兼容性。当前归约比较分支验证见 [归约比较记录](../../data/results/reduction_comparison_20261109/README.md)。
